@@ -109,13 +109,19 @@
 .work-media { margin-top: var(--space-5); }
 .work-media iframe { display: block; width: 100%; max-width: 100%; overflow: hidden; }
 /* 原型：手机模拟视口，居中、完整显示不拉伸（桌面/平板用此；手机再压高度） */
+/* 原型展示：白色画布卡片 + 标题 + 手机视口（只显示手机内容） */
+.proto-showcase { margin-top: var(--space-5); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-5); }
+.proto-showcase__label { text-align: center; font-family: var(--font-display); font-size: var(--fs-lg); font-weight: var(--weight-medium); color: var(--text); margin-bottom: var(--space-4); letter-spacing: 0.02em; }
+.proto-showcase .btn { display: block; width: max-content; margin: var(--space-4) auto 0; }
 .work-media.proto-frame { display: flex; justify-content: center; align-items: flex-start; width: 100%; }
 .work-media.proto-frame .proto-iframe {
   display: block; margin: 0 auto;
   width: min(100%, 700px); max-width: 100%;
-  height: min(1400px, 88vh);
-  max-height: min(1300px, 88vh);
-  border: 0; border-radius: var(--radius-md); background: var(--surface);
+  height: min(1200px, 85vh);
+  max-height: min(1150px, 85vh);
+  border: 0; border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.35);
 }
 .work-media video { display: block; width: 100%; max-width: min(480px, 100%); max-height: 62vh; margin: 0 auto; border-radius: var(--radius-md); object-fit: contain; }
 .work-media figcaption { font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-2); }
@@ -190,7 +196,7 @@
 @media (max-width: 1024px) {
   .works-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: 1fr; }
-  .work-media.proto-frame .proto-iframe { height: 640px; max-height: 640px; }
+  .work-media.proto-frame .proto-iframe { height: 760px; max-height: 760px; }
 }
 
 /* 手机 <768px */

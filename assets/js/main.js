@@ -146,9 +146,13 @@
         "</div>";
     }
     if (w.prototypeUrl) {
-      html += '<div class="work-media proto-frame">' +
-        '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
-        "</div>";
+      html += '<div class="proto-showcase">' +
+        '<p class="proto-showcase__label">产品原型展示</p>' +
+        '<div class="work-media proto-frame">' +
+          '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
+        '</div>' +
+        '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>' +
+      "</div>";
     }
     return html;
   }
