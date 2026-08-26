@@ -107,6 +107,8 @@
 .report-pane { margin-top: var(--space-4); }
 .report-conclusions { margin: 0; padding-left: 1.2em; color: var(--text); font-size: var(--fs-base); line-height: 1.8; }
 .report-conclusions li { margin-bottom: var(--space-3); }
+.report-background { color: var(--text); font-size: var(--fs-base); line-height: 1.8; }
+.report-background--empty { color: var(--text-muted); font-style: italic; }
 .report-block { margin-bottom: var(--space-5); }
 .report-block:last-child { margin-bottom: 0; }
 .report-block h4 { color: var(--text); font-size: var(--fs-base); font-weight: var(--weight-bold); margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }

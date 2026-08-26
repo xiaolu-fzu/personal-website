@@ -134,12 +134,17 @@
         (w.report.title ? '<h3 class="report-title">' + escapeHtml(w.report.title) + "</h3>" : "") +
         tablesHtml +
         "</div>";
-      // 两个切换按钮：主要结论(默认) + 查看报表表格
+      var backgroundPane = '<div class="report-pane" data-pane="background" hidden>' +
+        (w.background ? '<p class="report-background">' + escapeHtml(w.background) + "</p>" : '<p class="report-background report-background--empty">项目背景整理中…</p>') +
+        "</div>";
+      // 切换按钮：项目背景(左) + 主要结论(默认) + 查看报表表格
       return '<div class="work-report">' +
         '<div class="report-tabs">' +
+          '<button type="button" class="report-tab" data-tab="background">项目背景</button>' +
           (resultsHtml ? '<button type="button" class="report-tab is-active" data-tab="conclusions">主要结论</button>' : "") +
           '<button type="button" class="report-tab" data-tab="tables">📊 查看报表表格</button>' +
         "</div>" +
+        backgroundPane +
         (resultsHtml ? resultsHtml : "") +
         reportPane +
         "</div>";
