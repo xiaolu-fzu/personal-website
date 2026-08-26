@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="个人作品集 / 简历 · 暗色霓虹赛博风格 · 纯静态网站" />
-  <title>首页 · 个人作品集</title>
+  <meta name="description" content="个人作品集 / 简历 · 暗色霓虹赛博风格 · 单页滚动" />
+  <title>李嘉豪 · 个人作品集</title>
 
   <!-- 字体渐进增强（SIL OFL 1.1，来源 Google Fonts；离线回落系统栈） -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,21 +22,21 @@
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-scanlines" aria-hidden="true"></div>
 
-  <!-- ===== 共享导航 ===== -->
+  <!-- ===== 共享导航（锚点跳转） ===== -->
   <header class="nav">
     <div class="nav__inner container">
-      <a class="nav__brand" href="index.html">李嘉豪</a>
+      <a class="nav__brand" href="#home">李嘉豪</a>
       <nav class="nav__list" aria-label="主导航">
-        <a class="nav__link" data-page="index" href="index.html">首页</a>
-        <a class="nav__link" data-page="portfolio" href="portfolio.html">作品集</a>
-        <a class="nav__link" data-page="about" href="about.html">关于</a>
-        <a class="nav__link" data-page="contact" href="contact.html">联系</a>
+        <a class="nav__link" data-page="home" href="#home">首页</a>
+        <a class="nav__link" data-page="portfolio" href="#portfolio">作品集</a>
+        <a class="nav__link" data-page="about" href="#about">关于</a>
+        <a class="nav__link" data-page="contact" href="#contact">联系</a>
       </nav>
       <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="navDrawer">☰</button>
     </div>
   </header>
 
-  <!-- 移动端抽屉 -->
+  <!-- 移动端抽屉（锚点跳转） -->
   <div class="nav-overlay" aria-hidden="true"></div>
   <aside class="nav-drawer" id="navDrawer" aria-label="菜单">
     <div class="nav-drawer__head">
@@ -46,52 +46,129 @@
       </button>
     </div>
     <nav class="nav-drawer__list" aria-label="主导航（移动端）">
-      <a class="nav-drawer__link" data-page="index" href="index.html">首页</a>
-      <a class="nav-drawer__link" data-page="portfolio" href="portfolio.html">作品集</a>
-      <a class="nav-drawer__link" data-page="about" href="about.html">关于</a>
-      <a class="nav-drawer__link" data-page="contact" href="contact.html">联系</a>
+      <a class="nav-drawer__link" data-page="home" href="#home">首页</a>
+      <a class="nav-drawer__link" data-page="portfolio" href="#portfolio">作品集</a>
+      <a class="nav-drawer__link" data-page="about" href="#about">关于</a>
+      <a class="nav-drawer__link" data-page="contact" href="#contact">联系</a>
     </nav>
   </aside>
 
   <main>
-    <!-- ===== Hero ===== -->
-    <section class="hero">
+    <!-- ==================== 首页 / Hero ==================== -->
+    <section id="home" class="hero">
       <div class="hero__grid-layer" aria-hidden="true"></div>
       <div class="container hero__content">
         <p class="hero__eyebrow">PORTFOLIO / RESUME</p>
         <h1 class="hero__title">你好，我是 <span class="text-gradient">李嘉豪</span></h1>
         <p class="hero__sub">会用数据找答案，会用 AI 造东西。从舆情报告到记账 App，从 AI 视频到网页游戏。</p>
         <div class="hero__actions">
-          <a class="btn btn-primary" href="portfolio.html">查看作品集</a>
-          <a class="btn btn-ghost" href="contact.html">联系我</a>
+          <a class="btn btn-primary" href="#portfolio">查看作品集</a>
+          <a class="btn btn-ghost" href="#contact">联系我</a>
           <a class="btn btn-ghost" href="https://github.com/xiaolu-fzu" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 作品集 ==================== -->
+    <section id="portfolio" class="section">
+      <div class="container">
+        <h2 class="section__title">作品集</h2>
+        <p class="section__lead">真实作品五大类：数据分析 / 产品原型 / AIGC / 网页游戏 / 工具开发。点击卡片查看详情或在线体验。</p>
+
+        <div class="filter-bar" id="filterBar" role="group" aria-label="作品筛选">
+          <button class="filter-btn" data-filter="" aria-pressed="true">全部</button>
+          <button class="filter-btn" data-filter="data" aria-pressed="false">数据分析</button>
+          <button class="filter-btn" data-filter="prototype" aria-pressed="false">产品原型</button>
+          <button class="filter-btn" data-filter="aigc" aria-pressed="false">AIGC</button>
+          <button class="filter-btn" data-filter="game" aria-pressed="false">网页游戏</button>
+          <button class="filter-btn" data-filter="tool" aria-pressed="false">工具/开发</button>
+        </div>
+
+        <div class="works-grid" id="worksGrid" aria-live="polite"></div>
+        <p class="works-empty" id="worksEmpty" style="display:none">没有匹配的作品。试试其他分类。</p>
+        <div class="work-detail wk-expandable" id="workDetail" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ==================== 关于 ==================== -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="section__title">关于我</h2>
+        <p class="section__lead">个人介绍、经历与研究方向。</p>
+
+        <div class="about-teaser">
+          <div>
+            <h3 class="section__title">你好，我是 李嘉豪</h3>
+            <p>会用数据找答案，会用 AI 造东西。从舆情报告到记账 App，从 AI 视频到网页游戏。兼具数据分析、产品原型与前端实现能力。</p>
+            <p>这里展示我的作品与简历，偏好清晰、克制、有记忆点的产品体验。</p>
+          </div>
+        </div>
+
+        <h2 class="section__title">教育与研究方向</h2>
+        <p class="section__lead">测绘 × 地理信息 × 机器学习，用数据与 AI 解决实际问题。</p>
+        <div class="timeline">
+          <div class="timeline__item">
+            <span class="timeline__time">硕士 · 福州大学（211）</span>
+            <h3 class="timeline__title">测绘工程 / 机器学习模型开发</h3>
+            <p class="timeline__desc">研究方向聚焦测绘与机器学习模型开发，结合数据与 AI 做工程化落地。</p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__time">本科 · 武汉科技大学（双一流）</span>
+            <h3 class="timeline__title">地理信息科学</h3>
+            <p class="timeline__desc">系统学习地理信息、空间数据处理与测绘，为数据分析与 AI 实践打基础。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 联系 ==================== -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2 class="section__title">联系我</h2>
+        <p class="section__lead">欢迎合作、交流或打个招呼，期待你的消息。</p>
+
+        <div class="contact-info">
+          <h2>直接联系</h2>
+          <p>微信 / 邮箱 / GitHub，随时联系我。</p>
+          <div class="social-links">
+            <a href="mailto:18672786151@163.com">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>
+              18672786151@163.com
+            </a>
+            <a href="https://github.com/xiaolu-fzu" target="_blank" rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              GitHub · xiaolu-fzu ↗
+            </a>
+          </div>
+          <div class="wechat">
+            <span class="footer__title">微信</span>
+            <img src="微信.jpg" alt="微信二维码" width="160" height="160" loading="lazy" style="border-radius:8px;border:1px solid var(--border)">
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ===== 共享 Footer ===== -->
+  <!-- ===== Footer ===== -->
   <footer class="footer">
     <div class="container">
       <div class="footer__inner">
         <div class="footer__col">
           <span class="footer__title">导航</span>
-          <a class="footer__link" href="index.html">首页</a>
-          <a class="footer__link" href="portfolio.html">作品集</a>
-          <a class="footer__link" href="about.html">关于</a>
-          <a class="footer__link" href="contact.html">联系</a>
+          <a class="footer__link" href="#home">首页</a>
+          <a class="footer__link" href="#portfolio">作品集</a>
+          <a class="footer__link" href="#about">关于</a>
+          <a class="footer__link" href="#contact">联系</a>
         </div>
         <div class="footer__col">
           <span class="footer__title">联系</span>
           <a class="footer__link" href="mailto:18672786151@163.com">18672786151@163.com</a>
-          <a class="footer__link" href="https://github.com/xiaolu-fzu" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
       <p class="footer__copyright">© <span id="year">2026</span> 李嘉豪</p>
     </div>
   </footer>
 
-  <!-- 脚本：data.js 提供数据，main.js 处理交互 -->
   <script src="assets/js/data.js"></script>
   <script src="assets/js/main.js"></script>
 </body>

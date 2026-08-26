@@ -15,17 +15,31 @@
 
   var currentPage = (location.pathname.split("/").pop() || "index.html").toLowerCase();
 
-  /* ---------- 1) 主导航高亮 ---------- */
+  /* ---------- 1) 主导航高亮（单页滚动高亮：IntersectionObserver scroll-spy） ---------- */
   function initNavHighlight() {
     var links = document.querySelectorAll(".nav__list .nav__link, .nav-drawer__list .nav-drawer__link");
-    var map = { "index.html": "index", "portfolio.html": "portfolio", "about.html": "about", "contact.html": "contact" };
-    var id = map[currentPage] || "index";
-    links.forEach(function (link) {
-      if (link.getAttribute("data-page") === id) {
-        link.classList.add("is-active");
-        if (link.classList.contains("nav-drawer__link")) link.setAttribute("aria-current", "page");
-      }
-    });
+    if (!links.length) return;
+    var ids = ["home", "portfolio", "about", "contact"];
+    function setActive(id) {
+      links.forEach(function (link) {
+        var on = link.getAttribute("data-page") === id;
+        link.classList.toggle("is-active", on);
+        if (link.classList.contains("nav-drawer__link")) {
+          if (on) link.setAttribute("aria-current", "page");
+          else link.removeAttribute("aria-current");
+        }
+      });
+    }
+    var sections = ids.map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    if (!sections.length) { setActive(ids[0]); return; }
+    if (window.IntersectionObserver) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
+      }, { rootMargin: "-35% 0px -55% 0px", threshold: 0 });
+      sections.forEach(function (s) { io.observe(s); });
+    } else {
+      setActive(ids[0]);
+    }
   }
 
   /* ---------- 2) 移动端抽屉 ---------- */
