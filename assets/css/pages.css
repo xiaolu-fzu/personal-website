@@ -127,6 +127,7 @@
 .work-media figcaption { font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-2); }
 .work-controls { font-size: var(--fs-sm); color: var(--text-secondary); margin: var(--space-3) 0; }
 .work-media .btn { margin-top: var(--space-3); }
+.game-frame:focus { outline: 2px solid var(--neon-cyan); outline-offset: 2px; }
 
 /* 故事原文折叠（AIGC 硬币故事区） */
 .work-story { margin-top: var(--space-5); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; }

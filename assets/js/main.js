@@ -140,7 +140,7 @@
     }
     if (w.gameUrl) {
       html += '<div class="work-media">' +
-        '<iframe src="' + escapeHtml(w.gameUrl) + '" title="' + escapeHtml(w.title) + ' 在线游玩" loading="lazy" allow="fullscreen; autoplay; gamepad" allowfullscreen width="100%" height="560" style="border:0;border-radius:var(--radius-md);background:var(--surface)"></iframe>' +
+        '<iframe src="' + escapeHtml(w.gameUrl) + '" title="' + escapeHtml(w.title) + ' 在线游玩" loading="lazy" allow="fullscreen; autoplay; gamepad" allowfullscreen width="100%" height="560" tabindex="0" class="game-frame" style="border:0;border-radius:var(--radius-md);background:var(--surface)"></iframe>' +
         (w.controls ? '<p class="work-controls">玩法：' + escapeHtml(w.controls) + "</p>" : "") +
         '<a class="btn btn-ghost" href="' + escapeHtml(w.gameUrl) + '" target="_blank" rel="noopener">在新窗口打开游戏 ↗</a>' +
         "</div>";
@@ -207,6 +207,9 @@
           renderLinks(w) +
         "</div>";
       detail.classList.add("is-open");
+      // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
+      var gameFrame = detail.querySelector(".game-frame");
+      if (gameFrame) { setTimeout(function () { try { gameFrame.focus(); } catch (e) {} }, 300); }
       var closeBtn = detail.querySelector(".work-detail__close");
       if (closeBtn) closeBtn.addEventListener("click", hideDetail);
       var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
