@@ -151,7 +151,6 @@
         '<div class="work-media proto-frame">' +
           '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
         '</div>' +
-        '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>' +
       "</div>";
     }
     return html;
@@ -162,8 +161,7 @@
     var html = '<div class="work-detail__links">';
     var primaryLabel = (w.results && w.results.length) ? "查看完整报告" : "查看项目";
     if (w.link) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + primaryLabel + ' ↗</a>';
-    if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
-    if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
+
     if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "hello@example.com") + '">联系获取更多 ↗</a>';
     html += "</div>";
     return html;
@@ -205,7 +203,6 @@
           renderReport(w) +
           renderMedia(w) +
           renderLinks(w) +
-          '<p class="work-disclaimer">素材：作者提供 · 本人原创（AIGC 视频 / 原型 / 游戏 / 报告）。卡面视觉为纯 CSS 几何占位，无外部版权素材。来源见 assets/ATTRIBUTIONS.md。</p>' +
         "</div>";
       detail.classList.add("is-open");
       var closeBtn = detail.querySelector(".work-detail__close");
