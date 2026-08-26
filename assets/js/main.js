@@ -144,15 +144,20 @@
       var backgroundPane = '<div class="report-pane" data-pane="background" hidden>' +
         (w.background ? '<p class="report-background">' + escapeHtml(w.background) + "</p>" : '<p class="report-background report-background--empty">项目背景整理中…</p>') +
         "</div>";
-      // 切换按钮：项目背景(左) + 主要结论(默认) + 查看报表表格
+      var summaryPane = '<div class="report-pane" data-pane="summary" hidden>' +
+        '<p class="report-summary">' + (w.summary ? escapeHtml(w.summary) : '<em class="report-summary--empty">报告摘要整理中…</em>') + "</p>" +
+        "</div>";
+      // 切换按钮：项目背景 / 主要结论(默认) / 报告摘要 / 查看报表表格（均带图标）
       return '<div class="work-report">' +
         '<div class="report-tabs">' +
-          '<button type="button" class="report-tab" data-tab="background">项目背景</button>' +
-          (resultsHtml ? '<button type="button" class="report-tab is-active" data-tab="conclusions">主要结论</button>' : "") +
+          '<button type="button" class="report-tab" data-tab="background">📋 项目背景</button>' +
+          (resultsHtml ? '<button type="button" class="report-tab is-active" data-tab="conclusions">💡 主要结论</button>' : "") +
+          '<button type="button" class="report-tab" data-tab="summary">📄 报告摘要</button>' +
           '<button type="button" class="report-tab" data-tab="tables">📊 查看报表表格</button>' +
         "</div>" +
         backgroundPane +
         (resultsHtml ? resultsHtml : "") +
+        summaryPane +
         reportPane +
         "</div>";
     }
