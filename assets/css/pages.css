@@ -28,7 +28,7 @@
 /* ==================== Hero ==================== */
 .hero {
   position: relative; overflow: hidden;
-  min-height: min(88vh, 760px);
+  min-height: calc(100vh - 64px);
   display: flex; align-items: center;
   padding: var(--space-10) 0;
 }
