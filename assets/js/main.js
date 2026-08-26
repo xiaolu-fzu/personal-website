@@ -11,7 +11,7 @@
   /* 联系表单 Formspree 端点 —— 上线前把 REPLACE_ME 换成你的 Formspree 表单 ID
      注册：https://formspree.io ，用邮箱建表单得链接 https://formspree.io/f/abcd1234
      把 REPLACE_ME 替换为 abcd1234 即可，留言会直达你的邮箱 */
-  var FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME";
+  
 
   var currentPage = (location.pathname.split("/").pop() || "index.html").toLowerCase();
 
@@ -316,50 +316,6 @@
     render("");
   }
 
-  /* ---------- 4) 联系表单占位（无后端） ---------- */
-  function initContactForm() {
-    var form = document.querySelector(".contact-form");
-    if (!form) return;
-    var status = document.getElementById("formStatus");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var name = form.querySelector("#name");
-      var email = form.querySelector("#email");
-      var msg = form.querySelector("#message");
-      var ok = true;
-      [name, email, msg].forEach(function (f) { f.parentElement.classList.remove("is-invalid"); });
-      if (name && !name.value.trim()) { name.parentElement.classList.add("is-invalid"); ok = false; }
-      if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())) { email.parentElement.classList.add("is-invalid"); ok = false; }
-      if (msg && !msg.value.trim()) { msg.parentElement.classList.add("is-invalid"); ok = false; }
-      if (!ok) {
-        if (status) { status.textContent = "请完善标 * 的必填项（邮箱格式需正确）。"; status.style.color = "var(--neon-magenta)"; }
-        return;
-      }
-      if (typeof FORMSPREE_ENDPOINT !== 'undefined' && FORMSPREE_ENDPOINT.indexOf('REPLACE_ME') === -1) {
-        // 真实提交到 Formspree
-        var submitBtn = form.querySelector('button[type="submit"]');
-        var payload = { name: name.value.trim(), email: email.value.trim(), message: msg.value.trim() };
-        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '发送中…'; }
-        fetch(FORMSPREE_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).then(function (res) {
-          if (res.ok) {
-            if (status) { status.textContent = '✔ 已收到你的留言，我会尽快联系你。'; status.style.color = 'var(--neon-cyan)'; }
-            form.reset();
-          } else { throw new Error('submit failed'); }
-        }).catch(function () {
-          if (status) { status.textContent = '⚠ 发送失败，请直接邮箱联系 18672786151@163.com。'; status.style.color = 'var(--neon-magenta)'; }
-        }).finally(function () {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '发送留言'; }
-        });
-      } else {
-        if (status) { status.textContent = '留言功能配置中，可先用邮箱联系 18672786151@163.com。'; status.style.color = 'var(--neon-magenta)'; }
-      }
-      form.reset();
-    });
-  }
 
   /* ---------- 5) Footer 当前年份 ---------- */
   function initYear() {
@@ -412,7 +368,7 @@
     initNavDrawer();
     applyNavMode();
     initPortfolio();
-    initContactForm();
+
     initStoryZoom();
     initYear();
   }
