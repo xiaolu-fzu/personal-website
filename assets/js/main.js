@@ -8,6 +8,11 @@
 (function () {
   "use strict";
 
+  /* 联系表单 Formspree 端点 —— 上线前把 REPLACE_ME 换成你的 Formspree 表单 ID
+     注册：https://formspree.io ，用邮箱建表单得链接 https://formspree.io/f/abcd1234
+     把 REPLACE_ME 替换为 abcd1234 即可，留言会直达你的邮箱 */
+  var FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME";
+
   var currentPage = (location.pathname.split("/").pop() || "index.html").toLowerCase();
 
   /* ---------- 1) 主导航高亮 ---------- */
@@ -253,9 +258,27 @@
         if (status) { status.textContent = "请完善标 * 的必填项（邮箱格式需正确）。"; status.style.color = "var(--neon-magenta)"; }
         return;
       }
-      if (status) {
-        status.textContent = "✔ 已收到你的留言，我会尽快联系你。";
-        status.style.color = "var(--neon-cyan)";
+      if (typeof FORMSPREE_ENDPOINT !== 'undefined' && FORMSPREE_ENDPOINT.indexOf('REPLACE_ME') === -1) {
+        // 真实提交到 Formspree
+        var submitBtn = form.querySelector('button[type="submit"]');
+        var payload = { name: name.value.trim(), email: email.value.trim(), message: msg.value.trim() };
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = '发送中…'; }
+        fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (res) {
+          if (res.ok) {
+            if (status) { status.textContent = '✔ 已收到你的留言，我会尽快联系你。'; status.style.color = 'var(--neon-cyan)'; }
+            form.reset();
+          } else { throw new Error('submit failed'); }
+        }).catch(function () {
+          if (status) { status.textContent = '⚠ 发送失败，请直接邮箱联系 18672786151@163.com。'; status.style.color = 'var(--neon-magenta)'; }
+        }).finally(function () {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '发送留言'; }
+        });
+      } else {
+        if (status) { status.textContent = '留言功能配置中，可先用邮箱联系 18672786151@163.com。'; status.style.color = 'var(--neon-magenta)'; }
       }
       form.reset();
     });
