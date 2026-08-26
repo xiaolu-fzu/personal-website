@@ -297,15 +297,27 @@
       // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
       var gameFrame = detail.querySelector(".game-frame");
       if (gameFrame) {
-        setTimeout(function () { try { gameFrame.focus(); } catch (e) {} }, 300);
-        // 点击游戏区域时强制聚焦，确保键盘事件进入游戏（解决失焦按键失灵）
-        gameFrame.addEventListener("click", function () { try { this.focus(); } catch (e) {} });
+        var focusGame = function () { try { gameFrame.focus(); } catch (e) {} };
+        focusGame();
+        setTimeout(focusGame, 300);
+        // 很多游戏内部会动态加载/重绘，晚一点再聚焦一次更稳
+        setTimeout(focusGame, 1500);
+        gameFrame.addEventListener("load", focusGame);
+        gameFrame.addEventListener("click", focusGame);
         var gameWrap = detail.querySelector(".game-wrap");
         if (gameWrap) {
-          gameWrap.addEventListener("pointerdown", function (e) {
-            if (e.target !== gameFrame) { try { gameFrame.focus(); } catch (err) {} }
+          gameWrap.addEventListener("pointerdown", function (e) { if (e.target !== gameFrame) focusGame(); });
+          // 焦点被别处抢走（如切窗口、点页眉）时，详情仍开着则把焦点还给游戏
+          gameWrap.addEventListener("focusout", function (e) {
+            if (detail.classList.contains("is-open") && gameWrap.contains(e.relatedTarget) === false) {
+              setTimeout(focusGame, 50);
+            }
           });
         }
+        // 切换窗口/标签页回来时重新聚焦
+        document.addEventListener("visibilitychange", function () {
+          if (!document.hidden && detail.classList.contains("is-open")) setTimeout(focusGame, 200);
+        });
       }
       var closeBtn = detail.querySelector(".work-detail__close");
       if (closeBtn) closeBtn.addEventListener("click", hideDetail);
