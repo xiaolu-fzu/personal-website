@@ -124,7 +124,7 @@
     var html = "";
     if (w.videoSrc) {
       html += '<figure class="work-media">' +
-        '<video controls preload="metadata" playsinline src="' + escapeHtml(w.videoSrc) + '" aria-label="' + escapeHtml(w.title + ' 视频') + '" style="width:100%;max-width:100%;border-radius:var(--radius-md);background:var(--surface)"></video>' +
+        '<video controls preload="metadata" playsinline src="' + escapeHtml(w.videoSrc) + '" aria-label="' + escapeHtml(w.title + ' 视频') + '" style="width:100%;max-width:min(480px,100%);margin:0 auto;display:block;border-radius:var(--radius-md);background:var(--surface)"></video>' +
         (w.videoTitle ? "<figcaption>" + escapeHtml(w.videoTitle) + " · AI 生成视频</figcaption>" : "") +
         "</figure>";
       if (w.story && w.story.img1) {
