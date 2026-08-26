@@ -124,11 +124,12 @@
       var tablesHtml = w.report.tables.map(function (t) {
         return '<div class="report-block"><h4>' + escapeHtml(t.title) + "</h4>" + renderTableHtml(t) + "</div>";
       }).join("");
-      var previewHtml = w.report.preview ? renderTableHtml(w.report.preview) : "";
       return '<div class="work-report">' +
-        '<span class="report-btn" tabindex="0">📊 查看报表表格<span class="report-preview">' + previewHtml + "</span></span>" +
-        (w.report.title ? '<h3>' + escapeHtml(w.report.title) + "</h3>" : "") +
-        tablesHtml +
+        '<button type="button" class="report-toggle" aria-expanded="false">📊 查看报表表格</button>' +
+        '<div class="report-body" hidden>' +
+          (w.report.title ? '<h3 class="report-title">' + escapeHtml(w.report.title) + "</h3>" : "") +
+          tablesHtml +
+        "</div>" +
         "</div>";
     }
     if (!w.results || !w.results.length) return "";
@@ -176,8 +177,8 @@
   /* 各类外链动作 */
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
-    var primaryLabel = (w.results && w.results.length) ? "查看完整报告" : "查看项目";
-    if (w.link) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + primaryLabel + ' ↗</a>';
+    // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
+    if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">查看项目 ↗</a>';
     if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
 
@@ -225,6 +226,16 @@
           renderLinks(w) +
         "</div>";
       detail.classList.add("is-open");
+      // 报表表格 点击展开/收起
+      var reportToggle = detail.querySelector(".report-toggle");
+      if (reportToggle) {
+        reportToggle.addEventListener("click", function () {
+          var body = reportToggle.nextElementSibling;
+          var expanded = reportToggle.getAttribute("aria-expanded") === "true";
+          reportToggle.setAttribute("aria-expanded", expanded ? "false" : "true");
+          if (body) body.hidden = expanded;
+        });
+      }
       // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
       var gameFrame = detail.querySelector(".game-frame");
       if (gameFrame) { setTimeout(function () { try { gameFrame.focus(); } catch (e) {} }, 300); }
