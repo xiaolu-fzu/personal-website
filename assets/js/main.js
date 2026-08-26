@@ -185,8 +185,9 @@
       }
     }
     if (w.gameUrl) {
-      html += '<div class="work-media">' +
+      html += '<div class="work-media game-wrap">' +
         '<iframe src="' + escapeHtml(w.gameUrl) + '" title="' + escapeHtml(w.title) + ' 在线游玩" loading="lazy" allow="fullscreen; autoplay; gamepad" allowfullscreen width="100%" height="560" tabindex="0" class="game-frame" style="border:0;border-radius:var(--radius-md);background:var(--surface)"></iframe>' +
+        '<p class="game-hint">点击游戏画面后，用 WASD / 方向键操作</p>' +
         (w.controls ? '<p class="work-controls">玩法：' + escapeHtml(w.controls) + "</p>" : "") +
         '<a class="btn btn-ghost" href="' + escapeHtml(w.gameUrl) + '" target="_blank" rel="noopener">在新窗口打开游戏 ↗</a>' +
         "</div>";
@@ -269,7 +270,17 @@
       }
       // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
       var gameFrame = detail.querySelector(".game-frame");
-      if (gameFrame) { setTimeout(function () { try { gameFrame.focus(); } catch (e) {} }, 300); }
+      if (gameFrame) {
+        setTimeout(function () { try { gameFrame.focus(); } catch (e) {} }, 300);
+        // 点击游戏区域时强制聚焦，确保键盘事件进入游戏（解决失焦按键失灵）
+        gameFrame.addEventListener("click", function () { try { this.focus(); } catch (e) {} });
+        var gameWrap = detail.querySelector(".game-wrap");
+        if (gameWrap) {
+          gameWrap.addEventListener("pointerdown", function (e) {
+            if (e.target !== gameFrame) { try { gameFrame.focus(); } catch (err) {} }
+          });
+        }
+      }
       var closeBtn = detail.querySelector(".work-detail__close");
       if (closeBtn) closeBtn.addEventListener("click", hideDetail);
       var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
