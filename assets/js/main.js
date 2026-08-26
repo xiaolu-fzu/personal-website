@@ -132,8 +132,8 @@
           "<summary>📖 故事原文（同学原创脑洞）</summary>" +
           '<p class="work-story__note">' + escapeHtml(w.story.note || "同学写的原创故事蓝本") + "</p>" +
           '<div class="work-story__imgs">' +
-            '<figure><img src="' + escapeHtml(w.story.img1) + '" alt="故事原文截图 1" loading="lazy"></figure>' +
-            (w.story.img2 ? '<figure><img src="' + escapeHtml(w.story.img2) + '" alt="故事原文截图 2" loading="lazy"></figure>' : "") +
+            '<figure><img src="' + escapeHtml(w.story.img1) + '" alt="故事原文截图 1" loading="lazy" class="story-zoom"></figure>' +
+            (w.story.img2 ? '<figure><img src="' + escapeHtml(w.story.img2) + '" alt="故事原文截图 2" loading="lazy" class="story-zoom"></figure>' : "") +
           "</div>" +
         "</details>";
       }
@@ -148,7 +148,6 @@
     if (w.prototypeUrl) {
       html += '<div class="work-media proto-frame">' +
         '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
-        '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>' +
         "</div>";
     }
     return html;
@@ -159,6 +158,7 @@
     var html = '<div class="work-detail__links">';
     var primaryLabel = (w.results && w.results.length) ? "查看完整报告" : "查看项目";
     if (w.link) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + primaryLabel + ' ↗</a>';
+    if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
     if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "hello@example.com") + '">联系获取更多 ↗</a>';
     html += "</div>";
@@ -302,12 +302,41 @@
   }
   window.addEventListener("resize", applyNavMode);
 
+  /* 故事图点击放大（lightbox） */
+  function initStoryZoom() {
+    document.addEventListener("click", function (e) {
+      var zoomTarget = e.target.closest(".story-zoom");
+      if (zoomTarget) {
+        var lb = document.querySelector(".work-story__lightbox");
+        if (!lb) {
+          lb = document.createElement("div");
+          lb.className = "work-story__lightbox close";
+          lb.setAttribute("role", "dialog");
+          lb.setAttribute("aria-label", "查看大图");
+          lb.addEventListener("click", close)
+          document.body.appendChild(lb);
+        }
+        lb.innerHTML = '<img src="' + zoomTarget.src + '" alt="查看大图">';
+        lb.classList.remove("close");
+        document.body.classList.add("nav-locked");
+      }
+      function close() { if (lb) lb.classList.add("close"); document.body.classList.remove("nav-locked"); }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        var lb = document.querySelector(".work-story__lightbox");
+        if (lb) { lb.classList.add("close"); document.body.classList.remove("nav-locked"); }
+      }
+    });
+  }
+
   function boot() {
     initNavHighlight();
     initNavDrawer();
     applyNavMode();
     initPortfolio();
     initContactForm();
+    initStoryZoom();
     initYear();
   }
 
