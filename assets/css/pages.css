@@ -111,7 +111,7 @@
 /* 原型：手机模拟视口，居中、完整显示不拉伸（桌面/平板用此；手机再压高度） */
 /* 原型展示：白色画布卡片 + 标题 + 手机视口（只显示手机内容） */
 .proto-showcase { margin-top: var(--space-5); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-5); }
-.proto-showcase__label { text-align: center; font-family: var(--font-display); font-size: var(--fs-lg); font-weight: var(--weight-medium); color: var(--text); margin-bottom: var(--space-4); letter-spacing: 0.02em; }
+.proto-showcase__label { text-align: center; font-family: var(--font-display); font-size: var(--fs-xl); font-weight: var(--weight-bold); color: var(--text); margin-bottom: var(--space-4); letter-spacing: 0.04em; }
 .proto-showcase .btn { display: block; width: max-content; margin: var(--space-4) auto 0; }
 .work-media.proto-frame { display: flex; justify-content: center; align-items: flex-start; width: 100%; }
 .work-media.proto-frame .proto-iframe {
