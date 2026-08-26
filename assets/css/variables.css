@@ -1,6 +1,6 @@
 /* ============================================================
    variables.css — 设计令牌（Design Tokens）
-   权威来源：DESIGN.md §1  |  spec.md §6 视觉方向 暗色霓虹/赛博
+   视觉方向：暖琥珀 · 编辑体（米白暖底 + 琥珀橙 + 衬线）
    纯静态，供其余 CSS 用 var() 引用；无 import / 无构建。
    ============================================================ */
 
@@ -10,19 +10,25 @@
   --surface:            #ffffff;                 /* 卡片 / 表面 */
   --surface-2:          #fdf8f1;                 /* 卡片 hover / 嵌套表面 */
   --surface-3:          #f5ede0;                 /* 更亮表面（输入框） */
-  --text:               #2b2118;                 /* 正文主色（深棕） */
-  --text-secondary:     #7a6a55;                 /* 次级文本 */
-  --text-muted:         #a08d75;                 /* 弱化文本 */
-  --neon-cyan:          #b45309;                 /* 主强调（琥珀橙） */
-  --neon-magenta:       #d97706;                 /* 辅强调（橙） */
-  --neon-purple:        #b45309;                 /* 点缀 */
-  --neon-green:         #7f7a3a;                 /* 点缀 */
+  --text:               #2b2118;                 /* 正文主色（深棕，14.6:1） */
+  --text-secondary:     #6b5844;                 /* 次级文本（6.3:1） */
+  --text-muted:         #71634f;                 /* 弱化文本（5.4:1） */
+  --accent:             #b45309;                 /* 主强调（琥珀橙） */
+  --accent-2:           #d97706;                 /* 辅强调（深琥珀） */
+  --accent-3:           #7c3f10;                 /* 第三强调（巧克力棕） */
   --border:             rgba(180,83,9,0.12);     /* 基础描边 */
   --border-strong:      rgba(180,83,9,0.25);     /* 强调描边 */
-  --border-cyan:        rgba(180,83,9,0.35);     /* 主描边 */
-  --border-magenta:     rgba(217,119,6,0.35);    /* 辅描边 */
+  --border-accent:      rgba(180,83,9,0.35);     /* 主描边 */
+  --border-accent-2:    rgba(217,119,6,0.35);    /* 辅描边 */
 
-  /* ---------- 1.2 背景渐变（赛博氛围，纯 CSS） ---------- */
+  /* ---------- 1.1b 分类色（5 类 1:1） ---------- */
+  --cat-data:            #b45309;   /* 数据分析 */
+  --cat-prototype:       #c2410c;   /* 产品原型 · terracotta */
+  --cat-aigc:            #9a3412;   /* AIGC · rust */
+  --cat-game:            #a16207;   /* 网页游戏 · bronze */
+  --cat-tool:            #7c3f10;   /* 工具/开发 · chocolate */
+
+  /* ---------- 1.2 背景渐变（暖琥珀氛围，纯 CSS） ---------- */
   --bg-gradient:
     radial-gradient(ellipse 80% 60% at 20% 0%,   rgba(217,119,6,0.06), transparent 60%),
     radial-gradient(ellipse 70% 55% at 90% 10%,  rgba(180,83,9,0.05), transparent 55%),
@@ -34,13 +40,13 @@
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
 
   /* ---------- 1.4 字号阶梯 ---------- */
-  --fs-xs:   0.75rem;                 /* 12px 时间戳 / 小标签 */
-  --fs-sm:   0.875rem;                /* 14px 次级描述 */
-  --fs-base: 1rem;                    /* 16px 正文 */
-  --fs-lg:   1.125rem;                /* 18px 卡片标题 */
-  --fs-xl:   clamp(1.4rem, 3vw, 1.75rem);   /* h2 */
-  --fs-2xl:  clamp(1.8rem, 4vw, 2.5rem);    /* h1 */
-  --fs-hero: clamp(2.4rem, 6vw, 4rem);      /* HERO 主标题 */
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-lg:   1.125rem;
+  --fs-xl:   clamp(1.4rem, 3vw, 1.75rem);
+  --fs-2xl:  clamp(1.8rem, 4vw, 2.5rem);
+  --fs-hero: clamp(2.4rem, 6vw, 4rem);
   --lh-tight: 1.15;
   --lh-body:  1.6;
   --weight-regular: 400;
@@ -48,16 +54,16 @@
   --weight-bold:    700;
 
   /* ---------- 1.5 间距系统（8px 制） ---------- */
-  --space-1: 0.25rem;   /* 4 */
-  --space-2: 0.5rem;    /* 8 */
-  --space-3: 0.75rem;   /* 12 */
-  --space-4: 1rem;      /* 16 */
-  --space-5: 1.5rem;    /* 24 */
-  --space-6: 2rem;      /* 32 */
-  --space-8: 3rem;      /* 48 */
-  --space-10: 4rem;     /* 64 */
-  --space-12: 6rem;     /* 96 */
-  --section-pad: clamp(4rem, 8vw, 7rem);   /* 纵向区块间距 */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4rem;
+  --space-12: 6rem;
+  --section-pad: clamp(4rem, 8vw, 7rem);
 
   /* ---------- 1.6 圆角 ---------- */
   --radius-sm:   6px;
@@ -66,18 +72,15 @@
   --radius-full: 999px;
   --radius-card: var(--radius-lg);
 
-  /* ---------- 1.7 霓虹辉光 ---------- */
-  /* box-shadow 青色 */
-  --glow-cyan-sm:    0 0 8px rgba(0,229,255,0.25);
-  --glow-cyan-md:    0 0 16px rgba(0,229,255,0.35);
-  --glow-cyan-lg:    0 0 28px rgba(0,229,255,0.5);
-  --glow-cyan-outer: 0 0 0 1px rgba(0,229,255,0.4), 0 0 24px rgba(0,229,255,0.3);
-  /* box-shadow 洋红 */
-  --glow-magenta-md: 0 0 16px rgba(255,46,224,0.35);
-  --glow-magenta-lg: 0 0 28px rgba(255,46,224,0.5);
-  /* text-shadow */
-  --text-glow-cyan:    0 0 6px rgba(0,229,255,0.6), 0 0 12px rgba(0,229,255,0.35);
-  --text-glow-magenta: 0 0 6px rgba(255,46,224,0.6), 0 0 12px rgba(255,46,224,0.35);
+  /* ---------- 1.7 暖琥珀辉光 ---------- */
+  --glow-sm:    0 0 8px rgba(180,83,9,0.20);
+  --glow-md:    0 0 16px rgba(180,83,9,0.28);
+  --glow-lg:    0 0 28px rgba(180,83,9,0.38);
+  --glow-outer: 0 0 0 1px rgba(180,83,9,0.35), 0 0 22px rgba(180,83,9,0.26);
+  --glow-2-md:  0 0 14px rgba(217,119,6,0.30);
+  --glow-2-lg:  0 0 24px rgba(217,119,6,0.40);
+  --text-glow:    0 0 8px rgba(180,83,9,0.38);
+  --text-glow-2:  0 0 8px rgba(217,119,6,0.38);
 
   /* ---------- 1.8 布局与容器 ---------- */
   --container-max: 1200px;

@@ -17,7 +17,7 @@ window.OWNER = {
   email: "18672786151@163.com",
   github: "xiaolu-fzu",
   githubUrl: "https://github.com/xiaolu-fzu",
-  wechatQR: "微信二维码/b59c1e61ff6b95d2141f0a3c2406dc5b.jpg",
+  wechatQR: "微信.jpg",
   tagline: "会用数据找答案，会用AI造东西。从舆情报告到记账App，从AI视频到网页游戏。"
 };
 
@@ -26,6 +26,7 @@ window.WORKS = [
   {
     title: "绝区零 2.7 · X 日语区海外社区监测",
     desc: "对《绝区零》2.7 版本 X 日语区做系统性内容生态监测，定位投放机会、量化商单效率。",
+    value: "6.5 万帖 · 定位投放机会，量化商单效率",
     category: "data",
     year: 2024,
     hue: 190,
@@ -52,6 +53,7 @@ window.WORKS = [
   {
     title: "绝区零 · YouTube 日区长期生态监测",
     desc: "建立长周期跨版本持续性监测体系，覆盖自研爬取 + 官方接口补爬 → 判定引擎 → 固定工作流 → 简报输出全链路。",
+    value: "7+ 版本长周期监测 · 自研爬取到简报全链路",
     category: "data",
     year: 2024,
     hue: 220,
@@ -75,6 +77,7 @@ window.WORKS = [
   {
     title: "星布谷地 CBT2 · 小语种地区舆论监控",
     desc: "围绕《星布谷地》CBT2，对泰/印尼/法/俄四语区进行为期一个月周期性舆情监控，覆盖 YouTube/X/VK。",
+    value: "4 语区舆情监控 · 提前预警 7 大风险",
     category: "data",
     year: 2024,
     hue: 160,
@@ -96,6 +99,7 @@ window.WORKS = [
   {
     title: "欧美 AIGC 用户接受度调研",
     desc: "跨 YouTube/TikTok/X 三大平台，覆盖英/德/法/西语区 AIGC 内容，分析用户接受度、风险结构与平台匹配。",
+    value: "3049 条内容 · 判断 AIGC 接受度与平台匹配",
     category: "data",
     year: 2024,
     hue: 300,
@@ -119,6 +123,7 @@ window.WORKS = [
   {
     title: "鸣潮 · 巴西创作者投资调研",
     desc: "受《鸣潮》项目委托，对巴西 11 位潜在合作创作者做背景调研与风险评估，为投资决策提供依据。",
+    value: "11 位创作者调研 · 规避品牌声誉风险",
     category: "data",
     year: 2024,
     hue: 260,
@@ -141,6 +146,7 @@ window.WORKS = [
   {
     title: "ProListing · 离线记账应用",
     desc: "「一部手机装下全部生活」的离线记账 App，含原型 + 安卓包 + 下载页。",
+    value: "离线记账 App 原型 · J人理想型生活管理",
     idea: "专为「J人」（计划型人格）打造的综合性离线生活管理软件，把多款生活记录与自律计划功能融为一体。坚持「完全理想→绝对安全、功能众多→软件唯一」的产品哲学：数据全部本地存储、绝对安全；功能虽多，却保持唯一的沉浸式体验。目前已完成「记账」与「计划」两大核心模块，未来还有多项开发计划持续迭代。",
     category: "prototype",
     year: 2024,
@@ -156,6 +162,7 @@ window.WORKS = [
   {
     title: "硬币",
     desc: "实现了同学的想法，把脑洞做成可运行/可复现的 AI 视频作品。",
+    value: "把同学脑洞做成可运行的 AI 视频",
     category: "aigc",
     year: 2025,
     hue: 45,
@@ -168,6 +175,7 @@ window.WORKS = [
   {
     title: "荔枝的组会日",
     desc: "与师兄师姐讨论后，用师兄师姐的小猫为主角制作的 AI 视频作品。",
+    value: "以师兄师姐小猫为主角的 AI 视频",
     category: "aigc",
     year: 2025,
     hue: 130,
@@ -181,6 +189,7 @@ window.WORKS = [
   {
     title: "果宝特攻 · 水果机甲肉鸽",
     desc: "水果机甲肉鸽战斗游戏，升级三选一强化，活得更久冲得更远。",
+    value: "水果机甲肉鸽 · 升级三选一强化",
     category: "game",
     year: 2025,
     hue: 90,
@@ -193,6 +202,7 @@ window.WORKS = [
   {
     title: "班尼特 · 炎光试炼",
     desc: "Boss Rush 战斗游戏，对战多关卡 Boss。",
+    value: "多关卡 Boss Rush 战斗",
     category: "game",
     year: 2025,
     hue: 20,
@@ -206,6 +216,7 @@ window.WORKS = [
   {
     title: "LocalMiniDrama · 本地短剧 Mod",
     desc: "改装 LocalMiniDrama：适配 RunningHub 中转站 MiniMax H3、加入 AI 配置停用选项、添加输出分辨率选项。",
+    value: "本地短剧 Mod · 适配 MiniMax H3",
     category: "tool",
     year: 2025,
     hue: 55,

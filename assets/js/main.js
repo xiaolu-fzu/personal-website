@@ -82,12 +82,15 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
+  function slugify(s) {
+    return String(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "").slice(0, 48) || "work";
+  }
 
   function catClass(tag) {
-    if (tag === "data" || tag === "prototype") return "tag--cyan";
-    if (tag === "aigc" || tag === "game") return "tag--magenta";
-    if (tag === "tool") return "tag--green";
-    return "";
+    return { data: "tag--data", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool" }[tag] || "";
+  }
+  function catVar(tag) {
+    return { data: "var(--cat-data)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
     return { data: "数据分析", prototype: "产品原型", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
@@ -109,13 +112,18 @@
 
   function makeCard(work, index) {
     var tags = '<span class="tag ' + catClass(work.category) + '">' + tagLabel(work.category) + "</span>";
+    var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
+    var badge = work.featured ? '<span class="work-card__badge">精选</span>' : "";
     return (
-      '<a class="work-card" href="#work-detail" data-index="' + index + '">' +
-        '<div class="work-card__thumb" style="--work-hue:' + work.hue + '" role="img" aria-label="' + escapeHtml(work.title) + ' 缩略图占位"></div>' +
+      '<a class="work-card" href="#work-detail" data-slug="' + escapeHtml(slugify(work.title)) + '" data-index="' + index + '">' +
+        '<div class="work-card__thumb" style="--cat:' + catVar(work.category) + '" role="img" aria-label="' + escapeHtml(work.title) + ' 缩略图占位">' +
+          '<span class="work-card__thumb-label">' + escapeHtml(tagLabel(work.category)) + "</span>" +
+        "</div>" +
         '<div class="work-card__meta">' +
           '<h3 class="work-card__title">' + escapeHtml(work.title) + "</h3>" +
-          '<span class="work-card__year">' + escapeHtml(work.year) + "</span>" +
+          badge +
         "</div>" +
+        '<div class="work-card__value-row">' + valueHtml + "</div>" +
         '<div class="work-card__tags">' + tags + "</div>" +
       "</a>"
     );
@@ -225,7 +233,7 @@
     if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
 
-    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "hello@example.com") + '">联系获取更多 ↗</a>';
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '">联系获取更多 ↗</a>';
     html += "</div>";
     return html;
   }
@@ -269,6 +277,10 @@
           renderLinks(w) +
         "</div>";
       detail.classList.add("is-open");
+      detail.setAttribute("role", "dialog");
+      detail.setAttribute("aria-label", escapeHtml(w.title));
+      var panelTitle = detail.querySelector(".work-detail__head h2") || detail.querySelector("h2");
+      if (panelTitle) { panelTitle.setAttribute("tabindex", "-1"); panelTitle.focus({ preventScroll: true }); }
       // 报表 主要结论/查看报表表格 切换
       var reportTabs = detail.querySelectorAll(".report-tab");
       if (reportTabs.length) {
@@ -306,6 +318,7 @@
       if (!card) return;
       e.preventDefault();
       openDetail(parseInt(card.getAttribute("data-index"), 10));
+      try { history.replaceState(null, "", "#work-" + card.getAttribute("data-slug")); } catch (err) {}
     });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && detail && detail.classList.contains("is-open")) hideDetail();
@@ -328,6 +341,15 @@
       });
     }
     render("");
+    function openFromHash() {
+      var slug = (location.hash || "").replace("#work-", "");
+      if (!slug) return;
+      var idx = -1;
+      for (var i = 0; i < works.length; i++) { if (slugify(works[i].title) === slug) { idx = i; break; } }
+      if (idx >= 0) openDetail(idx);
+    }
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
   }
 
 
