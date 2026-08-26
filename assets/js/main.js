@@ -130,7 +130,7 @@
         }
         return "<li>" + escapeHtml(t) + "</li>";
       }).join("");
-      resultsHtml = '<div class="report-pane" data-pane="conclusions" hidden><ol class="report-conclusions">' + items + "</ol></div>";
+      resultsHtml = '<div class="report-pane" data-pane="conclusions"><ol class="report-conclusions">' + items + "</ol></div>";
     }
     var hasReport = w.report && w.report.tables && w.report.tables.length;
     if (hasReport) {
