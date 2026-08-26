@@ -336,6 +336,9 @@
     body { padding:0; margin:0; min-height:100vh; }
     .phone { transform:scale(0.5); transform-origin:center center; }
   }
+  /* 去掉 V3 说明条和底部指引，只留手机壳居中 */
+  .note, .note2 { display:none !important; }
+  body > div { display:flex; justify-content:center; align-items:center; width:100%; }
 </style>
 </head>
 <body>
