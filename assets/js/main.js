@@ -120,21 +120,32 @@
     return '<div class="report-table-wrap"><table><thead><tr>' + t.thead.map(function (h) { return "<th>" + escapeHtml(h) + "</th>"; }).join("") + '</tr></thead><tbody>' + rows + "</tbody></table></div>";
   }
   function renderReport(w) {
-    if (w.report && w.report.tables && w.report.tables.length) {
+    var resultsHtml = "";
+    if (w.results && w.results.length) {
+      var items = w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("");
+      resultsHtml = '<div class="report-pane" data-pane="conclusions" hidden><ol class="report-conclusions">' + items + "</ol></div>";
+    }
+    var hasReport = w.report && w.report.tables && w.report.tables.length;
+    if (hasReport) {
       var tablesHtml = w.report.tables.map(function (t) {
         return '<div class="report-block"><h4>' + escapeHtml(t.title) + "</h4>" + renderTableHtml(t) + "</div>";
       }).join("");
+      var reportPane = '<div class="report-pane" data-pane="tables" hidden>' +
+        (w.report.title ? '<h3 class="report-title">' + escapeHtml(w.report.title) + "</h3>" : "") +
+        tablesHtml +
+        "</div>";
+      // 两个切换按钮：主要结论(默认) + 查看报表表格
       return '<div class="work-report">' +
-        '<button type="button" class="report-toggle" aria-expanded="false">📊 查看报表表格</button>' +
-        '<div class="report-body" hidden>' +
-          (w.report.title ? '<h3 class="report-title">' + escapeHtml(w.report.title) + "</h3>" : "") +
-          tablesHtml +
+        '<div class="report-tabs">' +
+          (resultsHtml ? '<button type="button" class="report-tab is-active" data-tab="conclusions">主要结论</button>' : "") +
+          '<button type="button" class="report-tab" data-tab="tables">📊 查看报表表格</button>' +
         "</div>" +
+        (resultsHtml ? resultsHtml : "") +
+        reportPane +
         "</div>";
     }
-    if (!w.results || !w.results.length) return "";
-    var items = w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("");
-    return '<div class="work-report"><h3>关键结论</h3><ol>' + items + "</ol></div>";
+    if (!resultsHtml) return "";
+    return '<div class="work-report"><h3>主要结论</h3><ol class="report-conclusions">' + w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("") + "</ol></div>";
   }
 
   /* 站内互动媒体（video / 游戏 iframe / 原型 iframe） */
@@ -226,14 +237,17 @@
           renderLinks(w) +
         "</div>";
       detail.classList.add("is-open");
-      // 报表表格 点击展开/收起
-      var reportToggle = detail.querySelector(".report-toggle");
-      if (reportToggle) {
-        reportToggle.addEventListener("click", function () {
-          var body = reportToggle.nextElementSibling;
-          var expanded = reportToggle.getAttribute("aria-expanded") === "true";
-          reportToggle.setAttribute("aria-expanded", expanded ? "false" : "true");
-          if (body) body.hidden = expanded;
+      // 报表 主要结论/查看报表表格 切换
+      var reportTabs = detail.querySelectorAll(".report-tab");
+      if (reportTabs.length) {
+        reportTabs.forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            var name = tab.getAttribute("data-tab");
+            reportTabs.forEach(function (t) { t.classList.toggle("is-active", t === tab); });
+            detail.querySelectorAll(".report-pane").forEach(function (p) {
+              p.hidden = p.getAttribute("data-pane") !== name;
+            });
+          });
         });
       }
       // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
