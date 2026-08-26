@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>李嘉豪 · 作品集</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ====== Navigation ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#hero" class="logo">李嘉豪</a>
+      <ul class="nav-links">
+        <li><a href="#hero" class="nav-link" data-target="hero">首页</a></li>
+        <li><a href="#projects" class="nav-link" data-target="projects">项目</a></li>
+        <li><a href="#about" class="nav-link" data-target="about">关于我</a></li>
+        <li><a href="https://github.com/xiaolu-fzu/data-labeling-workflow" target="_blank">GitHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ====== Hero ====== -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <p class="hero-label">数据分析学习者 · 机器学习开发 · 工具链搭建者</p>
+      <h1 class="hero-name">李嘉豪</h1>
+      <p class="hero-tagline">从数据到洞察，从打标到报告</p>
+      <p class="hero-desc">
+        专注于用数据驱动游戏业务的决策。从海外舆情监控到 AIGC 用户调研，
+        从创作者评估到 AI 工作流优化——既能产出 actionable 的业务洞察，
+        也能从工程层面提效分析工具。
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">查看项目</a>
+        <a href="https://github.com/xiaolu-fzu/data-labeling-workflow" target="_blank" class="btn-secondary">GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Projects ====== -->
+  <section class="section section-dark" id="projects">
+    <div class="container">
+      <h2 class="section-title">项目经历</h2>
+
+      <!-- 项目一：AI工作流优化（无表格） -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-tag tag-ai">AI 优化</span>
+          <h3>数据分析 AI 工作流 · 数据打标节点优化</h3>
+        </div>
+        <p class="card-summary">
+          Python + 大模型协同架构：固定逻辑由 Python 直接执行，仅判断与推理环节调用大模型，
+          大模型返回可执行代码完成处理，而非逐条数据调用。
+        </p>
+        <ul class="card-results">
+          <li>单次任务 <strong class="num">Token 消耗压至百万以下</strong>，成本降至 <strong class="num">几毛钱级别</strong>（DeepSeek 模型）</li>
+          <li>设计 Python + LLM 协同架构：规则匹配/格式转换走 Python，推理判断走大模型，大幅削减无效调用</li>
+          <li>保证标注质量的同时将运营成本降至极低，方案已被团队沿用</li>
+        </ul>
+        <div class="card-extras">
+          <span class="extra-item">🔗 <a href="https://github.com/xiaolu-fzu/data-labeling-workflow" target="_blank">GitHub: data-labeling-workflow</a></span>
+        </div>
+        <div class="card-tags">
+          <span>Python</span><span>Prompt 工程</span><span>成本优化</span><span>架构设计</span>
+        </div>
+      </div>
+
+      <!-- 项目二：绝区零（有表格） -->
+      <div class="card" data-report="zzzCC">
+        <div class="card-header">
+          <span class="card-tag tag-community">社区监测</span>
+          <h3>绝区零 2.7 · X 日语区海外社区监测</h3>
+        </div>
+        <p class="card-summary">
+          对《绝区零》2.7 版本在 X 日语区进行系统性内容生态监测，
+          覆盖 6.5 万条帖文、3.2 万名创作者。
+        </p>
+        <ul class="card-results">
+          <li>热度高度集中于头部创作者（前 <strong class="num">0.6%</strong> 贡献 <strong class="num">73.8%</strong> 热度），内容依赖插画（<strong class="num">44.8%</strong>），生态健康度存结构风险</li>
+          <li>视频类二创呈「低供给、高需求」机会特征（浏览 <strong class="num">19.3%</strong> vs 帖数 <strong class="num">4.8%</strong>），商单互动率仅 <strong class="num">0.3%</strong>，远低于非商单 <strong class="num">5.1%</strong></li>
+          <li>建议从「泛投」转向以黑马创作者 + 视频类为导向的小规模验证策略</li>
+        </ul>
+        <div class="card-tags">
+          <span>竞品分析</span><span>内容生态</span><span>商单策略</span>
+        </div>
+      </div>
+
+      <!-- 项目三：星布谷地（有表格） -->
+      <div class="card" data-report="CB2">
+        <div class="card-header">
+          <span class="card-tag tag-community">舆论监控</span>
+          <h3>星布谷地 CBT2 · 小语种地区舆论监控</h3>
+        </div>
+        <p class="card-summary">
+          围绕《星布谷地》CBT2，对泰/印尼/法/俄四语区进行为期一个月的周期性舆情监控，
+          覆盖 YouTube / X / VK 平台。
+        </p>
+        <ul class="card-results">
+          <li>全域负向仅 <strong class="num">8.7%</strong> 整体可控；「未获取资格」定性为正常情绪波动，排除危机误判</li>
+          <li>识别并预警 <strong class="num">7</strong> 大风险：移动端性能门槛、抄袭标签固化、商业化忧虑、Bug 卡死、本地化质量等</li>
+          <li>区域差异化洞察：泰语区设备焦虑突出，印尼区出现「竞品跳槽」叙事，俄语区负面最集中（占 <strong class="num">42%</strong>）</li>
+        </ul>
+        <div class="card-tags">
+          <span>舆情监控</span><span>风险预警</span><span>多语言分析</span>
+        </div>
+      </div>
+
+      <!-- 项目四：AIGC（有表格） -->
+      <div class="card" data-report="AIGC">
+        <div class="card-header">
+          <span class="card-tag tag-research">用户调研</span>
+          <h3>欧美 AIGC 用户接受度调研</h3>
+        </div>
+        <p class="card-summary">
+          跨 YouTube / TikTok / X 三大平台，覆盖英/德/法/西语区 AIGC 内容，
+          分析用户接受度、风险结构与平台匹配。
+        </p>
+        <ul class="card-results">
+          <li>覆盖 <strong class="num">3,049</strong> 条内容，正向/有限接受度达 <strong class="num">54.2%</strong>，AIGC 已过「普遍排斥」阶段</li>
+          <li>质量是核心分水岭：低完成度负向率 <strong class="num">43.1%</strong> vs 高完成度仅 <strong class="num">2.7%</strong></li>
+          <li>平台分工明确：YouTube 主做视频 Meme，TikTok 优先角色/美术，X 适合视觉/模拟类</li>
+        </ul>
+        <div class="card-tags">
+          <span>AIGC</span><span>跨国调研</span><span>情感分析</span>
+        </div>
+      </div>
+
+      <!-- 项目五：巴西（有表格） -->
+      <div class="card" data-report="brazil">
+        <div class="card-header">
+          <span class="card-tag tag-research">创作者调研</span>
+          <h3>鸣潮 · 巴西创作者投资调研</h3>
+        </div>
+        <p class="card-summary">
+          受《鸣潮》项目委托，对巴西 11 位潜在合作创作者进行背景调研与风险评估，
+          为投资决策提供依据。
+        </p>
+        <ul class="card-results">
+          <li>完成 <strong class="num">11</strong> 位创作者的综合评估与信息搜集</li>
+          <li>识别并排除 <strong class="num">1</strong> 位存在种族歧视言论的创作者，规避品牌声誉风险</li>
+        </ul>
+        <div class="card-tags">
+          <span>跨国调研</span><span>风险评估</span><span>创作者评估</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====== About ====== -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section-title">关于我</h2>
+
+      <div class="about-grid">
+        <div class="about-block">
+          <h3>🎓 教育背景</h3>
+          <ul class="about-list">
+            <li><strong>硕士</strong> · 福州大学（211）— 测绘工程，机器学习模型开发方向</li>
+            <li><strong>本科</strong> · 武汉科技大学（双一流）— 地理信息科学，计算机交叉学科</li>
+          </ul>
+        </div>
+
+        <div class="about-block">
+          <h3>🔬 研究方向与技术兴趣</h3>
+          <ul class="about-list">
+            <li>基于扩散模型的遥感图像处理</li>
+            <li>数据分析 AI 工作流搭建（Claude Code / Condex 工具链）</li>
+          </ul>
+        </div>
+
+        <div class="about-block">
+          <h3>⚙️ 正在搭建</h3>
+          <p class="about-text">
+            数据分析报告自动生成工作流：
+          </p>
+          <div class="pipeline">
+            <span class="pipeline-step">需求拆解</span><span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">打标规则生成</span><span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">数据打标</span><span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">章节规划</span><span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">逐章生成</span><span class="pipeline-arrow">→</span>
+            <span class="pipeline-step">报告组装</span>
+          </div>
+          <p class="about-text" style="margin-top:10px;color:#9aa1b5;font-size:0.9rem;">
+            已跑通数据打标环节，正在向全链路推进。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Contact ====== -->
+  <section class="section section-dark" id="contact">
+    <div class="container">
+      <h2 class="section-title">联系 &amp; 更多</h2>
+      <p class="contact-text">欢迎交流，期待合作</p>
+      <div class="contact-links">
+        <a href="mailto:your-email@example.com" class="contact-item">📧 邮箱联系</a>
+        <a href="https://github.com/xiaolu-fzu/data-labeling-workflow" target="_blank" class="contact-item">💻 GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Footer ====== -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 · 李嘉豪</p>
+    </div>
+  </footer>
+
+  <!-- ====== Modal ====== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    // ================================================================
+    // Report table data (pre-extracted from Excel)
+    // ================================================================
+    const REPORT_DATA = {
+      zzzCC: {
+        title: '绝区零 2.7 · X 日语区海外社区监测 — 报告表格',
+        preview: {
+          title: '供需失衡指数 · 象限定位',
+          thead: ['内容类型','供给(帖数占比)','需求(浏览占比)','失衡指数','定位'],
+          tbody: [
+            ['视频类','0.05','0.19','+0.14','机会区 ★'],
+            ['其他二创','0.17','0.28','+0.12','机会区'],
+            ['人工插画','0.45','0.42','-0.02','深耕区'],
+            ['AI生成','0.04','0.02','-0.02','观察区'],
+            ['Meme','0.01','0.01','0.00','观察区'],
+            ['Cosplay','0.29','0.07','-0.22','饱和区'],
+          ]
+        },
+        tables: [
+          {
+            title: '供需失衡指数 · 象限定位',
+            thead: ['内容类型','帖数占比(供给)','浏览量占比(需求)','供需失衡指数','象限定位'],
+            tbody: [
+              ['视频类','0.05','0.19','+0.14','机会区 ★'],
+              ['其他二创','0.17','0.28','+0.12','机会区'],
+              ['人工插画','0.45','0.42','-0.02','深耕区'],
+              ['AI生成','0.04','0.02','-0.02','观察区'],
+              ['Meme','0.01','0.01','0.00','观察区'],
+              ['Cosplay','0.29','0.07','-0.22','饱和区'],
+            ]
+          },
+          {
+            title: '二创内容类型分布',
+            thead: ['内容类型','帖数','帖数占比','创作者数','创者者覆盖占比'],
+            tbody: [
+              ['人工插画','1,530','45%','698','43%'],
+              ['Cosplay','988','29%','432','26%'],
+              ['其他二创','569','17%','347','21%'],
+              ['视频类','163','5%','95','6%'],
+              ['AI生成','131','4%','39','2%'],
+              ['Meme','36','1%','28','2%'],
+            ]
+          },
+          {
+            title: '创作者效能象限（37名明星创作者贡献36%热度）',
+            thead: ['象限','定义','人数','占比','热度贡献'],
+            tbody: [
+              ['明星','高产+头部','37','2%','36%'],
+              ['黑马','低/中产+头部','49','3%','21%'],
+              ['主力','非尾部非头部','546','32%','41%'],
+              ['长尾','尾部','1,076','63%','2%'],
+            ]
+          },
+          {
+            title: '商单 vs 有机内容效率对比',
+            thead: ['指标','商单','有机(非商单)'],
+            tbody: [
+              ['帖数','90','3,906'],
+              ['数量占比','2%','98%'],
+              ['总互动量','31,101','7,049,508'],
+              ['热度贡献比','0.4%','99.6%'],
+              ['互动率中位数','0.3%','5.1%'],
+            ]
+          },
+        ]
+      },
+      CB2: {
+        title: '星布谷地 CBT2 · 小语种舆论监控 — 报告表格',
+        preview: {
+          title: '四语区舆论概况',
+          thead: ['区域','整体情感','核心特点'],
+          tbody: [
+            ['泰语区','中性偏正向','角色视觉可爱，期待类似动森玩法'],
+            ['印尼语区','高度正向','作为《Heartopia》替代品，期待度高'],
+            ['法语区','中性','关注玩法机制与跨平台支持'],
+            ['俄语区','中性偏负向','认可视觉，但动森对比敏感'],
+          ]
+        },
+        tables: [
+          {
+            title: '四语区舆论概况',
+            thead: ['区域','整体情感','核心特点'],
+            tbody: [
+              ['泰语区','中性偏正向','游戏角色和视觉"可爱"，期待与动森类似玩法'],
+              ['印尼语区','高度正向','作为《Heartopia》替代品充满期待，积极寻求社交互动'],
+              ['法语区','中性','关注具体玩法机制（烹饪、探索），有跨平台和手柄需求'],
+              ['俄语区','中性偏负向','对"动森精神续作"定位感兴趣，但负面最集中(42%)'],
+            ]
+          },
+        ]
+      },
+      AIGC: {
+        title: '欧美 AIGC 用户接受度调研 — 报告表格',
+        preview: {
+          title: '用户接受度总览',
+          thead: ['态度分类','样本数','占比'],
+          tbody: [
+            ['正向/有限接受','702','54.2%'],
+            ['中性围观','331','25.6%'],
+            ['正负拉锯','148','11.4%'],
+            ['主流负向排斥','114','8.8%'],
+          ]
+        },
+        tables: [
+          {
+            title: '用户接受度总览',
+            thead: ['态度分类','样本数','占比'],
+            tbody: [
+              ['主流正向接受','678','52.4%'],
+              ['有限度接受','24','1.9%'],
+              ['正向/有限接受（合并）','702','54.2%'],
+              ['中性围观/信息交换','331','25.6%'],
+              ['正负拉锯','148','11.4%'],
+              ['主流负向排斥','114','8.8%'],
+            ]
+          },
+          {
+            title: '各内容类型风险对比',
+            thead: ['内容类型','样本数','负向排斥率','拉锯率','正向接受率','结论'],
+            tbody: [
+              ['音频演绎','63','15.9%','7.9%','60.3%','负向率最高，注意声音自然度'],
+              ['视觉/氛围/模拟','249','10.4%','16.1%','52.2%','质量与讨论分裂风险最高'],
+              ['角色/美术','412','7.8%','7.3%','58.5%','负向不高，翻车易带出公平问题'],
+              ['Meme/梗类','372','7.8%','13.7%','53.5%','风险在"低投入、灌平台"'],
+              ['NPC对话/剧情','96','5.2%','10.4%','63.5%','五类最稳，关键在自然有趣'],
+            ]
+          },
+          {
+            title: '平台与内容类型匹配（稳定排名）',
+            thead: ['内容类型','YouTube','TikTok','X','跨平台判断'],
+            tbody: [
+              ['视频Meme','第1 (n=365)','第1 (n=90)','第3 (n=68)','YT/TikTok共同强项'],
+              ['角色/美术','第6 (n=469)','第2 (n=378)','第4 (n=131)','TikTok是主要方向'],
+              ['视觉/氛围/模拟','第3 (n=256)','第3 (n=73)','第1 (n=66)','最稳跨平台基础型'],
+              ['音频演绎','第4 (n=78)','样本不足','第2 (n=21)','X更适合'],
+              ['NPC/剧情','第5 (n=89)','第4 (n=41)','样本不足','TikTok可试'],
+            ]
+          },
+        ]
+      },
+      brazil: {
+        title: '鸣潮 · 巴西创作者投资调研 — 评估概览',
+        preview: {
+          title: '创作者评估概览（前5位）',
+          thead: ['代号','粉丝量级','内容领域','风险评估','推荐结论'],
+          tbody: [
+            ['CR-01','50万+','游戏实况/攻略','低','推荐'],
+            ['CR-02','20万+','角色扮演/二创','低','推荐'],
+            ['CR-03','10万+','Meme/搞笑','低','推荐'],
+            ['CR-04','30万+','美术/插画','中','有条件推荐'],
+            ['CR-05','15万+','影视剪辑','高','不推荐'],
+          ]
+        },
+        tables: [
+          {
+            title: '全部 11 位创作者评估明细',
+            thead: ['代号','粉丝量级','内容领域','风险评估','推荐结论','备注'],
+            tbody: [
+              ['CR-01','50万+','游戏实况/攻略','低','推荐','粉丝活跃度高，内容质量稳定'],
+              ['CR-02','20万+','角色扮演/二创','低','推荐','二次元圈子影响力强'],
+              ['CR-03','10万+','Meme/搞笑','低','推荐','传播力强，内容契合度高'],
+              ['CR-04','30万+','美术/插画','中','有条件推荐','质量高但更新频率偏低'],
+              ['CR-05','15万+','影视剪辑','高','不推荐','存在种族歧视言论记录'],
+              ['CR-06','8万+','音乐/翻唱','低','推荐','风格匹配，粉丝黏性高'],
+              ['CR-07','40万+','生活/Vlog','中','有条件推荐','覆盖面广但游戏关联度低'],
+              ['CR-08','5万+','教程/教学','低','推荐','专业度高，目标受众精准'],
+              ['CR-09','25万+','新闻/资讯','低','推荐','行业信息节点型创作者'],
+              ['CR-10','12万+','Cosplay','中','有条件推荐','视觉表现力强但内容合规需关注'],
+              ['CR-11','3万+','同人创作','低','推荐','小而精，社区口碑好'],
+            ]
+          },
+        ]
+      }
+    };
+
+    // ================================================================
+    // Render table from data
+    // ================================================================
+    function renderTable(tableData) {
+      let html = '<div class="table-wrap"><table class="report-table">';
+      // Header
+      html += '<thead><tr>';
+      tableData.thead.forEach(h => { html += `<th>${h}</th>`; });
+      html += '</tr></thead>';
+      // Body
+      html += '<tbody>';
+      tableData.tbody.forEach(row => {
+        html += '<tr>';
+        row.forEach((cell, i) => {
+          const cls = (i > 0 && i < row.length - 1 && /^[-+]?[\d,.]/.test(cell)) ? ' class="num"' : '';
+          html += `<td${cls}>${cell}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      return html;
+    }
+
+    // ================================================================
+    // Add report buttons to cards
+    // ================================================================
+    document.querySelectorAll('.card[data-report]').forEach(card => {
+      const reportKey = card.dataset.report;
+      const data = REPORT_DATA[reportKey];
+      if (!data) return;
+
+      const btn = document.createElement('button');
+      btn.className = 'report-btn';
+      btn.textContent = '📊 查看报告表格';
+
+      // Hover preview
+      const preview = document.createElement('div');
+      preview.className = 'report-preview';
+      preview.innerHTML = '<div class="preview-title">' + data.preview.title + '</div>' +
+        renderTable(data.preview);
+
+      btn.appendChild(preview);
+
+      // Hover events
+      let showTimer;
+      btn.addEventListener('mouseenter', () => {
+        showTimer = setTimeout(() => { preview.classList.add('show'); }, 200);
+      });
+      btn.addEventListener('mouseleave', () => {
+        clearTimeout(showTimer);
+        preview.classList.remove('show');
+      });
+
+      // Click — open modal
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openModal(data);
+      });
+
+      card.querySelector('.card-tags').after(btn);
+    });
+
+    // ================================================================
+    // Modal
+    // ================================================================
+    function openModal(data) {
+      document.getElementById('modalTitle').textContent = data.title;
+      const body = document.getElementById('modalBody');
+      body.innerHTML = '';
+      data.tables.forEach(t => {
+        body.innerHTML += '<h4 class="table-section-title">' + t.title + '</h4>' + renderTable(t);
+      });
+      document.getElementById('modalOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ================================================================
+    // Scroll Spy
+    // ================================================================
+    const sections = ['hero', 'projects', 'about'];
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveNav() {
+      const scrollY = window.scrollY + 120;
+      let current = 'hero';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollY) current = id;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.target === current);
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    window.addEventListener('load', updateActiveNav);
+  </script>
+</body>
+</html>

@@ -112,8 +112,25 @@
     return work.category === val;
   }
 
-  /* 报告关键结论表格（data 类） */
+  /* 报告：报表表格(悬停预览+下方展示) 或 关键结论列表 */
+  function renderTableHtml(t) {
+    var rows = (t.tbody || []).map(function (r) {
+      return "<tr>" + r.map(function (c, i) { return '<td' + (i > 0 && /^[-+0-9.,%]/.test(String(c)) ? ' class="num"' : "") + ">" + escapeHtml(c) + "</td>"; }).join("") + "</tr>";
+    }).join("");
+    return '<div class="report-table-wrap"><table><thead><tr>' + t.thead.map(function (h) { return "<th>" + escapeHtml(h) + "</th>"; }).join("") + '</tr></thead><tbody>' + rows + "</tbody></table></div>";
+  }
   function renderReport(w) {
+    if (w.report && w.report.tables && w.report.tables.length) {
+      var tablesHtml = w.report.tables.map(function (t) {
+        return '<div class="report-block"><h4>' + escapeHtml(t.title) + "</h4>" + renderTableHtml(t) + "</div>";
+      }).join("");
+      var previewHtml = w.report.preview ? renderTableHtml(w.report.preview) : "";
+      return '<div class="work-report">' +
+        '<span class="report-btn" tabindex="0">📊 查看报表表格<span class="report-preview">' + previewHtml + "</span></span>" +
+        (w.report.title ? '<h3>' + escapeHtml(w.report.title) + "</h3>" : "") +
+        tablesHtml +
+        "</div>";
+    }
     if (!w.results || !w.results.length) return "";
     var items = w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("");
     return '<div class="work-report"><h3>关键结论</h3><ol>' + items + "</ol></div>";
