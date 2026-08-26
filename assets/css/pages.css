@@ -7,15 +7,11 @@
 .bg-grid {
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background-image:
-    linear-gradient(rgba(180,83,9,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180,83,9,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(180,83,9,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,83,9,0.02) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
-}
-.bg-scanlines {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 4px);
 }
 
 /* ==================== 页面头（Portfolio/About/Contact 共用） ==================== */
@@ -35,12 +31,12 @@
 .hero__grid-layer {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-image:
-    linear-gradient(rgba(180,83,9,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180,83,9,0.05) 1px, transparent 1px);
+    linear-gradient(rgba(180,83,9,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,83,9,0.03) 1px, transparent 1px);
   background-size: 48px 48px;
   transform: perspective(600px) rotateX(42deg) scale(1.6);
   transform-origin: center bottom;
-  opacity: 0.5;
+  opacity: 0.14;
   mask-image: linear-gradient(to top, #000, transparent 85%);
   -webkit-mask-image: linear-gradient(to top, #000, transparent 85%);
 }
