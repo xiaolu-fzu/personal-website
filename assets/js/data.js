@@ -101,7 +101,7 @@ window.WORKS = [
     category: "prototype",
     year: 2024,
     hue: 200,
-    prototypeUrl: "https://xiaolu-fzu.github.io/prolist-prototype/",
+    prototypeUrl: "prototype/prolist.html",
     downloadUrl: "https://xiaolu-fzu.github.io/prolist-download/",
     platform: "Web 原型 · 安卓 App · 下载页",
     keywords: ["产品原型", "移动端", "离线记账"],
