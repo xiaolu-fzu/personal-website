@@ -108,12 +108,13 @@
 /* 站内互动媒体（video / 原型 / 游戏 iframe） */
 .work-media { margin-top: var(--space-5); }
 .work-media iframe { display: block; width: 100%; max-width: 100%; overflow: hidden; }
-/* 原型：手机模拟视口，居中、完整显示不拉伸 */
+/* 原型：手机模拟视口，居中、完整显示不拉伸（桌面/平板用此；手机再压高度） */
 .work-media.proto-frame { text-align: center; }
 .work-media.proto-frame .proto-iframe {
   display: inline-block; margin: 0 auto; vertical-align: top;
-  width: 390px; max-width: 100%;
-  height: min(844px, 76vh);
+  width: min(100%, 400px); max-width: 100%;
+  height: min(844px, 80vh);
+  max-height: min(760px, 80vh);
   border: 0; border-radius: var(--radius-md); background: var(--surface);
 }
 .work-media video { display: block; width: 100%; max-width: 100%; }
@@ -184,6 +185,7 @@
 @media (max-width: 1024px) {
   .works-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: 1fr; }
+  .work-media.proto-frame .proto-iframe { height: 520px; max-height: 520px; }
 }
 
 /* 手机 <768px */

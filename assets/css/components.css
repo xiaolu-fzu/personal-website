@@ -45,7 +45,7 @@
 }
 
 /* 汉堡按钮（默认显示；桌面 ≥768px 隐藏，见 pages.css）
-   按钮内为内联文本「☰」，任何渲染环境都稳定显示 */
+   按钮内为内联文本「☰」，不依赖伪元素；任何渲染环境都稳定显示 */
 .nav__toggle {
   display: inline-flex; appearance: none; border: 0; cursor: pointer;
   color: var(--text);
