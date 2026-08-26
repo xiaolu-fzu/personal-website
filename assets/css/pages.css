@@ -109,9 +109,9 @@
 .work-media { margin-top: var(--space-5); }
 .work-media iframe { display: block; width: 100%; max-width: 100%; overflow: hidden; }
 /* 原型：手机模拟视口，居中、完整显示不拉伸（桌面/平板用此；手机再压高度） */
-.work-media.proto-frame { text-align: center; }
+.work-media.proto-frame { display: flex; justify-content: center; align-items: flex-start; width: 100%; }
 .work-media.proto-frame .proto-iframe {
-  display: inline-block; margin: 0 auto; vertical-align: top;
+  display: block; margin: 0 auto;
   width: min(100%, 700px); max-width: 100%;
   height: min(1400px, 88vh);
   max-height: min(1300px, 88vh);
@@ -206,5 +206,6 @@
   .timeline__item::before { left: calc(-1 * var(--space-5) + 4px); }
   .work-detail__card { padding: var(--space-4); }
   .work-media iframe { height: 520px; }
+  .work-media.proto-frame .proto-iframe { height: min(1400px, 88vh); max-height: min(1300px, 88vh); }
   .filter-btn { flex: 0 0 auto; padding: var(--space-1) var(--space-2); font-size: var(--fs-xs); }
 }
