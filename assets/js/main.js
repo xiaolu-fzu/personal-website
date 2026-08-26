@@ -202,6 +202,7 @@
           '<div class="work-detail__tags">' + catTags + "</div>" +
           (kwTags ? '<div class="work-detail__kws">' + kwTags + "</div>" : "") +
           '<p class="work-detail__desc">' + escapeHtml(w.desc) + "</p>" +
+          (w.idea ? '<div class="work-detail__idea"><h4>设计理念</h4><p>' + escapeHtml(w.idea) + "</p></div>" : "") +
           renderReport(w) +
           renderMedia(w) +
           renderLinks(w) +
