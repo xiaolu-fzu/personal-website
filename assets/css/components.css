@@ -9,7 +9,7 @@
   position: sticky; top: 0; z-index: var(--z-nav);
   height: var(--nav-height);
   display: flex; align-items: center;
-  background: rgba(10,10,15,0.75);
+  background: rgba(255,255,255,0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
@@ -78,7 +78,7 @@
   border-radius: var(--radius-md); color: var(--text);
   font-size: var(--fs-xl); font-family: var(--font-display);
 }
-.nav-drawer__link:hover { background: rgba(0,229,255,0.08); color: var(--neon-cyan); }
+.nav-drawer__link:hover { background: rgba(180,83,9,0.08); color: var(--neon-cyan); }
 
 .nav-overlay {
   position: fixed; inset: 0; z-index: calc(var(--z-overlay) - 1);
@@ -101,7 +101,7 @@ body.nav-locked { overflow: hidden; }
   transition: all var(--transition-base);
 }
 .btn-primary {
-  background: linear-gradient(135deg, #00e5ff, #00b8e0);
+  background: linear-gradient(135deg, #b45309, #d97706);
   color: #071018; box-shadow: var(--glow-cyan-md);
 }
 .btn-primary:hover {
@@ -118,12 +118,12 @@ body.nav-locked { overflow: hidden; }
   color: var(--neon-cyan);
 }
 .btn-ghost:hover {
-  background: rgba(0,229,255,0.08); color: var(--text);
+  background: rgba(180,83,9,0.08); color: var(--text);
   border-color: var(--neon-cyan); box-shadow: var(--glow-cyan-sm);
 }
 
 .btn-accent {
-  background: linear-gradient(135deg, #ff2ee0, #ff2a9e);
+  background: linear-gradient(135deg, #d97706, #e8912d);
   color: #18020f; box-shadow: var(--glow-magenta-md);
 }
 .btn-accent:hover { transform: translateY(-2px); box-shadow: var(--glow-magenta-lg); }
@@ -177,9 +177,9 @@ body.nav-locked { overflow: hidden; }
   transition: all var(--transition-fast);
 }
 .tag--cyan { color: var(--neon-cyan); border-color: var(--border-cyan); }
-.tag--cyan:hover { background: rgba(0,229,255,0.08); box-shadow: var(--glow-cyan-sm); }
+.tag--cyan:hover { background: rgba(180,83,9,0.08); box-shadow: var(--glow-cyan-sm); }
 .tag--magenta { color: var(--neon-magenta); border-color: var(--border-magenta); }
-.tag--magenta:hover { background: rgba(255,46,224,0.08); box-shadow: var(--glow-magenta-md); }
+.tag--magenta:hover { background: rgba(217,119,6,0.08); box-shadow: var(--glow-magenta-md); }
 .tag--green { color: var(--neon-green); border-color: rgba(57,255,20,0.35); }
 .tag--green:hover { background: rgba(57,255,20,0.08); box-shadow: 0 0 8px rgba(57,255,20,0.25); }
 
