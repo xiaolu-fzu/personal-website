@@ -194,7 +194,7 @@
     }
     if (w.prototypeUrl) {
       html += '<div class="proto-showcase">' +
-        '<p class="proto-showcase__label">产品原型展示</p>' +
+        '<p class="proto-showcase__label">产品原型展示（点击可交互）</p>' +
         '<div class="work-media proto-frame">' +
           '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
         '</div>' +
