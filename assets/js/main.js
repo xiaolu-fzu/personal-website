@@ -82,16 +82,14 @@
     return list.slice().sort(function (a, b) {
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
       if (a.year !== b.year) return b.year - a.year;
-      var pa = catPriority(a.tags[0]), pb = catPriority(b.tags[0]);
+      var pa = catPriority(a.category), pb = catPriority(b.category);
       if (pa !== pb) return pa - pb;
       return String(a.title).localeCompare(String(b.title), "zh-Hans-CN");
     });
   }
 
   function makeCard(work, index) {
-    var tags = work.tags.map(function (t) {
-      return '<span class="tag ' + catClass(t) + '">' + tagLabel(t) + "</span>";
-    }).join("");
+    var tags = '<span class="tag ' + catClass(work.category) + '">' + tagLabel(work.category) + "</span>";
     return (
       '<a class="work-card" href="#work-detail" data-index="' + index + '">' +
         '<div class="work-card__thumb" style="--work-hue:' + work.hue + '" role="img" aria-label="' + escapeHtml(work.title) + ' 缩略图占位"></div>' +
@@ -106,19 +104,12 @@
 
   function meetsFilter(work, val) {
     if (!val) return true;
-    return work.tags.indexOf(val) !== -1;
+    return work.category === val;
   }
 
   /* 报告关键结论表格（data 类） */
   function renderReport(w) {
     if (!w.results || !w.results.length) return "";
-    var isObj = typeof w.results[0] === "object" && w.results[0] !== null;
-    if (isObj) {
-      var rows = w.results.map(function (r) {
-        return '<tr><th scope="row">' + escapeHtml(r.label) + "</th><td>" + escapeHtml(r.value) + "</td></tr>";
-      }).join("");
-      return '<div class="work-report"><h3>关键结论</h3><table>' + rows + "</table></div>";
-    }
     var items = w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("");
     return '<div class="work-report"><h3>关键结论</h3><ol>' + items + "</ol></div>";
   }
@@ -150,8 +141,8 @@
         "</div>";
     }
     if (w.prototypeUrl) {
-      html += '<div class="work-media">' +
-        '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" width="100%" height="640" style="border:0;border-radius:var(--radius-md);background:var(--surface)"></iframe>' +
+      html += '<div class="work-media proto-frame">' +
+        '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
         '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>' +
         "</div>";
     }
@@ -189,9 +180,7 @@
     function openDetail(index) {
       var w = works[index];
       if (!w || !detail) return;
-      var catTags = w.tags.map(function (t) {
-        return '<span class="tag ' + catClass(t) + '">' + tagLabel(t) + "</span>";
-      }).join("");
+      var catTags = '<span class="tag ' + catClass(w.category) + '">' + tagLabel(w.category) + "</span>";
       var kwTags = (w.keywords || []).map(function (k) {
         return '<span class="tag">' + escapeHtml(k) + "</span>";
       }).join("");
@@ -265,7 +254,7 @@
         return;
       }
       if (status) {
-        status.textContent = "✔ 已收到你的留言（前端占位，未真正发送）。正式上线后会接入后端或表单服务。";
+        status.textContent = "✔ 已收到你的留言，我会尽快联系你。";
         status.style.color = "var(--neon-cyan)";
       }
       form.reset();
@@ -278,9 +267,22 @@
     if (el) el.textContent = new Date().getFullYear();
   }
 
+  /* JS 驱动的导航模式：<768 显示汉堡+隐藏链接，≥768 反之（兜底 CSS 媒体查询，
+     确保各渲染环境都正确显示移动端汉堡） */
+  function applyNavMode() {
+    var toggle = document.querySelector(".nav__toggle");
+    var list = document.querySelector(".nav__list");
+    if (!toggle || !list) return;
+    var mobile = window.innerWidth < 768;
+    toggle.style.display = mobile ? "inline-flex" : "none";
+    list.style.display = mobile ? "none" : "flex";
+  }
+  window.addEventListener("resize", applyNavMode);
+
   function boot() {
     initNavHighlight();
     initNavDrawer();
+    applyNavMode();
     initPortfolio();
     initContactForm();
     initYear();

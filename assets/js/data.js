@@ -3,7 +3,7 @@
    ⚠️ 权威来源：_real_works.json（无需爬取，直接采用其 title/desc/results 等字段）。
    分类 id：data(数据分析) / prototype(产品原型) / aigc(AIGC) / game(网页游戏)
    字段说明（ACCEPTANCE.md §2）：
-     统一：title / desc / tags=[cat] / year / hue / link / featured
+     统一：title / desc / category / year / hue / link / featured
      data：results=[str] 关键结论（来源于 JSON 的 results）
      各分类通用 keywords=[str] 为描述性标签（来源于 JSON 的 tags）
      分类专属：prototype: prototypeUrl+downloadUrl；aigc: videoSrc；game: gameUrl(+controls)
@@ -26,7 +26,7 @@ window.WORKS = [
   {
     title: "绝区零 2.7 · X 日语区海外社区监测",
     desc: "对《绝区零》2.7 版本 X 日语区做系统性内容生态监测，定位投放机会、量化商单效率。",
-    tags: ["data"],
+    category: "data",
     year: 2024,
     hue: 190,
     link: "https://xiaolu-fzu.github.io/portfolio/",
@@ -41,7 +41,7 @@ window.WORKS = [
   {
     title: "绝区零 · YouTube 日区长期生态监测",
     desc: "建立长周期跨版本持续性监测体系，覆盖自研爬取 + 官方接口补爬 → 判定引擎 → 固定工作流 → 简报输出全链路。",
-    tags: ["data"],
+    category: "data",
     year: 2024,
     hue: 220,
     link: "https://xiaolu-fzu.github.io/portfolio/",
@@ -55,7 +55,7 @@ window.WORKS = [
   {
     title: "星布谷地 CBT2 · 小语种地区舆论监控",
     desc: "围绕《星布谷地》CBT2，对泰/印尼/法/俄四语区进行为期一个月周期性舆情监控，覆盖 YouTube/X/VK。",
-    tags: ["data"],
+    category: "data",
     year: 2024,
     hue: 160,
     link: "https://xiaolu-fzu.github.io/portfolio/",
@@ -69,7 +69,7 @@ window.WORKS = [
   {
     title: "欧美 AIGC 用户接受度调研",
     desc: "跨 YouTube/TikTok/X 三大平台，覆盖英/德/法/西语区 AIGC 内容，分析用户接受度、风险结构与平台匹配。",
-    tags: ["data"],
+    category: "data",
     year: 2024,
     hue: 300,
     link: "https://xiaolu-fzu.github.io/portfolio/",
@@ -83,7 +83,7 @@ window.WORKS = [
   {
     title: "鸣潮 · 巴西创作者投资调研",
     desc: "受《鸣潮》项目委托，对巴西 11 位潜在合作创作者做背景调研与风险评估，为投资决策提供依据。",
-    tags: ["data"],
+    category: "data",
     year: 2024,
     hue: 260,
     link: "https://xiaolu-fzu.github.io/portfolio/",
@@ -98,7 +98,7 @@ window.WORKS = [
   {
     title: "ProListing · 离线记账应用",
     desc: "一款离线记账 APP（「一部手机装下全部生活」），含可交互原型 + 安卓安装包 + 下载展示页。",
-    tags: ["prototype"],
+    category: "prototype",
     year: 2024,
     hue: 200,
     prototypeUrl: "https://xiaolu-fzu.github.io/prolist-prototype/",
@@ -112,7 +112,7 @@ window.WORKS = [
   {
     title: "硬币",
     desc: "实现了同学的想法，把脑洞做成可运行/可复现的 AI 视频作品。",
-    tags: ["aigc"],
+    category: "aigc",
     year: 2025,
     hue: 45,
     videoSrc: "AIGC/硬币.mp4",
@@ -124,7 +124,7 @@ window.WORKS = [
   {
     title: "荔枝的组会日",
     desc: "与师兄师姐讨论碰撞出的 AI 视频作品。",
-    tags: ["aigc"],
+    category: "aigc",
     year: 2025,
     hue: 130,
     videoSrc: "AIGC/荔枝的组会日.mp4",
@@ -136,7 +136,7 @@ window.WORKS = [
   {
     title: "果宝特攻 · 水果机甲肉鸽",
     desc: "水果机甲肉鸽战斗游戏，升级三选一强化，活得更久冲得更远。",
-    tags: ["game"],
+    category: "game",
     year: 2025,
     hue: 90,
     gameUrl: "https://xiaolu-fzu.github.io/fruit-rogue/",
@@ -148,7 +148,7 @@ window.WORKS = [
   {
     title: "班尼特 · 炎光试炼",
     desc: "Boss Rush 战斗游戏，对战多关卡 Boss。",
-    tags: ["game"],
+    category: "game",
     year: 2025,
     hue: 20,
     gameUrl: "https://xiaolu-fzu.github.io/bennett-boss-rush/",
@@ -161,7 +161,7 @@ window.WORKS = [
   {
     title: "LocalMiniDrama · 本地短剧 Mod",
     desc: "改装 LocalMiniDrama：适配 RunningHub 中转站 MiniMax H3、加入 AI 配置停用选项、添加输出分辨率选项。",
-    tags: ["tool"],
+    category: "tool",
     year: 2025,
     hue: 55,
     link: "https://github.com/xiaolu-fzu/LocalMiniDrama-Mod",
@@ -172,12 +172,3 @@ window.WORKS = [
 
 window.WORK_CATEGORIES = ["全部", "数据分析", "产品原型", "AIGC", "网页游戏", "工具/开发"];
 
-/* 分类中文名 → tags 值；「全部」为空串表示不过滤 */
-window.WORK_TAG_MAP = {
-  "全部": "",
-  "数据分析": "data",
-  "产品原型": "prototype",
-  "AIGC": "aigc",
-  "网页游戏": "game",
-  "工具/开发": "tool"
-};

@@ -44,14 +44,16 @@
   background: var(--neon-cyan); box-shadow: var(--glow-cyan-sm);
 }
 
-/* 汉堡按钮（默认隐藏，<768px 显示） */
+/* 汉堡按钮（默认显示；桌面 ≥768px 隐藏，见 pages.css）
+   用 ::before 文本字形「☰」绘制，跨渲染环境最稳（文本必渲染） */
 .nav__toggle {
-  display: none; appearance: none; border: 0; cursor: pointer;
-  background: transparent; color: var(--text);
+  display: inline-flex; appearance: none; border: 0; cursor: pointer;
+  color: var(--text);
   width: 44px; height: 44px; border-radius: var(--radius-sm);
   align-items: center; justify-content: center;
+  font-size: 26px; line-height: 1;
 }
-.nav__toggle:hover { background: rgba(255,255,255,0.06); }
+.nav__toggle:hover { background-color: rgba(255,255,255,0.06); }
 .nav__toggle:focus-visible { outline: 2px solid var(--neon-cyan); outline-offset: 2px; }
 
 /* 移动端抽屉 */
@@ -158,9 +160,9 @@ body.nav-locked { overflow: hidden; }
   background: repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 12px);
 }
 .work-card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
-.work-card__title { font-size: var(--fs-lg); font-family: var(--font-display); color: var(--text); }
+.work-card__title { font-size: var(--fs-lg); font-family: var(--font-display); color: var(--text); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .work-card:hover .work-card__title { text-shadow: var(--text-glow-cyan); }
-.work-card__year { font-size: var(--fs-xs); color: var(--text-muted); font-family: var(--font-mono); }
+.work-card__year { font-size: var(--fs-xs); color: var(--text-muted); font-family: var(--font-mono); flex-shrink: 0; white-space: nowrap; }
 .work-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
 
 /* ==================== 2.4 标签 Tag ==================== */
@@ -190,6 +192,7 @@ body.nav-locked { overflow: hidden; }
   border-radius: var(--radius-full);
   padding: var(--space-1) var(--space-3);
   font-size: var(--fs-sm); font-family: var(--font-mono);
+  white-space: nowrap; flex-shrink: 0;
   transition: all var(--transition-fast);
 }
 .filter-btn:hover { color: var(--text); border-color: var(--border-strong); box-shadow: var(--glow-cyan-sm); }
@@ -205,8 +208,7 @@ body.nav-locked { overflow: hidden; }
 }
 .field { display: flex; flex-direction: column; gap: var(--space-2); }
 .field label { font-size: var(--fs-sm); color: var(--text-secondary); }
-.field input, .field textarea,
-.field select {
+.field input, .field textarea {
   background: var(--surface-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
