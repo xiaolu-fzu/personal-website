@@ -122,7 +122,14 @@
   function renderReport(w) {
     var resultsHtml = "";
     if (w.results && w.results.length) {
-      var items = w.results.map(function (r) { return "<li>" + escapeHtml(r) + "</li>"; }).join("");
+      var items = w.results.map(function (r) {
+        var t = String(r);
+        var m = t.match(/^([^：:]+)[：:]\s*(.+)$/);
+        if (m) {
+          return '<li class="concl-item"><span class="concl-label">' + escapeHtml(m[1]) + "</span><span class=\"concl-body\">" + escapeHtml(m[2]) + "</span></li>";
+        }
+        return "<li>" + escapeHtml(t) + "</li>";
+      }).join("");
       resultsHtml = '<div class="report-pane" data-pane="conclusions" hidden><ol class="report-conclusions">' + items + "</ol></div>";
     }
     var hasReport = w.report && w.report.tables && w.report.tables.length;
