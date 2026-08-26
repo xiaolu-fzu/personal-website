@@ -199,7 +199,7 @@
 .cta-band__actions { display: flex; gap: var(--space-3); }
 
 /* ==================== 联系页 ==================== */
-.contact-grid { display: grid; grid-template-columns: minmax(0, 420px); justify-content: center; gap: var(--space-8); align-items: start; }
+.contact-grid { display: grid; grid-template-columns: minmax(0, 480px); justify-content: start; gap: var(--space-8); align-items: start; }
 .contact-info h2 { font-size: var(--fs-lg); margin-bottom: var(--space-3); }
 .contact-info p { color: var(--text-secondary); margin-bottom: var(--space-4); }
 .social-links { display: flex; flex-direction: column; gap: var(--space-3); }
