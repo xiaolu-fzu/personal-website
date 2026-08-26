@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="作品集 · 个人作品展示 · 暗色霓虹赛博风格" />
+  <title>作品集 · 个人作品集</title>
+
+  <!-- 字体渐进增强（SIL OFL 1.1，来源 Google Fonts；离线回落系统栈） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="nav__inner container">
+      <a class="nav__brand" href="index.html">NEON<span class="text-glow-cyan">.DEV</span></a>
+      <nav class="nav__list" aria-label="主导航">
+        <a class="nav__link" data-page="index" href="index.html">首页</a>
+        <a class="nav__link" data-page="portfolio" href="portfolio.html">作品集</a>
+        <a class="nav__link" data-page="about" href="about.html">关于</a>
+        <a class="nav__link" data-page="contact" href="contact.html">联系</a>
+      </nav>
+      <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="navDrawer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay" aria-hidden="true"></div>
+  <aside class="nav-drawer" id="navDrawer" aria-label="菜单">
+    <div class="nav-drawer__head">
+      <span class="nav__brand">NEON<span class="text-glow-cyan">.DEV</span></span>
+      <button class="nav-drawer__close" aria-label="关闭菜单">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+      </button>
+    </div>
+    <nav class="nav-drawer__list" aria-label="主导航（移动端）">
+      <a class="nav-drawer__link" data-page="index" href="index.html">首页</a>
+      <a class="nav-drawer__link" data-page="portfolio" href="portfolio.html">作品集</a>
+      <a class="nav-drawer__link" data-page="about" href="about.html">关于</a>
+      <a class="nav-drawer__link" data-page="contact" href="contact.html">联系</a>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="page-head">
+      <div class="container">
+        <h1 class="page-head__title">作品集</h1>
+        <p class="page-head__lead">真实作品五大类：数据分析 / 产品原型 / AIGC / 网页游戏 / 工具开发。数据驱动渲染（assets/js/data.js）。点击卡片查看详情或在线体验。</p>
+
+        <div class="filter-bar" id="filterBar" role="group" aria-label="作品筛选">
+          <button class="filter-btn" data-filter="" aria-pressed="true">全部</button>
+          <button class="filter-btn" data-filter="data" aria-pressed="false">数据分析</button>
+          <button class="filter-btn" data-filter="prototype" aria-pressed="false">产品原型</button>
+          <button class="filter-btn" data-filter="aigc" aria-pressed="false">AIGC</button>
+          <button class="filter-btn" data-filter="game" aria-pressed="false">网页游戏</button>
+          <button class="filter-btn" data-filter="tool" aria-pressed="false">工具/开发</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <h2 class="sr-only">作品列表</h2>
+        <div class="works-grid" id="worksGrid" aria-live="polite"></div>
+        <p class="works-empty" id="worksEmpty" style="display:none">没有匹配的作品。试试其他分类。</p>
+
+        <div class="work-detail wk-expandable" id="workDetail" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__col">
+          <span class="footer__title">导航</span>
+          <a class="footer__link" href="index.html">首页</a>
+          <a class="footer__link" href="portfolio.html">作品集</a>
+          <a class="footer__link" href="about.html">关于</a>
+          <a class="footer__link" href="contact.html">联系</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">素材</span>
+          <a class="footer__link" href="assets/ATTRIBUTIONS.md">素材署名（ATTRIBUTIONS）</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">联系</span>
+          <a class="footer__link" href="mailto:18672786151@163.com">18672786151@163.com</a>
+        </div>
+      </div>
+      <p class="footer__copyright">© <span id="year">2025</span> 李嘉豪 · 本站点未使用外部图片素材，视觉均为纯 CSS 几何 · <a href="assets/ATTRIBUTIONS.md">素材来源与许可</a></p>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="个人作品集 / 简历 · 暗色霓虹赛博风格 · 纯静态网站" />
+  <title>首页 · 个人作品集</title>
+
+  <!-- 字体渐进增强（SIL OFL 1.1，来源 Google Fonts；离线回落系统栈） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- 样式：variables → base → components → pages -->
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+  <!-- 背景装饰层（纯 CSS，不覆盖交互） -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+
+  <!-- ===== 共享导航 ===== -->
+  <header class="nav">
+    <div class="nav__inner container">
+      <a class="nav__brand" href="index.html">NEON<span class="text-glow-cyan">.DEV</span></a>
+      <nav class="nav__list" aria-label="主导航">
+        <a class="nav__link" data-page="index" href="index.html">首页</a>
+        <a class="nav__link" data-page="portfolio" href="portfolio.html">作品集</a>
+        <a class="nav__link" data-page="about" href="about.html">关于</a>
+        <a class="nav__link" data-page="contact" href="contact.html">联系</a>
+      </nav>
+      <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="navDrawer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 移动端抽屉 -->
+  <div class="nav-overlay" aria-hidden="true"></div>
+  <aside class="nav-drawer" id="navDrawer" aria-label="菜单">
+    <div class="nav-drawer__head">
+      <span class="nav__brand">NEON<span class="text-glow-cyan">.DEV</span></span>
+      <button class="nav-drawer__close" aria-label="关闭菜单">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+      </button>
+    </div>
+    <nav class="nav-drawer__list" aria-label="主导航（移动端）">
+      <a class="nav-drawer__link" data-page="index" href="index.html">首页</a>
+      <a class="nav-drawer__link" data-page="portfolio" href="portfolio.html">作品集</a>
+      <a class="nav-drawer__link" data-page="about" href="about.html">关于</a>
+      <a class="nav-drawer__link" data-page="contact" href="contact.html">联系</a>
+    </nav>
+  </aside>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="hero__grid-layer" aria-hidden="true"></div>
+      <div class="container hero__content">
+        <p class="hero__eyebrow">PORTFOLIO / RESUME</p>
+        <h1 class="hero__title">你好，我是 <span class="text-gradient">李嘉豪</span></h1>
+        <p class="hero__sub">会用数据找答案，会用 AI 造东西。从舆情报告到记账 App，从 AI 视频到网页游戏。</p>
+        <div class="hero__actions">
+          <a class="btn btn-primary" href="portfolio.html">查看作品集</a>
+          <a class="btn btn-ghost" href="contact.html">联系我</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 核心理念 ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="about-teaser">
+          <div class="avatar" role="img" aria-label="几何占位头像（纯 CSS）"></div>
+          <div>
+            <h2 class="section__title">我做什么</h2>
+            <p>我专注于前端与视觉方向的创作。这里作为个人作品与简历的展示窗口，用暗色霓虹的赛博视觉，表达清晰、克制、有记忆点的产品体验。</p>
+            <a class="btn btn-ghost" href="about.html">了解更多 →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 精选作品 ===== -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section__title">精选作品</h2>
+        <p class="section__lead">跨五大类代表作：数据分析 / 产品原型 / AIGC / 网页游戏 / 工具开发。点击查看作品集。</p>
+        <div class="works-grid">
+          <a class="work-card" href="portfolio.html">
+            <div class="work-card__thumb" style="--work-hue:200" role="img" aria-label="绝区零 X 日语区海外社区监测 缩略图占位"></div>
+            <div class="work-card__meta">
+              <h3 class="work-card__title">绝区零 2.7 · X 日语区海外社区监测</h3>
+              <span class="work-card__year">2024</span>
+            </div>
+            <div class="work-card__tags"><span class="tag tag--cyan">数据分析</span></div>
+          </a>
+          <a class="work-card" href="portfolio.html">
+            <div class="work-card__thumb" style="--work-hue:190" role="img" aria-label="ProListing 离线记账 缩略图占位"></div>
+            <div class="work-card__meta">
+              <h3 class="work-card__title">ProListing · 离线记账</h3>
+              <span class="work-card__year">2024</span>
+            </div>
+            <div class="work-card__tags"><span class="tag tag--cyan">产品原型</span></div>
+          </a>
+          <a class="work-card" href="portfolio.html">
+            <div class="work-card__thumb" style="--work-hue:120" role="img" aria-label="果宝特攻 水果机甲肉鸽 缩略图占位"></div>
+            <div class="work-card__meta">
+              <h3 class="work-card__title">果宝特攻 · 水果机甲肉鸽</h3>
+              <span class="work-card__year">2025</span>
+            </div>
+            <div class="work-card__tags"><span class="tag tag--magenta">网页游戏</span></div>
+          </a>
+          <a class="work-card" href="portfolio.html">
+            <div class="work-card__thumb" style="--work-hue:300" role="img" aria-label="硬币 AIGC 视频 缩略图占位"></div>
+            <div class="work-card__meta">
+              <h3 class="work-card__title">硬币</h3>
+              <span class="work-card__year">2025</span>
+            </div>
+            <div class="work-card__tags"><span class="tag tag--magenta">AIGC</span></div>
+          </a>
+          <a class="work-card" href="portfolio.html">
+            <div class="work-card__thumb" style="--work-hue:55" role="img" aria-label="LocalMiniDrama 本地短剧 Mod 缩略图占位"></div>
+            <div class="work-card__meta">
+              <h3 class="work-card__title">LocalMiniDrama · 本地短剧 Mod</h3>
+              <span class="work-card__year">2025</span>
+            </div>
+            <div class="work-card__tags"><span class="tag tag--green">工具/开发</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 技能亮点 ===== -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section__title">技能亮点</h2>
+        <div class="skills">
+          <div class="skill-group">
+            <h3>前端 / 技术</h3>
+            <div class="skill-list">
+              <span class="tag tag--cyan">HTML</span>
+              <span class="tag tag--cyan">CSS</span>
+              <span class="tag tag--cyan">JavaScript</span>
+              <span class="tag tag--cyan">响应式</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>设计</h3>
+            <div class="skill-list">
+              <span class="tag tag--magenta">UI 设计</span>
+              <span class="tag tag--magenta">视觉设计</span>
+              <span class="tag tag--magenta">暗色主题</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>工具</h3>
+            <div class="skill-list">
+              <span class="tag">Git</span>
+              <span class="tag">Figma</span>
+              <span class="tag">VS Code</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 联系 CTA ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <h2>我们聊聊？</h2>
+            <p>无论合作、交流还是只打个招呼，都欢迎。</p>
+          </div>
+          <div class="cta-band__actions">
+            <a class="btn btn-accent" href="contact.html">联系我</a>
+            <a class="btn btn-ghost" href="assets/ATTRIBUTIONS.md">素材署名</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== 共享 Footer ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__col">
+          <span class="footer__title">导航</span>
+          <a class="footer__link" href="index.html">首页</a>
+          <a class="footer__link" href="portfolio.html">作品集</a>
+          <a class="footer__link" href="about.html">关于</a>
+          <a class="footer__link" href="contact.html">联系</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">素材</span>
+          <a class="footer__link" href="assets/ATTRIBUTIONS.md">素材署名（ATTRIBUTIONS）</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">联系</span>
+          <a class="footer__link" href="mailto:18672786151@163.com">18672786151@163.com</a>
+        </div>
+      </div>
+      <p class="footer__copyright">© <span id="year">2025</span> 李嘉豪 · 本站点未使用外部图片素材，视觉均为纯 CSS 几何 · <a href="assets/ATTRIBUTIONS.md">素材来源与许可</a></p>
+    </div>
+  </footer>
+
+  <!-- 脚本：data.js 提供数据，main.js 处理交互 -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

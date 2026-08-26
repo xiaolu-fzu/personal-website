@@ -1,0 +1,245 @@
+/* ============================================================
+   components.css — 通用组件样式
+   权威来源：DESIGN.md §2  (§2.1 nav / §2.2 button / §2.3 card
+   / §2.4 tag / §2.5 form / §2.6 footer)
+   ============================================================ */
+
+/* ==================== 2.1 导航 Navbar ==================== */
+.nav {
+  position: sticky; top: 0; z-index: var(--z-nav);
+  height: var(--nav-height);
+  display: flex; align-items: center;
+  background: rgba(10,10,15,0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-4); width: 100%;
+}
+.nav__brand {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  font-size: var(--fs-lg);
+  letter-spacing: 0.02em;
+}
+.nav__brand:hover { color: var(--neon-cyan); text-shadow: var(--text-glow-cyan); }
+.nav__list { display: flex; align-items: center; gap: var(--space-2); }
+.nav__link {
+  display: inline-block; padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary); font-size: var(--fs-base);
+  font-weight: var(--weight-medium);
+}
+.nav__link:hover { color: var(--text); text-shadow: var(--text-glow-cyan); }
+.nav__link.is-active {
+  color: var(--neon-cyan);
+  position: relative;
+}
+.nav__link.is-active::after {
+  content: ""; position: absolute; left: var(--space-3); right: var(--space-3);
+  bottom: var(--space-1); height: 2px; border-radius: var(--radius-full);
+  background: var(--neon-cyan); box-shadow: var(--glow-cyan-sm);
+}
+
+/* 汉堡按钮（默认隐藏，<768px 显示） */
+.nav__toggle {
+  display: none; appearance: none; border: 0; cursor: pointer;
+  background: transparent; color: var(--text);
+  width: 44px; height: 44px; border-radius: var(--radius-sm);
+  align-items: center; justify-content: center;
+}
+.nav__toggle:hover { background: rgba(255,255,255,0.06); }
+.nav__toggle:focus-visible { outline: 2px solid var(--neon-cyan); outline-offset: 2px; }
+
+/* 移动端抽屉 */
+.nav-drawer {
+  position: fixed; inset: 0; z-index: var(--z-overlay);
+  background: var(--bg); padding: var(--space-6) var(--container-pad);
+  display: flex; flex-direction: column; gap: var(--space-6);
+  transform: translateX(100%); visibility: hidden;
+  transition: transform var(--transition-slow), visibility var(--transition-slow);
+}
+.nav-drawer.is-open { transform: translateX(0); visibility: visible; }
+.nav-drawer__head { display: flex; align-items: center; justify-content: space-between; }
+.nav-drawer__close {
+  appearance: none; border: 0; cursor: pointer; background: transparent;
+  color: var(--text); width: 44px; height: 44px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center; font-size: var(--fs-xl);
+}
+.nav-drawer__close:hover { background: rgba(255,255,255,0.06); }
+.nav-drawer__list { display: flex; flex-direction: column; gap: var(--space-2); }
+.nav-drawer__link {
+  display: block; padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md); color: var(--text);
+  font-size: var(--fs-xl); font-family: var(--font-display);
+}
+.nav-drawer__link:hover { background: rgba(0,229,255,0.08); color: var(--neon-cyan); }
+
+.nav-overlay {
+  position: fixed; inset: 0; z-index: calc(var(--z-overlay) - 1);
+  background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+.nav-overlay.is-open { opacity: 1; pointer-events: auto; }
+body.nav-locked { overflow: hidden; }
+
+/* ==================== 2.2 按钮 Button ==================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-body); font-size: var(--fs-base);
+  font-weight: var(--weight-medium);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer; text-align: center; min-height: 44px;
+  transition: all var(--transition-base);
+}
+.btn-primary {
+  background: linear-gradient(135deg, #00e5ff, #00b8e0);
+  color: #071018; box-shadow: var(--glow-cyan-md);
+}
+.btn-primary:hover {
+  color: #071018;
+  transform: translateY(-2px);
+  box-shadow: var(--glow-cyan-lg);
+  filter: brightness(1.06);
+}
+.btn-primary:active { transform: translateY(0); box-shadow: var(--glow-cyan-md); }
+
+.btn-ghost {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border-cyan);
+  color: var(--neon-cyan);
+}
+.btn-ghost:hover {
+  background: rgba(0,229,255,0.08); color: var(--text);
+  border-color: var(--neon-cyan); box-shadow: var(--glow-cyan-sm);
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #ff2ee0, #ff2a9e);
+  color: #18020f; box-shadow: var(--glow-magenta-md);
+}
+.btn-accent:hover { transform: translateY(-2px); box-shadow: var(--glow-magenta-lg); }
+
+/* ==================== 2.3 作品卡片 Work Card ==================== */
+.work-card {
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  transition: transform var(--transition-slow), border-color var(--transition-slow), box-shadow var(--transition-slow);
+}
+.work-card:hover {
+  transform: var(--hover-lift);
+  border-color: var(--border-cyan);
+  box-shadow: var(--glow-cyan-md);
+}
+.work-card__thumb {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  position: relative;
+  background:
+    radial-gradient(circle at 30% 30%, hsla(var(--work-hue,200),100%,60%,0.35), transparent 60%),
+    linear-gradient(135deg, hsla(var(--work-hue,200),100%,60%,0.15), transparent),
+    var(--surface-2);
+  margin-bottom: var(--space-4);
+  transition: transform var(--transition-slow);
+}
+.work-card:hover .work-card__thumb { transform: scale(1.04); }
+.work-card__thumb::after {
+  content: ""; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 12px);
+}
+.work-card__meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); }
+.work-card__title { font-size: var(--fs-lg); font-family: var(--font-display); color: var(--text); }
+.work-card:hover .work-card__title { text-shadow: var(--text-glow-cyan); }
+.work-card__year { font-size: var(--fs-xs); color: var(--text-muted); font-family: var(--font-mono); }
+.work-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+
+/* ==================== 2.4 标签 Tag ==================== */
+.tag {
+  display: inline-flex; align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm); font-family: var(--font-mono);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+.tag--cyan { color: var(--neon-cyan); border-color: var(--border-cyan); }
+.tag--cyan:hover { background: rgba(0,229,255,0.08); box-shadow: var(--glow-cyan-sm); }
+.tag--magenta { color: var(--neon-magenta); border-color: var(--border-magenta); }
+.tag--magenta:hover { background: rgba(255,46,224,0.08); box-shadow: var(--glow-magenta-md); }
+.tag--green { color: var(--neon-green); border-color: rgba(57,255,20,0.35); }
+.tag--green:hover { background: rgba(57,255,20,0.08); box-shadow: 0 0 8px rgba(57,255,20,0.25); }
+
+/* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active） */
+.filter-btn {
+  appearance: none; cursor: pointer;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-sm); font-family: var(--font-mono);
+  transition: all var(--transition-fast);
+}
+.filter-btn:hover { color: var(--text); border-color: var(--border-strong); box-shadow: var(--glow-cyan-sm); }
+.filter-btn.is-active, .filter-btn[aria-pressed="true"] {
+  background: var(--neon-cyan); border-color: var(--neon-cyan);
+  color: var(--bg); box-shadow: var(--glow-cyan-md);
+}
+
+/* ==================== 2.5 表单 Form ==================== */
+.contact-form {
+  display: flex; flex-direction: column; gap: var(--space-4);
+  max-width: var(--maxwidth-text);
+}
+.field { display: flex; flex-direction: column; gap: var(--space-2); }
+.field label { font-size: var(--fs-sm); color: var(--text-secondary); }
+.field input, .field textarea,
+.field select {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text); font-size: var(--fs-base);
+  font-family: var(--font-body);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  width: 100%;
+}
+.field textarea { resize: vertical; min-height: 120px; }
+.field input::placeholder, .field textarea::placeholder { color: var(--text-muted); }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--neon-cyan); box-shadow: var(--glow-cyan-md); }
+.field.is-invalid input, .field.is-invalid textarea { border-color: var(--neon-magenta); box-shadow: var(--glow-magenta-md); }
+.field__error { font-size: var(--fs-sm); color: var(--neon-magenta); }
+
+/* ==================== 2.6 Footer ==================== */
+.footer {
+  position: relative;
+  background: var(--bg);
+  padding: var(--space-8) 0;
+  border-top: 1px solid var(--border);
+}
+.footer::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-magenta), transparent);
+  opacity: 0.5;
+}
+.footer__inner { display: flex; flex-wrap: wrap; gap: var(--space-6); justify-content: space-between; align-items: flex-start; }
+.footer__col { display: flex; flex-direction: column; gap: var(--space-2); }
+.footer__title { font-size: var(--fs-sm); color: var(--text-secondary); margin-bottom: var(--space-1); }
+.footer__link { color: var(--text-secondary); font-size: var(--fs-base); transition: color var(--transition-fast); text-decoration: none; }
+.footer__link:hover { color: var(--neon-cyan); text-shadow: var(--text-glow-cyan); }
+.footer__social { display: flex; gap: var(--space-3); }
+.footer__copyright { font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-6); text-align: center; }
+.footer__copyright a { color: var(--text-muted); }
+.footer__copyright a:hover { color: var(--neon-cyan); }

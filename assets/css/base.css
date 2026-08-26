@@ -1,0 +1,76 @@
+/* ============================================================
+   base.css — 重置与基础排版（Base / Reset）
+   权威来源：DESIGN.md §1 / §4  |  spec.md §7
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--text);
+  background: var(--bg);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: var(--lh-tight);
+  font-weight: var(--weight-bold);
+  color: var(--text);
+  font-synthesis-weight: none;
+}
+
+h1 { font-size: var(--fs-2xl); }
+h2 { font-size: var(--fs-xl); }
+h3 { font-size: var(--fs-lg); }
+
+p { max-width: var(--maxwidth-text); }
+
+a { color: var(--neon-cyan); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--text); }
+
+img, svg, video { display: block; max-width: 100%; }
+
+ul, ol { list-style: none; }
+
+strong { font-weight: var(--weight-bold); }
+
+/* 容器 */
+.container { width: 100%; max-width: var(--container-max); margin-inline: auto; padding-inline: var(--container-pad); }
+
+/* 语义区块纵向间距 */
+.section { padding-block: var(--section-pad); }
+.section__title { font-size: var(--fs-xl); margin-bottom: var(--space-4); }
+.section__lead { color: var(--text-secondary); max-width: var(--maxwidth-text); margin-bottom: var(--space-6); }
+
+/* 全局可访问焦点（focus-visible） */
+:focus-visible { outline: 2px solid var(--neon-cyan); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+/* 工具类 */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.text-glow-cyan { text-shadow: var(--text-glow-cyan); }
+.text-glow-magenta { text-shadow: var(--text-glow-magenta); }
+
+/* 渐变文字 */
+.text-gradient { background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* 细滚动条（装饰性） */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: var(--radius-full); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* 可访问性 · 减少动态 —— 关闭全部过渡/动画 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  html { scroll-behavior: auto; }
+}

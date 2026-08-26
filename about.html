@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="关于 · 个人介绍与简历 · 暗色霓虹赛博风格" />
+  <title>关于 · 个人作品集</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/pages.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="nav__inner container">
+      <a class="nav__brand" href="index.html">NEON<span class="text-glow-cyan">.DEV</span></a>
+      <nav class="nav__list" aria-label="主导航">
+        <a class="nav__link" data-page="index" href="index.html">首页</a>
+        <a class="nav__link" data-page="portfolio" href="portfolio.html">作品集</a>
+        <a class="nav__link" data-page="about" href="about.html">关于</a>
+        <a class="nav__link" data-page="contact" href="contact.html">联系</a>
+      </nav>
+      <button class="nav__toggle" aria-label="打开菜单" aria-expanded="false" aria-controls="navDrawer">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="nav-overlay" aria-hidden="true"></div>
+  <aside class="nav-drawer" id="navDrawer" aria-label="菜单">
+    <div class="nav-drawer__head">
+      <span class="nav__brand">NEON<span class="text-glow-cyan">.DEV</span></span>
+      <button class="nav-drawer__close" aria-label="关闭菜单">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+      </button>
+    </div>
+    <nav class="nav-drawer__list" aria-label="主导航（移动端）">
+      <a class="nav-drawer__link" data-page="index" href="index.html">首页</a>
+      <a class="nav-drawer__link" data-page="portfolio" href="portfolio.html">作品集</a>
+      <a class="nav-drawer__link" data-page="about" href="about.html">关于</a>
+      <a class="nav-drawer__link" data-page="contact" href="contact.html">联系</a>
+    </nav>
+  </aside>
+
+  <main>
+    <section class="page-head">
+      <div class="container">
+        <h1 class="page-head__title">关于我</h1>
+        <p class="page-head__lead">个人介绍、经历与简历。头像为纯 CSS 几何占位，可替换为你的授权头像（见 assets/ATTRIBUTIONS.md）。</p>
+      </div>
+    </section>
+
+    <!-- 介绍 -->
+    <section class="section">
+      <div class="container">
+        <div class="about-teaser">
+          <div class="avatar avatar--lg" role="img" aria-label="几何占位头像（纯 CSS，可替换为授权头像）"></div>
+          <div>
+            <h2 class="section__title">你好，我是 李嘉豪</h2>
+            <p>会用数据找答案，会用 AI 造东西。从舆情报告到记账 App，从 AI 视频到网页游戏。兼具数据分析、产品原型与前端实现能力。</p>
+            <p>这里展示我的作品与简历，偏好清晰、克制、有记忆点的产品体验。</p>
+            <div style="display:flex;gap:12px;margin-top:16px">
+              <a class="btn btn-primary" href="mailto:18672786151@163.com?subject=简历索取">索要简历</a>
+              <a class="btn btn-ghost" href="contact.html">联系我</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 经历 / 时间轴 -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section__title">经历</h2>
+        <p class="section__lead">以下为占位时间轴，请替换为你的真实教育 / 工作 / 项目经历。</p>
+        <div class="timeline">
+          <div class="timeline__item">
+            <span class="timeline__time">2024 — 今</span>
+            <h3 class="timeline__title">自由职业 / 前端 · 视觉</h3>
+            <p class="timeline__desc">占位：描述你当前的工作方向。</p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__time">2022 — 2024</span>
+            <h3 class="timeline__title">某公司 · 前端工程师</h3>
+            <p class="timeline__desc">占位：描述你的职责与成果。</p>
+          </div>
+          <div class="timeline__item">
+            <span class="timeline__time">2018 — 2022</span>
+            <h3 class="timeline__title">某大学 · 本科</h3>
+            <p class="timeline__desc">占位：描述你的专业与教育背景。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能 -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section__title">技能与工具</h2>
+        <div class="skills">
+          <div class="skill-group">
+            <h3>前端 / 技术</h3>
+            <div class="skill-list">
+              <span class="tag tag--cyan">HTML</span>
+              <span class="tag tag--cyan">CSS</span>
+              <span class="tag tag--cyan">JavaScript</span>
+              <span class="tag tag--cyan">TypeScript</span>
+              <span class="tag tag--cyan">响应式</span>
+              <span class="tag tag--cyan">性能优化</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>设计</h3>
+            <div class="skill-list">
+              <span class="tag tag--magenta">UI 设计</span>
+              <span class="tag tag--magenta">视觉设计</span>
+              <span class="tag tag--magenta">暗色主题</span>
+              <span class="tag tag--magenta">设计系统</span>
+            </div>
+          </div>
+          <div class="skill-group">
+            <h3>工具</h3>
+            <div class="skill-list">
+              <span class="tag">Git</span>
+              <span class="tag">Figma</span>
+              <span class="tag">VS Code</span>
+              <span class="tag">Node.js</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__col">
+          <span class="footer__title">导航</span>
+          <a class="footer__link" href="index.html">首页</a>
+          <a class="footer__link" href="portfolio.html">作品集</a>
+          <a class="footer__link" href="about.html">关于</a>
+          <a class="footer__link" href="contact.html">联系</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">素材</span>
+          <a class="footer__link" href="assets/ATTRIBUTIONS.md">素材署名（ATTRIBUTIONS）</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__title">联系</span>
+          <a class="footer__link" href="mailto:18672786151@163.com">18672786151@163.com</a>
+        </div>
+      </div>
+      <p class="footer__copyright">© <span id="year">2025</span> 李嘉豪 · 本站点未使用外部图片素材，视觉均为纯 CSS 几何 · <a href="assets/ATTRIBUTIONS.md">素材来源与许可</a></p>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
