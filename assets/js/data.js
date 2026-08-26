@@ -123,13 +123,14 @@ window.WORKS = [
   },
   {
     title: "荔枝的组会日",
-    desc: "与师兄师姐讨论碰撞出的 AI 视频作品。",
+    desc: "与师兄师姐讨论后，用师兄师姐的小猫为主角制作的 AI 视频作品。",
     category: "aigc",
     year: 2025,
     hue: 130,
     videoSrc: "AIGC/荔枝的组会日.mp4",
     videoTitle: "荔枝的组会日",
-    keywords: ["AIGC", "视频"]
+    keywords: ["AIGC", "视频"],
+    story: { img1: "AIGC/39329728623750764d402a14abea9ecf.jpg", note: "师兄师姐的小猫原型", label: "角色（小猫）原型" }
   },
 
   /* ---------------- 网页游戏 game ---------------- */

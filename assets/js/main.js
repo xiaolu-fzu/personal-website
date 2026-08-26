@@ -129,7 +129,7 @@
         "</figure>";
       if (w.story && w.story.img1) {
         html += '<details class="work-story">' +
-          "<summary>📖 故事原文（同学原创脑洞）</summary>" +
+          "<summary>📖 " + escapeHtml(w.story.label || "故事原文（同学原创脑洞）") + "</summary>" +
           '<p class="work-story__note">' + escapeHtml(w.story.note || "同学写的原创故事蓝本") + "</p>" +
           '<div class="work-story__imgs">' +
             '<figure><img src="' + escapeHtml(w.story.img1) + '" alt="故事原文截图 1" loading="lazy" class="story-zoom"></figure>' +
