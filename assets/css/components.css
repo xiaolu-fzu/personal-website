@@ -186,13 +186,15 @@ body.nav-locked { overflow: hidden; }
 /* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active） */
 .filter-btn {
   appearance: none; cursor: pointer;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
   border-radius: var(--radius-full);
-  padding: var(--space-1) var(--space-3);
-  font-size: var(--fs-sm); font-family: var(--font-mono);
+  padding: var(--space-2) var(--space-5);
+  font-size: var(--fs-base); font-weight: var(--weight-medium);
+  font-family: var(--font-body);
   white-space: nowrap; flex-shrink: 0;
+  letter-spacing: 0.02em;
   transition: all var(--transition-fast);
 }
 .filter-btn:hover { color: var(--text); border-color: var(--border-strong); box-shadow: var(--glow-cyan-sm); }

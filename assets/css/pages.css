@@ -217,5 +217,5 @@
   .work-detail__card { padding: var(--space-4); }
   .work-media iframe { height: 520px; }
   .work-media.proto-frame .proto-iframe { height: min(1400px, 88vh); max-height: min(1300px, 88vh); }
-  .filter-btn { flex: 0 0 auto; padding: var(--space-1) var(--space-2); font-size: var(--fs-xs); }
+  .filter-btn { flex: 0 0 auto; padding: var(--space-2) var(--space-4); font-size: var(--fs-sm); }
 }
