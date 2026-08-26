@@ -53,10 +53,12 @@
 .hero__title {
   font-size: var(--fs-hero); font-weight: var(--weight-bold);
   line-height: var(--lh-tight); margin-bottom: var(--space-4);
+  white-space: nowrap;
 }
 .hero__sub {
   font-size: var(--fs-lg); color: var(--text-secondary);
-  max-width: var(--maxwidth-text); margin-bottom: var(--space-6);
+  max-width: none; margin-bottom: var(--space-6);
+  white-space: nowrap;
 }
 .hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 
