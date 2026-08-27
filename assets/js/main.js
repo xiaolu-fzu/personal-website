@@ -232,7 +232,7 @@
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">查看项目 ↗</a>';
     if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
-    if (w.prdUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
+    if (w.prdUrl) html += '<a class="btn btn-prd" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
 
     if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '">联系获取更多 ↗</a>';
     html += "</div>";
