@@ -123,19 +123,20 @@ body.nav-locked { overflow: hidden; }
 }
 
 .btn-prd {
-  /* 与 ProListing-PRD 页主题色一致：accent #1f7a5c */
-  background: #1f7a5c;
-  color: #ffffff;
+  /* 仅色调对齐 ProListing-PRD 页：accent #1f7a5c / soft #e7f2ec / ink #0f4a37 */
+  background: transparent;
+  border: 1px solid rgba(31,122,92,0.45);
+  color: #1f7a5c;
   font-weight: var(--weight-bold);
-  box-shadow: 0 0 14px rgba(31,122,92,0.40);
 }
 .btn-prd:hover {
-  color: #ffffff;
+  background: #e7f2ec;
+  color: #0f4a37;
+  border-color: #1f7a5c;
+  box-shadow: 0 0 12px rgba(31,122,92,0.25);
   transform: translateY(-2px);
-  box-shadow: 0 0 22px rgba(31,122,92,0.55);
-  filter: brightness(1.06);
 }
-.btn-prd:active { transform: translateY(0); box-shadow: 0 0 10px rgba(31,122,92,0.45); }
+.btn-prd:active { transform: translateY(0); }
 
 
 /* ==================== 2.3 作品卡片 Work Card ==================== */
