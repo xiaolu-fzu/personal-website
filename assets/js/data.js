@@ -153,6 +153,7 @@ window.WORKS = [
     hue: 200,
     prototypeUrl: "prototype/prolist.html",
     downloadUrl: "https://xiaolu-fzu.github.io/prolist-download/",
+    prdUrl: "https://xiaolu-fzu.github.io/ProListing-PRD/",
     platform: "Web 原型 · 安卓 App · 下载页",
     keywords: ["产品原型", "移动端", "离线记账"],
     featured: true
