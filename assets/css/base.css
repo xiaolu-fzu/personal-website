@@ -16,7 +16,9 @@ body {
   line-height: var(--lh-body);
   color: var(--text);
   background: var(--bg);
-  background-image: var(--bg-gradient);
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='44' height='44' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22 2L42 22L22 42L2 22Z' fill='none' stroke='%23CC785C' stroke-width='0.8' opacity='0.045'/%3E%3C/svg%3E"),
+    var(--bg-gradient);
   background-attachment: fixed;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;

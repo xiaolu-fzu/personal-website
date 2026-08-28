@@ -6,33 +6,33 @@
 
 :root {
   /* ---------- 1.1 颜色 · 色板 ---------- */
-  --bg:                 #faf6f0;                 /* 主背景（米白暖底） */
+  --bg:                 #FAF9F5;                 /* 主背景（米白暖底） */
   --surface:            #ffffff;                 /* 卡片 / 表面 */
-  --surface-2:          #fdf8f1;                 /* 卡片 hover / 嵌套表面 */
-  --surface-3:          #f5ede0;                 /* 更亮表面（输入框） */
-  --text:               #2b2118;                 /* 正文主色（深棕，14.6:1） */
-  --text-secondary:     #6b5844;                 /* 次级文本（6.3:1） */
-  --text-muted:         #71634f;                 /* 弱化文本（5.4:1） */
-  --accent:             #b45309;                 /* 主强调（琥珀橙） */
-  --accent-2:           #d97706;                 /* 辅强调（深琥珀） */
-  --accent-3:           #7c3f10;                 /* 第三强调（巧克力棕） */
-  --border:             rgba(180,83,9,0.12);     /* 基础描边 */
-  --border-strong:      rgba(180,83,9,0.25);     /* 强调描边 */
-  --border-accent:      rgba(180,83,9,0.35);     /* 主描边 */
-  --border-accent-2:    rgba(217,119,6,0.35);    /* 辅描边 */
+  --surface-2:          #F7F2EC;                 /* 卡片 hover / 嵌套表面 */
+  --surface-3:          #F1EAE1;                 /* 更亮表面（输入框） */
+  --text:               #141413;                 /* 正文主色（深棕，14.6:1） */
+  --text-secondary:     #6C6A64;                 /* 次级文本（6.3:1） */
+  --text-muted:         #8A8781;                 /* 弱化文本（5.4:1） */
+  --accent:             #CC785C;                 /* 主强调（琥珀橙） */
+  --accent-2:           #B9624A;                 /* 辅强调（深琥珀） */
+  --accent-3:           #9E4F3A;                 /* 第三强调（巧克力棕） */
+  --border:             rgba(204,120,92,0.12);     /* 基础描边 */
+  --border-strong:      rgba(204,120,92,0.25);     /* 强调描边 */
+  --border-accent:      rgba(204,120,92,0.35);     /* 主描边 */
+  --border-accent-2:    rgba(185,98,74,0.35);    /* 辅描边 */
 
   /* ---------- 1.1b 分类色（5 类 1:1） ---------- */
-  --cat-data:            #b45309;   /* 数据分析 */
-  --cat-prototype:       #c2410c;   /* 产品原型 · terracotta */
-  --cat-aigc:            #9a3412;   /* AIGC · rust */
-  --cat-game:            #a16207;   /* 网页游戏 · bronze */
-  --cat-tool:            #7c3f10;   /* 工具/开发 · chocolate */
+  --cat-data:            #CC785C;   /* 数据分析 */
+  --cat-prototype:       #B9624A;   /* 产品原型 · terracotta */
+  --cat-aigc:            #C0592F;   /* AIGC · rust */
+  --cat-game:            #A65A3A;   /* 网页游戏 · bronze */
+  --cat-tool:            #9E4F3A;   /* 工具/开发 · chocolate */
 
   /* ---------- 1.2 背景渐变（暖琥珀氛围，纯 CSS） ---------- */
   --bg-gradient:
-    radial-gradient(ellipse 80% 60% at 20% 0%,   rgba(217,119,6,0.06), transparent 60%),
-    radial-gradient(ellipse 70% 55% at 90% 10%,  rgba(180,83,9,0.05), transparent 55%),
-    #faf6f0;
+    radial-gradient(ellipse 80% 60% at 20% 0%,   rgba(185,98,74,0.06), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 90% 10%,  rgba(204,120,92,0.05), transparent 55%),
+    #FAF9F5;
 
   /* ---------- 1.3 字体 ---------- */
   --font-display: 'Georgia', 'Times New Roman', 'Songti SC', 'SimSun', serif;
@@ -73,14 +73,14 @@
   --radius-card: var(--radius-lg);
 
   /* ---------- 1.7 暖琥珀辉光 ---------- */
-  --glow-sm:    0 0 8px rgba(180,83,9,0.20);
-  --glow-md:    0 0 16px rgba(180,83,9,0.28);
-  --glow-lg:    0 0 28px rgba(180,83,9,0.38);
-  --glow-outer: 0 0 0 1px rgba(180,83,9,0.35), 0 0 22px rgba(180,83,9,0.26);
-  --glow-2-md:  0 0 14px rgba(217,119,6,0.30);
-  --glow-2-lg:  0 0 24px rgba(217,119,6,0.40);
-  --text-glow:    0 0 8px rgba(180,83,9,0.38);
-  --text-glow-2:  0 0 8px rgba(217,119,6,0.38);
+  --glow-sm:    0 0 8px rgba(204,120,92,0.20);
+  --glow-md:    0 0 16px rgba(204,120,92,0.28);
+  --glow-lg:    0 0 28px rgba(204,120,92,0.38);
+  --glow-outer: 0 0 0 1px rgba(204,120,92,0.35), 0 0 22px rgba(204,120,92,0.26);
+  --glow-2-md:  0 0 14px rgba(185,98,74,0.30);
+  --glow-2-lg:  0 0 24px rgba(185,98,74,0.40);
+  --text-glow:    0 0 8px rgba(204,120,92,0.38);
+  --text-glow-2:  0 0 8px rgba(185,98,74,0.38);
 
   /* ---------- 1.8 布局与容器 ---------- */
   --container-max: 1200px;

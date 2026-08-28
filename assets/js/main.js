@@ -314,7 +314,10 @@
         gameFrame.addEventListener("click", focusGame);
         var gameWrap = detail.querySelector(".game-wrap");
         if (gameWrap) {
-          gameWrap.addEventListener("pointerdown", function (e) { if (e.target !== gameFrame) focusGame(); });
+          // 捕获阶段(在游戏内部 preventDefault 之前)强制聚焦，任何点击/触摸都聚焦 iframe
+          gameWrap.addEventListener("pointerdown", function () { focusGame(); }, true);
+          gameWrap.addEventListener("mousedown", function () { focusGame(); }, true);
+          gameWrap.addEventListener("touchstart", function () { focusGame(); }, true);
           // 焦点被别处抢走（如切窗口、点页眉）时，详情仍开着则把焦点还给游戏
           gameWrap.addEventListener("focusout", function (e) {
             if (detail.classList.contains("is-open") && gameWrap.contains(e.relatedTarget) === false) {
