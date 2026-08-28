@@ -146,14 +146,16 @@ window.WORKS = [
   {
     title: "ProListing · 离线记账应用",
     desc: "「一部手机装下全部生活」的离线记账 App，含原型 + 安卓包 + 下载页。",
+    thumb: "assets/img/ProListing.png",
     value: "离线记账 App 原型 · J人理想型生活管理",
-    idea: "专为「J人」（计划型人格）打造的综合性离线生活管理软件，把多款生活记录与自律计划功能融为一体。坚持「完全理想→绝对安全、功能众多→软件唯一」的产品哲学：数据全部本地存储、绝对安全；功能虽多，却保持唯一的沉浸式体验。目前已完成「记账」与「计划」两大核心模块，未来还有多项开发计划持续迭代。",
+    idea: "专为「J人」（计划型人格）打造的综合性离线生活管理软件，把多款生活记录与自律计划功能融为一体。坚持「完全离线→绝对安全、功能众多→软件唯一」的产品哲学：数据全部本地存储、绝对安全；功能虽多，却保持唯一的沉浸式体验。目前已完成「记账」与「计划」两大核心模块，未来还有多项开发计划持续迭代。",
     category: "prototype",
     year: 2024,
     hue: 200,
     prototypeUrl: "prototype/prolist.html",
     downloadUrl: "https://xiaolu-fzu.github.io/prolist-download/",
     prdUrl: "https://xiaolu-fzu.github.io/ProListing-PRD/",
+    prdDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/JRwsw8Kaui2rUEkTaE1c0X5Pn9e?from=from_copylink",
     platform: "Web 原型 · 安卓 App · 下载页",
     keywords: ["产品原型", "移动端", "离线记账"],
     featured: true
@@ -163,6 +165,7 @@ window.WORKS = [
   {
     title: "硬币",
     desc: "实现了同学的想法，把脑洞做成可运行/可复现的 AI 视频作品。",
+    thumb: "assets/img/硬币.jpg",
     value: "把同学脑洞做成可运行的 AI 视频",
     category: "aigc",
     year: 2025,
@@ -176,6 +179,7 @@ window.WORKS = [
   {
     title: "荔枝的组会日",
     desc: "与师兄师姐讨论后，用师兄师姐的小猫为主角制作的 AI 视频作品。",
+    thumb: "assets/img/荔枝的组会日.jpg",
     value: "以师兄师姐小猫为主角的 AI 视频",
     category: "aigc",
     year: 2025,
@@ -195,6 +199,8 @@ window.WORKS = [
     year: 2025,
     hue: 90,
     gameUrl: "https://xiaolu-fzu.github.io/fruit-rogue/",
+    thumb: "assets/img/国宝特工.png",
+    devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/QvinwvJtRi9vFYk2AFqcBTR5nUg?from=from_copylink",
     genre: "肉鸽",
     controls: "WASD / 方向键移动 · 自动射击 · 1–4 切武器 · 升级三选一 · 支持触屏",
     keywords: ["网页游戏", "肉鸽"],
@@ -208,6 +214,7 @@ window.WORKS = [
     year: 2025,
     hue: 20,
     gameUrl: "https://xiaolu-fzu.github.io/bennett-boss-rush/",
+    thumb: "assets/img/班尼特挑战.png",
     genre: "Boss 战",
     controls: "进入即玩 · 躲避与输出 · 多关卡 Boss 战",
     keywords: ["网页游戏", "Boss 战"]

@@ -19,7 +19,7 @@
   function initNavHighlight() {
     var links = document.querySelectorAll(".nav__list .nav__link, .nav-drawer__list .nav-drawer__link");
     if (!links.length) return;
-    var ids = ["home", "portfolio", "about", "contact"];
+    var ids = ["home", "portfolio"];
     function setActive(id) {
       links.forEach(function (link) {
         var on = link.getAttribute("data-page") === id;
@@ -93,7 +93,13 @@
     return { data: "var(--cat-data)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", prototype: "产品原型", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+    return { data: "数据分析", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+  }
+  function catTagsHtml(category) {
+    var cls = catClass(category);
+    return tagLabel(category).split(" · ").map(function (part) {
+      return '<span class="tag ' + cls + '">' + escapeHtml(part) + "</span>";
+    }).join("");
   }
   function catPriority(tag) {
     return { data: 0, prototype: 1, game: 2, aigc: 3, tool: 4 }[tag] || 99;
@@ -111,13 +117,13 @@
   }
 
   function makeCard(work, index) {
-    var tags = '<span class="tag ' + catClass(work.category) + '">' + tagLabel(work.category) + "</span>";
+    var tags = catTagsHtml(work.category);
     var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
     var badge = work.featured ? '<span class="work-card__badge">精选</span>' : "";
     return (
       '<a class="work-card" href="#work-detail" data-slug="' + escapeHtml(slugify(work.title)) + '" data-index="' + index + '">' +
-        '<div class="work-card__thumb" style="--cat:' + catVar(work.category) + '" role="img" aria-label="' + escapeHtml(work.title) + ' 缩略图占位">' +
-          '<span class="work-card__thumb-label">' + escapeHtml(tagLabel(work.category)) + "</span>" +
+        '<div class="work-card__thumb' + (work.thumb ? ' has-img' : '') + '" style="--cat:' + catVar(work.category) + '" role="img" aria-label="' + escapeHtml(work.title) + '">' +
+          (work.thumb ? '<img class="work-card__img" src="' + escapeHtml(work.thumb) + '" alt="' + escapeHtml(work.title) + '" loading="lazy">' : "") +
         "</div>" +
         '<div class="work-card__meta">' +
           '<h3 class="work-card__title">' + escapeHtml(work.title) + "</h3>" +
@@ -212,6 +218,7 @@
         '<p class="game-hint">点击游戏画面后，用 WASD / 方向键操作</p>' +
         (w.controls ? '<p class="work-controls">玩法：' + escapeHtml(w.controls) + "</p>" : "") +
         '<a class="btn btn-ghost" href="' + escapeHtml(w.gameUrl) + '" target="_blank" rel="noopener">在新窗口打开游戏 ↗</a>' +
+        (w.devDocUrl ? '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发飞书文档 ↗</a>' : "") +
         "</div>";
     }
     if (w.prototypeUrl) {
@@ -230,9 +237,9 @@
     var html = '<div class="work-detail__links">';
     // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">查看项目 ↗</a>';
-    if (w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prototypeUrl) + '" target="_blank" rel="noopener">在新窗口打开原型 ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
-    if (w.prdUrl) html += '<a class="btn btn-prd" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
+    if (w.prdUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
+    if (w.prdDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdDocUrl) + '" target="_blank" rel="noopener">PRD 飞书文档 ↗</a>';
 
     if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '">联系获取更多 ↗</a>';
     html += "</div>";
@@ -259,7 +266,7 @@
     function openDetail(index) {
       var w = works[index];
       if (!w || !detail) return;
-      var catTags = '<span class="tag ' + catClass(w.category) + '">' + tagLabel(w.category) + "</span>";
+      var catTags = catTagsHtml(w.category);
       var kwTags = (w.keywords || []).map(function (k) {
         return '<span class="tag">' + escapeHtml(k) + "</span>";
       }).join("");
@@ -298,7 +305,7 @@
       // 聚焦游戏/原型 iframe，让键盘事件能进入（解决游戏按键失灵）
       var gameFrame = detail.querySelector(".game-frame");
       if (gameFrame) {
-        var focusGame = function () { try { gameFrame.focus(); } catch (e) {} };
+        var focusGame = function () { try { gameFrame.focus(); } catch (e) {} try { if (gameFrame.contentWindow) gameFrame.contentWindow.focus(); } catch (e) {} try { var c = gameFrame.contentDocument && gameFrame.contentDocument.querySelector("canvas"); if (c) c.focus(); } catch (e) {} };
         focusGame();
         setTimeout(focusGame, 300);
         // 很多游戏内部会动态加载/重绘，晚一点再聚焦一次更稳
@@ -339,8 +346,9 @@
 
     var filterBar = document.getElementById("filterBar");
     if (filterBar) {
+      var firstBtn = filterBar.querySelector(".filter-btn");
       Array.prototype.forEach.call(filterBar.querySelectorAll(".filter-btn"), function (btn) {
-        var on = (btn.getAttribute("data-filter") || "") === "";
+        var on = btn === firstBtn;
         btn.setAttribute("aria-pressed", on ? "true" : "false");
         btn.classList.toggle("is-active", on);
         btn.addEventListener("click", function () {
@@ -353,7 +361,7 @@
         });
       });
     }
-    render("");
+    render(firstBtn ? (firstBtn.getAttribute("data-filter") || "") : "");
     function openFromHash() {
       var slug = (location.hash || "").replace("#work-", "");
       if (!slug) return;
