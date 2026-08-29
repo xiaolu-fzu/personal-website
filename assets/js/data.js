@@ -249,6 +249,18 @@ window.WORKS = [
       ]
     }
   },
+  {
+    title: "4agent 产品调研",
+    desc: "对 Claude Code、OpenAI Codex、DeepSeek Harness、腾讯 WorkBuddy 四款主流 AI Agent 产品做竞品/行业调研，给出分层定位与选型建议。",
+    thumb: "assets/img/4agent-logos.png",
+    value: "4 款 AI Agent 调研 · 分层定位与选型建议",
+    category: "industry",
+    year: 2026,
+    hue: 200,
+    link: "https://fcn6t1589nyp.feishu.cn/docx/OwFIdLuPloK0x9xl786ciNLnnVc",
+    outLinkText: "查看报告",
+    keywords: ["行业调研", "竞品分析", "AI Agent", "选型建议"]
+  },
 
   /* ---------------- 产品原型 prototype（1 项目 · 3 形态） ---------------- */
   {
@@ -343,5 +355,5 @@ window.WORKS = [
   }
 ];
 
-window.WORK_CATEGORIES = ["全部", "数据分析", "产品原型", "AIGC", "网页游戏", "工具/开发"];
+window.WORK_CATEGORIES = ["全部", "数据分析", "行业研究", "产品原型", "AIGC", "网页游戏", "工具/开发"];
 

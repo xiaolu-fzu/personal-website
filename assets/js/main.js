@@ -87,13 +87,13 @@
   }
 
   function catClass(tag) {
-    return { data: "tag--data", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool" }[tag] || "";
+    return { data: "tag--data", industry: "tag--industry", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool" }[tag] || "";
   }
   function catVar(tag) {
-    return { data: "var(--cat-data)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
+    return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
   }
   function catTagsHtml(category) {
     var cls = catClass(category);
@@ -102,7 +102,7 @@
     }).join("");
   }
   function catPriority(tag) {
-    return { data: 0, prototype: 1, game: 2, aigc: 3, tool: 4 }[tag] || 99;
+    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5 }[tag] || 99;
   }
 
   /* 排序：精选置顶 → 年限倒序 → 同年按类优先级 → 标题 */
@@ -251,7 +251,7 @@
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
     // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
-    if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">查看项目 ↗</a>';
+    if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
     if (w.prdUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
     if (w.prdDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdDocUrl) + '" target="_blank" rel="noopener">PRD 飞书文档 ↗</a>';

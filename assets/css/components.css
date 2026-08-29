@@ -218,6 +218,8 @@ body.nav-locked { overflow: hidden; }
 .tag--game:hover { background: rgba(161,98,7,0.08); box-shadow: var(--glow-sm); }
 .tag--tool { color: var(--cat-tool); border-color: rgba(124,63,16,0.40); }
 .tag--tool:hover { background: rgba(124,63,16,0.08); box-shadow: var(--glow-sm); }
+.tag--industry { color: var(--cat-industry); border-color: rgba(169,113,75,0.40); }
+.tag--industry:hover { background: rgba(169,113,75,0.08); box-shadow: var(--glow-sm); }
 
 /* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active） */
 .filter-btn {

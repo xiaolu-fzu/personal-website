@@ -27,6 +27,7 @@
   --cat-aigc:            #C0592F;   /* AIGC · rust */
   --cat-game:            #A65A3A;   /* 网页游戏 · bronze */
   --cat-tool:            #9E4F3A;   /* 工具/开发 · chocolate */
+  --cat-industry:        #A9714B;   /* 行业研究 · 暖陶 */
 
   /* ---------- 1.2 背景渐变（暖琥珀氛围，纯 CSS） ---------- */
   --bg-gradient:
