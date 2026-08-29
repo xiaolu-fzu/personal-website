@@ -26,6 +26,7 @@ window.WORKS = [
   {
     title: "绝区零 2.7 · X 日语区海外社区监测",
     desc: "对《绝区零》2.7 版本 X 日语区做系统性内容生态监测，定位投放机会、量化商单效率。",
+    thumb: "assets/img/绝区零-X.jpg",
     value: "6.5 万帖 · 定位投放机会，量化商单效率",
     category: "data",
     year: 2024,
@@ -74,6 +75,7 @@ window.WORKS = [
   {
     title: "绝区零 · YouTube 日区长期生态监测",
     desc: "建立长周期跨版本持续性监测体系，覆盖自研爬取 + 官方接口补爬 → 判定引擎 → 固定工作流 → 简报输出全链路。",
+    thumb: "assets/img/绝区零-YouTube.jpg",
     value: "7+ 版本长周期监测 · 自研爬取到简报全链路",
     category: "data",
     year: 2024,
@@ -120,6 +122,7 @@ window.WORKS = [
   {
     title: "星布谷地 CBT2 · 小语种地区舆论监控",
     desc: "围绕《星布谷地》CBT2，对泰/印尼/法/俄四语区进行为期一个月周期性舆情监控，覆盖 YouTube/X/VK。",
+    thumb: "assets/img/星布谷地.jpg",
     value: "4 语区舆情监控 · 提前预警 7 大风险",
     category: "data",
     year: 2024,
@@ -162,6 +165,7 @@ window.WORKS = [
   {
     title: "欧美 AIGC 用户接受度调研",
     desc: "跨 YouTube/TikTok/X 三大平台，覆盖英/德/法/西语区 AIGC 内容，分析用户接受度、风险结构与平台匹配。",
+    thumb: "assets/img/AIGC.jpg",
     value: "3049 条内容 · 判断 AIGC 接受度与平台匹配",
     category: "data",
     year: 2024,
@@ -207,6 +211,7 @@ window.WORKS = [
   {
     title: "鸣潮 · 巴西创作者投资调研",
     desc: "受《鸣潮》项目委托，对巴西 11 位潜在合作创作者做背景调研与风险评估，为投资决策提供依据。",
+    thumb: "assets/img/鸣潮.jpg",
     value: "11 位创作者调研 · 规避品牌声誉风险",
     category: "data",
     year: 2024,
@@ -327,6 +332,7 @@ window.WORKS = [
   {
     title: "LocalMiniDrama · 本地短剧 Mod",
     desc: "改装 LocalMiniDrama：适配 RunningHub 中转站 MiniMax H3、加入 AI 配置停用选项、添加输出分辨率选项。",
+    thumb: "assets/img/短剧工作流.jpg",
     value: "本地短剧 Mod · 适配 MiniMax H3",
     category: "tool",
     year: 2025,
