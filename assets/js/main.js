@@ -145,7 +145,8 @@
     var rows = (t.tbody || []).map(function (r) {
       return "<tr>" + r.map(function (c, i) { return '<td' + (i > 0 && /^[-+0-9.,%]/.test(String(c)) ? ' class="num"' : "") + ">" + escapeHtml(c) + "</td>"; }).join("") + "</tr>";
     }).join("");
-    return '<div class="report-table-wrap"><table><thead><tr>' + t.thead.map(function (h) { return "<th>" + escapeHtml(h) + "</th>"; }).join("") + '</tr></thead><tbody>' + rows + "</tbody></table></div>";
+    var note = t.note ? '<p class="table-note">' + escapeHtml(t.note) + "</p>" : "";
+    return '<div class="report-table-wrap"><table><thead><tr>' + t.thead.map(function (h) { return "<th>" + escapeHtml(h) + "</th>"; }).join("") + '</tr></thead><tbody>' + rows + "</tbody></table></div>" + note;
   }
   function renderReport(w) {
     var resultsHtml = "";
@@ -160,6 +161,14 @@
       }).join("");
       resultsHtml = '<div class="report-pane" data-pane="conclusions"><ol class="report-conclusions">' + items + "</ol></div>";
     }
+    var caliberHtml = (w.report && w.report.caliber && w.report.caliber.length) ? w.report.caliber.map(function (c) { return "<li>" + escapeHtml(c) + "</li>"; }).join("") : "";
+    var caliberPane = '<div class="report-pane" data-pane="caliber" hidden>' +
+        (caliberHtml ? '<ul class="report-caliber">' + caliberHtml + "</ul>" : '<p class="report-caliber--empty">数据口径整理中…</p>') +
+        "</div>";
+    var validateHtml = (w.report && w.report.validate && w.report.validate.length) ? w.report.validate.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") : "";
+    var validatePane = '<div class="report-pane" data-pane="validate" hidden>' +
+        (validateHtml ? '<ul class="report-summary-list">' + validateHtml + "</ul>" : '<p class="report-summary--empty">建议与验证整理中…</p>') +
+        "</div>";
     var hasReport = w.report && w.report.tables && w.report.tables.length;
     if (hasReport) {
       var tablesHtml = w.report.tables.map(function (t) {
@@ -169,24 +178,30 @@
         (w.report.title ? '<h3 class="report-title">' + escapeHtml(w.report.title) + "</h3>" : "") +
         tablesHtml +
         "</div>";
-      var backgroundPane = '<div class="report-pane" data-pane="background" hidden>' +
-        (w.background ? '<p class="report-background">' + escapeHtml(w.background) + "</p>" : '<p class="report-background report-background--empty">项目背景整理中…</p>') +
-        "</div>";
-      var summaryPane = '<div class="report-pane" data-pane="summary" hidden>' +
-        '<p class="report-summary">' + (w.summary ? escapeHtml(w.summary) : '<em class="report-summary--empty">报告摘要整理中…</em>') + "</p>" +
-        "</div>";
+      var backgroundBody = Array.isArray(w.background)
+        ? '<ul class="report-background-list">' + w.background.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ul>"
+        : (w.background ? '<p class="report-background">' + escapeHtml(w.background) + "</p>" : '<p class="report-background report-background--empty">项目背景整理中…</p>');
+      var backgroundPane = '<div class="report-pane" data-pane="background" hidden>' + backgroundBody + "</div>";
+      var summaryBody = Array.isArray(w.summary)
+        ? '<ul class="report-summary-list">' + w.summary.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ul>"
+        : (w.summary ? '<p class="report-summary">' + escapeHtml(w.summary) + "</p>" : '<p class="report-summary report-summary--empty">报告摘要整理中…</p>');
+      var summaryPane = '<div class="report-pane" data-pane="summary" hidden>' + summaryBody + "</div>";
       // 切换按钮：项目背景 / 主要结论(默认) / 报告摘要 / 查看报表表格（均带图标）
       return '<div class="work-report">' +
         '<div class="report-tabs">' +
-          '<button type="button" class="report-tab" data-tab="background">📋 项目背景</button>' +
           (resultsHtml ? '<button type="button" class="report-tab is-active" data-tab="conclusions">💡 主要结论</button>' : "") +
           '<button type="button" class="report-tab" data-tab="summary">📄 报告摘要</button>' +
+          '<button type="button" class="report-tab" data-tab="validate">🎯 建议与验证</button>' +
           '<button type="button" class="report-tab" data-tab="tables">📊 查看报表表格</button>' +
+          '<button type="button" class="report-tab" data-tab="caliber">🧭 数据口径</button>' +
+          '<button type="button" class="report-tab" data-tab="background">📋 项目背景</button>' +
         "</div>" +
         backgroundPane +
         (resultsHtml ? resultsHtml : "") +
         summaryPane +
         reportPane +
+        caliberPane +
+        validatePane +
         "</div>";
     }
     if (!resultsHtml) return "";

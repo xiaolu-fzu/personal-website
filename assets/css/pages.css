@@ -135,8 +135,20 @@
 .concl-label { flex-shrink: 0; display: inline-flex; align-items: center; padding: var(--space-1) var(--space-3); background: var(--accent); color: #17110b; border-radius: var(--radius-full); font-size: var(--fs-sm); font-weight: var(--weight-bold); white-space: nowrap; }
 .concl-body { color: var(--text); font-size: var(--fs-base); line-height: 1.7; }
 .report-background { color: var(--text); font-size: var(--fs-base); line-height: 1.8; }
+.report-background-list { list-style: none; padding: 0; margin: 0; text-align: left; }
+.report-background-list li { position: relative; padding-left: var(--space-4); margin-bottom: var(--space-3); color: var(--text); font-size: var(--fs-base); line-height: 1.85; }
+.report-background-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
 .report-background--empty { color: var(--text-muted); font-style: italic; }
 .report-summary { color: var(--text); font-size: var(--fs-base); line-height: 1.9; padding: var(--space-4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.report-summary-list { list-style: none; padding: 0; margin: 0; text-align: left; }
+.report-summary-list li { position: relative; padding-left: var(--space-4); margin-bottom: var(--space-3); color: var(--text); font-size: var(--fs-base); line-height: 1.85; }
+.report-summary-list li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
+.report-summary-list li strong { color: var(--text); }
+.table-note { font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--space-2); line-height: 1.7; white-space: nowrap; overflow-x: auto; max-width: 100%; }
+.report-caliber { list-style: none; padding: 0; margin: 0; text-align: left; }
+.report-caliber li { font-size: var(--fs-sm); color: var(--text-secondary); line-height: 1.85; margin-bottom: var(--space-3); position: relative; padding-left: var(--space-4); }
+.report-caliber li::before { content: "•"; position: absolute; left: 0; color: var(--accent); }
+.report-caliber--empty { color: var(--text-muted); font-size: var(--fs-sm); }
 .report-block { margin-bottom: var(--space-5); }
 .report-block:last-child { margin-bottom: 0; }
 .report-block h4 { color: var(--text); font-size: var(--fs-base); font-weight: var(--weight-bold); margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
