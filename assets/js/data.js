@@ -339,6 +339,20 @@ window.WORKS = [
     controls: "进入即玩 · 躲避与输出 · 多关卡 Boss 战",
     keywords: ["网页游戏", "Boss 战"]
   },
+  {
+    title: "真菌星域 · 生长吞并",
+    desc: "受 Eufloria 启发的 Canvas 2D 即时战略小游戏：派兵占领星球、建造繁殖/防御树、孢子继承能量自由追击敌人。",
+    value: "即时战略 · 星球占领与生长吞并",
+    category: "game",
+    year: 2026,
+    hue: 130,
+    gameUrl: "https://xiaolu-fzu.github.io/fungal-stars/",
+    thumb: "assets/img/真菌星域.webp",
+    genre: "RTS",
+    controls: "点我方星球选中 → 点目标星球派兵 · 造繁殖/防御树 · 拖动平移 · 滚轮缩放 · 右键取消",
+    keywords: ["网页游戏", "RTS", "即时战略"],
+    featured: true
+  },
 
   /* ---------------- 工具/开发 tool（第 5 类） ---------------- */
   {
