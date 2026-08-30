@@ -252,7 +252,7 @@ window.WORKS = [
   {
     title: "4agent 产品调研",
     desc: "对 Claude Code、OpenAI Codex、DeepSeek Harness、腾讯 WorkBuddy 四款主流 AI Agent 产品做竞品/行业调研，给出分层定位与选型建议。",
-    thumb: "assets/img/4agent-logos.png",
+    thumb: "assets/img/4agent-logos.webp",
     value: "4 款 AI Agent 调研 · 分层定位与选型建议",
     category: "industry",
     year: 2026,
@@ -266,7 +266,7 @@ window.WORKS = [
   {
     title: "ProListing · 离线记账应用",
     desc: "「一部手机装下全部生活」的离线记账 App，含原型 + 安卓包 + 下载页。",
-    thumb: "assets/img/ProListing.png",
+    thumb: "assets/img/ProListing.webp",
     value: "离线记账 App 原型 · J人理想型生活管理",
     idea: "专为「J人」（计划型人格）打造的综合性离线生活管理软件，把多款生活记录与自律计划功能融为一体。坚持「完全离线→绝对安全、功能众多→软件唯一」的产品哲学：数据全部本地存储、绝对安全；功能虽多，却保持唯一的沉浸式体验。目前已完成「记账」与「计划」两大核心模块，未来还有多项开发计划持续迭代。",
     category: "prototype",
@@ -319,7 +319,7 @@ window.WORKS = [
     year: 2025,
     hue: 90,
     gameUrl: "https://xiaolu-fzu.github.io/fruit-rogue/",
-    thumb: "assets/img/国宝特工.png",
+    thumb: "assets/img/国宝特工.webp",
     devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/QvinwvJtRi9vFYk2AFqcBTR5nUg?from=from_copylink",
     genre: "肉鸽",
     controls: "WASD / 方向键移动 · 自动射击 · 1–4 切武器 · 升级三选一 · 支持触屏",
@@ -334,7 +334,7 @@ window.WORKS = [
     year: 2025,
     hue: 20,
     gameUrl: "https://xiaolu-fzu.github.io/bennett-boss-rush/",
-    thumb: "assets/img/班尼特挑战.png",
+    thumb: "assets/img/班尼特挑战.webp",
     genre: "Boss 战",
     controls: "进入即玩 · 躲避与输出 · 多关卡 Boss 战",
     keywords: ["网页游戏", "Boss 战"]
