@@ -280,6 +280,28 @@ window.WORKS = [
     keywords: ["产品原型", "移动端", "离线记账"],
     featured: true
   },
+  {
+    title: "真菌星域 · 游戏原型设计",
+    desc: "一款菌毯扩张、孢子攻防的轻量策略游戏完整产品原型设计：团队提需求 → 做原型 demo → 内部试玩 → 需求补全，双文档严格互补。",
+    value: "游戏产品原型 · 需求与实现严格互补",
+    category: "prototype",
+    year: 2026,
+    hue: 145,
+    idea: "以产品经理视角，做一款轻量策略游戏的端到端原型：目标 Steam、弱操作、上手即爽。从《需求文档》（要什么、为什么、怎么验收）与《开发文档》（怎么做、现状态）双文档出发，先做成可玩 demo 并组织内部试玩，把真实反馈归纳为「上手门槛、操作效率、难度曲线、重复可玩性」四大问题，再用「需求与实现追溯矩阵」让两者严格互补、互相印证。",
+    mainline: [
+      "第 1 步 · 团队提需求（写需求文档）：团队要做一款目标 Steam 的轻度休闲策略游戏（菌毯扩张、孢子攻防）；产品经理产出《需求文档》，涵盖背景与目标、产品定位、目标用户、核心玩法、功能需求（P0、P1、P2）、原型 demo 范围、验收标准、用户访谈计划。",
+      "第 2 步 · 做原型 demo（开发文档）：把需求实现成一版可玩的网页原型（Canvas 2D、零依赖），包括阵营与数据模型、关卡式地图（19 星）、选择派遣与多跳寻路、繁殖树与防御树、中立殖民与战斗攻核、AI、教程、渲染与镜头、交互与音效、HUD、胜负判定；同步产出《开发文档》作为实现真源。",
+      "第 3 步 · 原型 demo 给内部人员游玩：组织 4 位用户内部试玩，收集真实反馈，归纳为「上手门槛、操作效率、难度曲线、重复可玩性」四大问题。",
+      "第 4 步 · 在需求文档上继续补全：把试玩反馈带回 PRD，补全 P0（批量编队、引导教学、难度档位、面板优化）至 P2；并用「需求与实现追溯矩阵」把每条需求映射到开发文档机制与当前状态（已实现、部分、待实现），让「要什么」与「做到哪」严格互补、不再漂移。"
+    ],
+    link: "https://xiaolu-fzu.github.io/fungal-stars/",
+    devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/LEVJwpvEUiZQ9mkYlELc1STZneb",
+    reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/PDIgwgQR8ifTjOknbQxcqo6Yn2b?from=from_copylink",
+    outLinkText: "原型demo ↗",
+    thumb: "assets/img/真菌星域.webp",
+    keywords: ["游戏原型", "PRD", "需求与实现", "产品设计"],
+    featured: true
+  },
 
   /* ---------------- AIGC aigc ---------------- */
   {
@@ -349,7 +371,7 @@ window.WORKS = [
     gameUrl: "https://xiaolu-fzu.github.io/fungal-stars/",
     thumb: "assets/img/真菌星域.webp",
     genre: "RTS",
-    controls: "点我方星球选中 → 点目标星球派兵 · 造繁殖/防御树 · 拖动平移 · 滚轮缩放 · 右键取消",
+    controls: "点星球选中 → 点目标派兵 · 造繁殖/防御树 · 拖动平移缩放 · 右键取消",
     keywords: ["网页游戏", "RTS", "即时战略"],
     featured: true
   },

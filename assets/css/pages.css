@@ -160,7 +160,14 @@
 .report-table-wrap td.num { font-family: var(--font-mono); color: var(--accent); white-space: nowrap; }
 .work-detail__idea h4 { font-family: var(--font-display); color: var(--accent); font-size: var(--fs-base); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
 .work-detail__idea p { color: var(--text-secondary); font-size: var(--fs-base); line-height: var(--lh-body); }
-.work-detail__links { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+.work-detail__mainline { margin-bottom: var(--space-4); padding: var(--space-4); background: rgba(78,110,142,0.05); border-left: 3px solid #4E6E8E; border-radius: var(--radius-sm); }
+.work-detail__mainline h4 { font-family: var(--font-display); color: #4E6E8E; font-size: var(--fs-base); font-weight: var(--weight-bold); margin-bottom: var(--space-2); }
+.mainline-list { margin: 0; padding-left: 1.2em; list-style: decimal; }
+.mainline-list li { color: var(--text-secondary); font-size: var(--fs-base); line-height: var(--lh-body); margin-bottom: var(--space-3); }
+.mainline-list li:last-child { margin-bottom: 0; }
+.work-detail__links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-4); }
+.work-detail__links .btn-ghost { padding: var(--space-2) var(--space-4); font-size: var(--fs-sm); font-weight: var(--weight-medium); }
+.work-detail__links .btn-primary { font-weight: var(--weight-bold); }
 .work-disclaimer { font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-4); }
 
 /* 报告关键结论（data 类）：表格或有序列表 */
@@ -194,7 +201,6 @@
 .work-media .btn { margin-top: var(--space-3); }
 .work-media .btn + .btn { margin-left: var(--space-3); }
 .game-frame:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
-.game-hint { font-size: var(--fs-sm); color: var(--text-secondary); text-align: center; margin-top: var(--space-2); }
 
 /* 故事原文折叠（AIGC 硬币故事区） */
 .work-story { margin-top: var(--space-5); border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); overflow: hidden; }
