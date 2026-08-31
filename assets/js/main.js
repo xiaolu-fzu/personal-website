@@ -250,7 +250,7 @@
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
     // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
-    if (w.devDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>';
+    if (w.devDocUrl && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>';
     if (w.reqDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.reqDocUrl) + '" target="_blank" rel="noopener">需求文档 ↗</a>';
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
