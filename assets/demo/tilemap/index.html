@@ -52,6 +52,24 @@
 </head>
 <body>
 <script src="recording.js?v=2"></script>
+<script>
+/* 早期：立即进入纯画布模式 + 显示加载提示（不等素材加载） */
+(function(){
+  if(/[?&]edit=1/.test(location.search)) return;
+  var s=document.createElement("style");
+  s.textContent=".app{grid-template-rows:1fr!important}.topbar,.statusbar,aside{display:none!important}.main{grid-template-columns:1fr!important}.canvaswrap{display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:#0c0f14!important}";
+  document.head.appendChild(s);
+  function tip(){
+    if(document.getElementById("__loadingTip")) return;
+    var t=document.createElement("div"); t.id="__loadingTip";
+    t.textContent="正在加载地图动画…";
+    t.style.cssText="position:fixed;left:0;right:0;top:50%;text-align:center;color:#8a9aa8;font:14px/1.6 system-ui,-apple-system,sans-serif;pointer-events:none;z-index:9";
+    document.body.appendChild(t);
+  }
+  if(document.body) tip(); else document.addEventListener("DOMContentLoaded", tip);
+  window.__removeTip=function(){ var t=document.getElementById("__loadingTip"); if(t) t.remove(); };
+})();
+</script>
 <div class="app">
   <div class="topbar">
     <h1>地形编辑器 <span class="dot">·</span> 图层</h1>
@@ -799,13 +817,21 @@ Promise.all([
   function boot(){
     if(IS_EDIT){ setupEditBar(); return; }
     stripUI();
+    if(window.__removeTip) window.__removeTip();
+    if(typeof A === "undefined" || !A){
+      var d=document.createElement("div");
+      d.textContent="地图动画加载中，请稍候刷新…";
+      d.style.cssText="position:fixed;left:0;right:0;top:50%;text-align:center;color:#8a9aa8;font:14px system-ui";
+      document.body.appendChild(d); return;
+    }
     if(window.__REC && window.__REC.events && window.__REC.events.length){ play(window.__REC); return; }
     fetch('recording.json',{cache:'no-store'})
       .then(function(r){ return r.ok?r.json():null; })
       .then(function(rec){ if(rec && rec.events && rec.events.length) play(rec); else defaultDemo(); })
       .catch(function(){ defaultDemo(); });
   }
-  var w=setInterval(function(){ if(window.__A_READY){ clearInterval(w); boot(); } }, 120);
+  var booted=false, w=setInterval(function(){ if(window.__A_READY){ clearInterval(w); if(!booted){ booted=true; boot(); } } }, 120);
+  setTimeout(function(){ if(!booted){ booted=true; clearInterval(w); boot(); } }, 12000);
 })();
 </script>
 </body>
