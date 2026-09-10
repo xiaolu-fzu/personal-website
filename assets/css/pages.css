@@ -195,6 +195,8 @@
   background: #fff;
   box-shadow: 0 8px 40px rgba(0,0,0,0.35);
 }
+/* 宽屏原型（如瓦片地图编辑器回放）：占满宽度、更高 */
+.work-media.proto-frame .proto-iframe.proto-wide { width: 100%; max-width: 100%; height: min(840px, 82vh); max-height: min(840px, 82vh); background: #0c0f14; }
 .work-media video { display: block; width: 100%; max-width: min(480px, 100%); max-height: 62vh; margin: 0 auto; border-radius: var(--radius-md); object-fit: contain; }
 .work-media figcaption { font-size: var(--fs-sm); color: var(--text-muted); margin-top: var(--space-2); }
 .work-controls { font-size: var(--fs-sm); color: var(--text-secondary); margin: var(--space-3) 0; }

@@ -93,7 +93,7 @@
     return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "原型和产品", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
   }
   function catTagsHtml(category) {
     var cls = catClass(category);
@@ -239,7 +239,7 @@
       html += '<div class="proto-showcase">' +
         '<p class="proto-showcase__label">产品原型展示（点击可交互）</p>' +
         '<div class="work-media proto-frame">' +
-          '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe"></iframe>' +
+          '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe' + (w.protoWide ? ' proto-wide' : '') + '"></iframe>' +
         '</div>' +
       "</div>";
     }

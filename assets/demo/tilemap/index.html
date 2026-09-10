@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地形编辑器 · 图层</title>
+<style>
+  :root{ --amber:#f5b942; --text:#e8e9ec; --muted:#9aa0ab; --line:#2a2f38; --panel:#151a21; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:#0c0f14;overflow:hidden;}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);}
+  .app{display:grid;grid-template-rows:auto 1fr auto;height:100%;}
+  .topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .topbar h1{font-size:15px;font-weight:700;} .topbar h1 .dot{color:var(--amber);}
+  .hint{font-size:11px;color:var(--muted);}
+  .btn{font-family:inherit;font-size:12.5px;font-weight:600;color:var(--text);background:#222831;border:1px solid #333b46;border-radius:8px;padding:6px 12px;cursor:pointer;}
+  .btn:hover{background:#2a323d;} .btn.amber{background:var(--amber);color:#1a1a1a;border-color:var(--amber);}
+  .btn.red{background:#c03a2a;color:#fff;border-color:#c03a2a;}
+  .btn.red.on{background:#e0553f;}
+  .spacer{flex:1;}
+  .main{display:grid;grid-template-columns:200px 1fr;min-height:0;}
+  aside{background:var(--panel);border-right:1px solid var(--line);padding:12px;overflow-y:auto;}
+  aside h3{font-size:11px;font-weight:700;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px;}
+  aside .group{margin-bottom:16px;}
+  .field{display:flex;align-items:center;gap:6px;margin:5px 0;font-size:12px;}
+  .field label{width:52px;color:var(--muted);}
+  .field input{width:76px;font-family:inherit;font-size:12px;color:var(--text);background:#10151b;border:1px solid #333b46;border-radius:6px;padding:5px 7px;}
+  aside .btn{width:100%;margin-top:6px;}
+  /* 图层面板 */
+  .layer-row{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:6px;border-radius:8px;background:#10151b;border:2px solid transparent;cursor:pointer;}
+  .layer-row.on{border-color:var(--amber);}
+  .layer-row .sw{width:30px;height:30px;image-rendering:pixelated;border-radius:5px;background:#0e1a24;flex:none;}
+  .layer-row .nm{font-size:12px;flex:1;}
+  .layer-row .vis{width:34px;height:20px;flex:none;display:flex;align-items:center;}
+  .layer-row .vis input{width:16px;height:16px;accent-color:var(--amber);}
+  .tabs{display:flex;gap:6px;margin-bottom:4px;}
+  .ico{font-size:14px;margin-right:3px;display:inline-block;}
+  .tab{display:inline-flex;align-items:center;justify-content:center;gap:3px;}
+  .tab{flex:1;font-family:inherit;font-size:12px;font-weight:700;padding:6px 0;background:#222831;border:1px solid #333b46;border-radius:8px;color:var(--text);cursor:pointer;}
+  .tab.on{background:var(--amber);color:#1a1a1a;border-color:var(--amber);}
+  #landList{display:flex;flex-wrap:wrap;gap:6px;}
+  .land-item{width:72px;height:56px;background:#10151b;border:2px solid transparent;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px;}
+  .land-item.on{border-color:var(--amber);}
+  .land-item img{max-width:100%;max-height:36px;image-rendering:pixelated;}
+  .land-item .nm{font-size:10px;color:var(--muted);}
+  #brushBtns{display:flex;flex-wrap:wrap;gap:6px;}
+  #brushBtns .btn{flex:1;min-width:44%;padding:6px 4px;}
+  .canvaswrap{overflow:auto;background:#080a0d;}
+  canvas{display:block;background:#0e1a24;image-rendering:pixelated;}
+  .statusbar{display:flex;gap:18px;align-items:center;padding:8px 14px;background:var(--panel);border-top:1px solid var(--line);font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <h1>地形编辑器 <span class="dot">·</span> 图层</h1>
+    <span class="hint">选层绘制 · 勾选显示 · 第0层 水/草地 · 1-3层 草地/高处地面</span>
+    <div style="display:flex;gap:6px;margin-left:auto;">
+      <button class="btn" id="foamBtn">水泡:开</button>
+      <div class="field" style="width:64px"><label>水泡</label><input type="number" id="foamScale" value="3" min="0.4" max="4" step="0.1"></div>
+      <button class="btn" id="shadowBtn">阴影:开</button>
+      <div class="field" style="width:64px"><label>阴影</label><input type="number" id="shadowScale" value="3" min="0.4" max="4" step="0.1"></div>
+      <button class="btn" id="exportBtn">导出</button>
+      <button class="btn" id="importBtn">导入</button>
+      <input type="file" id="importFile" accept=".json" style="display:none">
+    </div>
+  </div>
+
+  <div class="main">
+    <aside>
+      <div class="group">
+        <div class="tabs">
+          <button class="tab on" id="tabTerrain">地形</button>
+          <button class="tab" id="tabLandscape">景观</button>
+          <button class="tab" id="tabUnits">角色</button>
+        </div>
+      </div>
+      <!-- 角色面板 -->
+      <div id="unitPanel" style="display:none">
+        <div class="group">
+          <h3>角色工具</h3>
+          <div class="tabs" id="unitTools">
+            <button class="tab on" id="utPlace"><span class="ico">🖌️</span>放置</button>
+            <button class="tab" id="utErase"><span class="ico">🧹</span>擦除</button>
+            <button class="tab" id="utGlove"><span class="ico">🧤</span>手套</button>
+          </div>
+          <div class="field"><label>大小</label><input type="number" id="unitScale" value="1" min="0.3" max="4" step="0.1"></div>
+        </div>
+        <div class="group"><h3>角色</h3><div id="unitList"></div></div>
+      </div>
+      <!-- 景观面板 -->
+      <div id="landPanel" style="display:none">
+        <div class="group">
+          <h3>摆放模式</h3>
+          <div class="tabs">
+            <button class="tab on" id="modeGeom">几何</button>
+            <button class="tab" id="modeFree">自由</button>
+          </div>
+          <div class="field"><label>大小</label><input type="number" id="landScale" value="1" min="0.2" max="4" step="0.1"></div>
+        </div>
+        <div class="group">
+          <h3>工具</h3>
+          <div class="tabs" id="landTools">
+            <button class="tab on" id="ltPlace"><span class="ico">🖌️</span>放置</button>
+            <button class="tab" id="ltErase"><span class="ico">🧹</span>擦除</button>
+            <button class="tab" id="ltGlove"><span class="ico">🧤</span>手套</button>
+          </div>
+          <div class="field"><label>大小</label><input type="number" id="landScaleSel" value="1" min="0.2" max="4" step="0.1"></div>
+        </div>
+        <div class="group"><h3>景观</h3><div id="landList"></div></div>
+      </div>
+      <div class="group">
+        <h3>画布大小</h3>
+        <div class="field"><label>行</label><input type="number" id="rows" value="14" min="4" max="200"></div>
+        <div class="field"><label>列</label><input type="number" id="cols" value="24" min="4" max="200"></div>
+        <button class="btn amber" id="applySize">应用大小</button>
+      </div>
+      <div class="group">
+        <h3>图层</h3>
+        <div id="layerList"></div>
+      </div>
+      <div class="group">
+        <h3 id="brushTitle">第0层 画笔</h3>
+        <div id="brushBtns"></div>
+      </div>
+      <div class="group">
+        <h3>示例</h3>
+        <button class="btn" id="demoCliff">示例1</button>
+      </div>
+      <div class="group">
+        <h3>第0层 初始</h3>
+        <button class="btn" id="initWater">全水</button>
+        <button class="btn" id="initGrass">全草</button>
+      </div>
+    </aside>
+    <div class="canvaswrap"><canvas id="cv"></canvas></div>
+  </div>
+
+  <div class="statusbar">
+    <span>当前层：<b id="curLayer">第0层</b></span>
+    <span>坐标：<b id="cursor"></b></span>
+    <span>该层格数 <b id="landCount">0</b></span>
+  </div>
+</div>
+<script>
+window.addEventListener('error',function(ev){ document.title='ERR '+ev.message; });
+</script>
+<script>
+const TS=64, NLAYER=4; // 0,1,2,3
+const cv=document.getElementById('cv'), ctx=cv.getContext('2d');
+function img(src){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('load '+src));i.src=src;});}
+const AUTOTILE={
+  "1111":{sx:64,sy:64},  "0111":{sx:64,sy:0},  "1011":{sx:128,sy:64},"1101":{sx:64,sy:128},
+  "1110":{sx:0,sy:64},   "0110":{sx:0,sy:0},   "0011":{sx:128,sy:0}, "1100":{sx:0,sy:128},
+  "1001":{sx:128,sy:128},"0100":{sx:0,sy:192}, "0101":{sx:64,sy:192},"0001":{sx:128,sy:192},
+  "0010":{sx:192,sy:0},  "1010":{sx:192,sy:64},"1000":{sx:192,sy:128},"0000":{sx:192,sy:192}
+};
+// 草唇(高地南边界草顶): 按左右邻是否同为"南边界"选左/中/右/窄(sx); sy=192(行3)
+// 悬崖: 左/中/右/窄(sx), 落平地 sy=256(行4) / 落水 sy=320(行5)
+function lipSX(wLow,eLow){ if(wLow&&eLow) return 512; if(wLow) return 320; if(eLow) return 448; return 384; }
+function cliffSX(wLow,eLow){ if(wLow&&eLow) return 512; if(wLow) return 320; if(eLow) return 448; return 384; }
+// 层定义：第0层=水/草地(黑白翻转), 1/2/3 = 高地草(用 color2/3/4 的 id5 中心草)
+const LAYERDEF=[
+  {name:"第0层", color:"color1", kind:"base"},
+  {name:"第1层", color:"color2", kind:"hill"},
+  {name:"第2层", color:"color3", kind:"hill"},
+  {name:"第3层", color:"color4", kind:"hill"},
+];
+let COLS=24, ROWS=14;
+let layers=[]; for(let l=0;l<NLAYER;l++){ const g=[]; for(let r=0;r<ROWS;r++) g.push(new Array(COLS).fill(0)); layers.push(g); }
+let layerVis=[true,true,true,true]; // 显隐
+let stairs=[]; // 楼梯额外贴图: {l, r, c, dir(3左/4右)}, 不影响 layers 地形数据
+let landscape=[]; // 景观: {l, r, c, kind, id} 与地形互不删除, 叠加渲染遮挡
+let units=[]; // 角色: {l, x, y, role, scale} 独立于景观/地形
+let unitBrush=null; // 当前角色选择 {role}
+let unitScaleVal=1; // 角色缩放
+let animTick=0; // 动画帧计数
+let animTime=0; // 动画累计秒(驱动帧)
+ // 动画累计秒(驱动平滑帧)
+let tab='terrain'; // 'terrain' | 'landscape'
+let landscapeBrush=null; // 当前景观选择 {kind, id}
+let landBrush='place'; // 'place'(放置) | 'erase'(橡皮擦,只删景观) | 'glove'(手套,移动/缩放)
+let selectedLand=null; // 手套选中的景观
+let landscapeMode='geom'; // 'geom'(几何,吸附格子) | 'free'(自由,任意坐标)
+let landScale=1; // 景观缩放: 1=原大小, <1缩小, >1放大
+let waterFoamOn=1; // 水泡特效开关(1开 0关)
+let foamScale=3; // 水泡面积(格): 初始3
+let shadowOn=1; // 阴影特效开关
+let shadowScale=3; // 阴影面积(格): 初始3
+// 景观定义(帧数/尺寸/锚点偏移)由 assets.landscape 加载后提供
+function isLandscapeAt(l,r,c){ return landscape.some(s=> s.l===l && s.r===r && s.c===c); }
+function isStairAt(l,r,c){ return stairs.some(s=> s.l===l && s.c===c && s.r===r); } // 只认楼梯上格(草面吃草唇边框用)
+function isStairAnyAt(l,r,c){ return stairs.some(s=> s.l===l && s.c===c && (s.r===r||s.r+1===r)); } // 上+下格(悬崖交互用)
+function stairDirAt(l,r,c){ const s=stairs.find(x=> x.l===l && x.c===c && x.r===r); return s? s.dir : 0; }
+let curLayer=0; // 当前绘制层
+let brush='grass'; // 通用画笔: water|grass|cliff
+let A=null;
+const W=()=>COLS*TS, H=()=>ROWS*TS;
+
+// 第0层掩码(水/草地)
+function mask0(r,c){ const isL=(rr,cc)=>{ if(rr<0||rr>=ROWS||cc<0||cc>=COLS) return false; return layers[0][rr][cc]!==0; }; return ""+(isL(r-1,c)?1:0)+(isL(r,c+1)?1:0)+(isL(r+1,c)?1:0)+(isL(r,c-1)?1:0); }
+// 高地层掩码(该层自身/下层任一为陆 => 同方块? 简化：该层有内容算陆)
+function maskHill(l,r,c){
+  const L=layers[l];
+  // 草地掩码只看 草地(值1), 悬崖(值2)/空(0) 都不算草地邻居, 保证草面/草唇顶不受悬崖影响
+  const same=(rr,cc)=>{ if(rr<0||rr>=ROWS||cc<0||cc>=COLS) return false; return L[rr][cc]===1; };
+  const N=same(r-1,c)?1:0, E=same(r,c+1)?1:0, S=same(r+1,c)?1:0, W=same(r,c-1)?1:0;
+  return ""+N+E+S+W;
+}
+
+
+// 水泡特效: 画 层 l 的落水地形(草/悬崖) 下方(0层水格)的水泡(帧错开动画), 中心对齐水格
+// 水泡: 望天层(浮于水面之上, 地形之下) —— 画在 该层落水地形格 中心
+// 0层: 草/悬崖 邻水(四向); 1-3层: 悬崖 落水(其下方0层是水)
+function drawFoam(l){
+  if(l!==0 && l!==1) return;                       // 只有1层悬崖才有机会有水泡
+  if(!waterFoamOn || !A.waterFoam) return;
+  const wf=A.waterFoam, F=192, L=layers[l], L0=layers[0];
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const v=L[r][c];
+    let nearWater;
+    if(l===0){
+      if(v!==1 && v!==2 && v!==3) continue;     // 0层草/悬崖
+      nearWater = (r>0&&L0[r-1][c]===0)||(r+1<ROWS&&L0[r+1][c]===0)||(c>0&&L0[r][c-1]===0)||(c+1<COLS&&L0[r][c+1]===0);
+    } else {
+      if(v!==2) continue;                        // 1-3层只认悬崖(2), 草唇(1)不画水泡
+      nearWater = (r+1<ROWS && L0[r+1][c]===0);  // 落水悬崖: 下方0层是水
+    }
+    if(!nearWater) continue;
+    const fr=Math.floor(animTime*5)%16, k=(r*7+c*3)%16, f=((fr+k)%16)*F;
+    const sZ=TS*foamScale, bx=c*TS+TS/2, byy=r*TS+TS/2;   // 望天层: 中心=落水地形格中心(水面/地表), 地形后画盖中间、边缘露出
+    ctx.drawImage(wf, f,0,F,F, bx-sZ/2, byy-sZ/2, sZ, sZ);
+  }
+}
+// 阴影: 草地版水泡 —— 画在 落草地悬崖(1-3层悬崖,其下方0层是草地) 的悬崖格中心(望天层: 悬崖之下)
+function drawShadow(l){
+  if(!shadowOn || !A.shadow) return;
+  const sh=A.shadow, F=192, L=layers[l], L0=layers[0];
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    if(l===0) continue;                        // 阴影只在悬崖层
+    if(L[r][c]!==2) continue;                  // 只悬崖(2)
+    if(!(r+1<ROWS && L0[r+1][c]===1)) continue;  // 悬崖下方0层是草地(1) => 落草地 => 阴影
+    const sZ=TS*shadowScale, bx=c*TS+TS/2, byy=r*TS+TS/2;  // 望天层: 悬崖格中心
+    ctx.drawImage(sh, 0,0,F,F, bx-sZ/2, byy-sZ/2, sZ, sZ);  // 单帧(阴影静止)
+  }
+}
+function draw(){
+  ctx.fillStyle='#0e1a24'; ctx.fillRect(0,0,W(),H());
+  // 第0层：水/草地/悬崖(岸边+南向悬崖自动)
+  if(layerVis[0]){
+    // 全体先铺水
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      ctx.drawImage(A.waterbg,0,0,TS,TS,c*TS,r*TS,TS,TS);
+    }
+  if(waterFoamOn) drawFoam(0); // 0层草/悬崖邻水的水泡(望天层)
+
+
+    // 草地顶面(值1草地, 值2悬崖也铺草底) + 水岸边用普通草地掩码
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      const v=layers[0][r][c];
+      if(v===1||v===2){ const m=mask0(r,c); const tp=AUTOTILE[m]||AUTOTILE["1111"]; ctx.drawImage(A.sheets['color1'], tp.sx,tp.sy,TS,TS, c*TS,r*TS,TS,TS); }
+    }
+    // 悬崖标记(值2=连续, 值3=窄): 顶面具边缘特效草地 + 正下方悬崖(落水320/落地256)
+    const L0=layers[0];
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      if(L0[r][c]!==2 && L0[r][c]!==3) continue;
+      const narrow = L0[r][c]===3;
+      const wLow = narrow? true : !( (c-1>=0)&&L0[r][c-1]!==0 );
+      const eLow = narrow? true : !( (c+1<COLS)&&L0[r][c+1]!==0 );
+      // 顶面: 草地掩码(带水岸/边缘特效)
+      const m=mask0(r,c); const tp=AUTOTILE[m]||AUTOTILE["1111"];
+      ctx.drawImage(A.sheets['color1'], tp.sx,tp.sy,TS,TS, c*TS,r*TS,TS,TS);
+      if(r+1<ROWS){
+        const southWater = L0[r+1][c]===0;
+        const sy = southWater?320:256;
+        ctx.drawImage(A.sheets['color1'], cliffSX(wLow,eLow),sy,TS,TS, c*TS,(r+1)*TS,TS,TS);
+      }
+    }
+  }
+  // 第1/2/3层 高处地面 —— 分开绘制：草地(值1)与悬崖(值2)各自独立，各守各的规则
+  for(let l=1;l<NLAYER;l++){
+    if(!layerVis[l]) continue;
+    if(waterFoamOn) drawFoam(l);           // 落水悬崖的水泡(画在悬崖格, 望天层: 悬崖之下)
+    if(shadowOn) drawShadow(l);            // 落草地悬崖的阴影(画在悬崖格, 望天层)
+    const sheet=A.sheets[LAYERDEF[l].color];
+    const L=layers[l];
+    // ---------- 先画草地(值1, 含草唇顶) ----------
+    const HI=320; // 高地草面在 sheet 列5-8, 0层AUTOTILE在列0-3, 偏移+320
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      if(L[r][c]!==1) continue;
+      // 楼梯吃边框: (a) 本层左右邻是楼梯(stairs) => W/E位=1; (b) 下层楼梯接入上层草唇顶 => 本格边框消失
+      let m=maskHill(l,r,c);
+      if(c-1>=0 && isStairAt(l,r,c-1)) m = m.slice(0,3)+'1';      // W=1 (本层左邻楼梯)
+      if(c+1<COLS && isStairAt(l,r,c+1)) m = m.slice(0,1)+'1'+m.slice(2); // E=1
+      if(l-1>=0 && r-1>=0){
+        const d=stairDirAt(l-1,r-1,c);
+        if(d===3) m = m.slice(0,3)+'1';        // 下层左楼梯 -> 吃本草面格左边框
+        else if(d===4) m = m.slice(0,1)+'1'+m.slice(2);  // 下层右楼梯 -> 吃右边框
+      }
+      if((r-1>=0 && L[r-1][c]===1) && (r+1<ROWS && L[r+1][c]!==1)){
+        // 草唇顶固定用 纯草唇行(y=128, 7-9/15)
+        const sy = 128;
+        const tp=AUTOTILE[m]||AUTOTILE["1111"];
+        ctx.drawImage(sheet, tp.sx+HI,sy,TS,TS, c*TS,r*TS,TS,TS);
+      } else {
+        const tp=AUTOTILE[m]||AUTOTILE["1111"];
+        ctx.drawImage(sheet, tp.sx+HI,tp.sy,TS,TS, c*TS,r*TS,TS,TS);
+      }
+    }
+    // ---------- 再画悬崖(值2)在最上：基础段位(按左右悬崖邻) + 草唇顶修正(左右草唇顶) ----------
+    // 草唇顶(悬崖修正): 草地(1)或楼梯(3/4)都算, 悬崖(2)/空(0)不算 —— 楼梯横向等效草唇顶
+    const isLipTop=(rr,cc)=>{ if(rr<0||rr>=ROWS||cc<0||cc>=COLS) return false;
+      // 当前层: 草地(1) 或 该格是楼梯(额外贴图) => 草唇顶
+      const v=L[rr][cc];
+      return (v===1 || isStairAnyAt(l,rr,cc)); };   // 楼梯上/下格都算草唇顶(与悬崖交互)
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+      if(L[r][c]!==2) continue;
+      // 基础段位: 左右邻是否悬崖(2)
+      const wCliff=!!(c-1>=0&&L[r][c-1]===2), eCliff=!!(c+1<COLS&&L[r][c+1]===2);
+      // 基础段位索引(落地): 0=窄(20) 1=左端(17) 2=中(18) 3=右端(19)
+      let base;
+      if(!wCliff&&!eCliff) base='narrow'; else if(wCliff&&!eCliff) base='right'; else if(!wCliff&&eCliff) base='left'; else base='mid';
+      // 草唇顶修正: 看左右邻是否草唇顶
+      const lipW=isLipTop(r,c-1), lipE=isLipTop(r,c+1);
+      // 落水/落地
+      const southWater = !!(r+1<ROWS && layers[0] && layers[0][r+1][c]===0);
+      let sx;
+      if(base==='mid') sx=384;                 // 18/22 不变
+      else if(base==='left'){ sx = lipW? 384 : 320; }      // 17/21: 左草唇顶->18/22
+      else if(base==='right'){ sx = lipE? 384 : 448; }     // 19/23: 右草唇顶->18/22
+      else { // narrow(20/24)
+        if(lipW&&lipE) sx=384;                 // 左右都草唇顶 -> 18/22
+        else if(lipW) sx=448;                  // 左草唇顶 -> 19/23
+        else if(lipE) sx=320;                  // 右草唇顶 -> 17/21
+        else sx=512;                           // 无草唇顶 -> 20/24
+      }
+      const sy = southWater? 320 : 256;   // 落水(21-23/24) 落平地(17-19/20)
+      ctx.drawImage(sheet, sx,sy,TS,TS, c*TS,r*TS,TS,TS);
+    }
+  }
+  // ---------- 楼梯(额外贴图, 在 stairs 数组): 叠加绘制, 不影响 layers 地形 ----------
+  for(const st of stairs){
+    if(!layerVis[st.l]) continue;
+    const sheet=A.sheets[LAYERDEF[st.l].color];           // 楼梯颜色=该层草唇顶色
+    const right = st.dir===4;                              // 3=左坡(x=0), 4=右坡(x=192)
+    const topX = right?192:0, botX = right?192:0;
+    const r=st.r, c=st.c;
+    // 上格(草坡)在锚点; 下格(岩底)在下方格 —— 叠加贴图(不改地形)
+    ctx.drawImage(sheet, topX,256,TS,TS, c*TS,r*TS,TS,TS);
+    if(r+1<ROWS) ctx.drawImage(sheet, botX,320,TS,TS, c*TS,(r+1)*TS,TS,TS);
+  }
+  // ---------- 景观(叠加贴图, 遮挡地形): 按 kind 用帧动画 ----------
+  if(A.landscape && layerVis){
+    for(const item of landscape){
+      if(!layerVis[item.l]) continue;
+      const cfg=A.landscape[item.kind];
+      if(!cfg) continue;
+      const id0=item.id % cfg.imgs.length;
+      const im=cfg.imgs[id0];
+      // 每张建筑尺寸不同用 sizes, 其它用 cfg.fw/fh
+      const baseW = cfg.sizes? cfg.sizes[id0][0] : cfg.fw;
+      const baseH = cfg.sizes? cfg.sizes[id0][1] : cfg.fh;
+      const s=item.scale||1;
+      const cx=item.x, cy=item.y;
+      const fw=baseW*s, fh=baseH*s;
+      const fr=cfg.frames>1 ? Math.floor(animTime*cfg.fps) % cfg.frames : 0;
+      // 所有景观都以"底部中心"锚定(cx = 水平中心, cy = 底部)
+      if(cfg.frames>1) ctx.drawImage(im, fr*baseW,0,baseW,baseH, cx-fw/2, cy-fh, fw, fh);
+      else ctx.drawImage(im, 0,0,baseW,baseH, cx-fw/2, cy-fh, fw, fh);
+    }
+  }
+  // ---------- 角色(待机帧动画, 叠加在最上层): 底部中心锚定 ----------
+  if(A.units){
+    for(const u of units){
+      if(!layerVis[u.l]) continue;
+      const cfg=A.units[u.role]; if(!cfg) continue;
+      const im=cfg.imgs[0];
+      const s=u.scale||1;
+      const fw=cfg.fw*s, fh=cfg.fh*s;
+      const fr=Math.floor(animTime*cfg.fps) % cfg.frames;   // 待机帧(时间驱动)
+      const cx=u.x, cy=u.y;
+      ctx.drawImage(im, fr*cfg.fw,0,cfg.fw,cfg.fh, cx-fw/2, cy-fh, fw, fh);  // 底部中心
+    }
+  }
+  // 网格
+  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+  for(let c=0;c<=COLS;c++){ctx.beginPath();ctx.moveTo(c*TS+.5,0);ctx.lineTo(c*TS+.5,H());ctx.stroke();}
+  for(let r=0;r<=ROWS;r++){ctx.beginPath();ctx.moveTo(0,r*TS+.5);ctx.lineTo(W(),r*TS+.5);ctx.stroke();}
+  let cnt=0; for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(layers[curLayer][r][c]) cnt++;
+  document.getElementById('landCount').textContent=cnt;
+  if(window.__recOn && window.__recDiff) window.__recDiff();
+}
+function resizeCanvas(){ cv.width=W(); cv.height=H(); }
+function cellAt(e){ const rc=cv.getBoundingClientRect(); const x=Math.floor(e.clientX-rc.left),y=Math.floor(e.clientY-rc.top); const c=Math.floor(x/TS),r=Math.floor(y/TS); if(c<0||c>=COLS||r<0||r>=ROWS) return null; return {r,c}; }
+let painting=false, lastCell=null;
+function toggle(r,c){
+  if(tab==='landscape'){
+    // 景观模式: 点空白放一个景观(当前层); 擦除删景观(不改地形)
+    if(brush==='erase'){
+      const li=landscape.findIndex(s=> s.l===curLayer && s.x>=c && s.x<c+TS && s.y>=r && s.y<r+TS);
+      if(li>=0) landscape.splice(li,1);
+      return;
+    }
+    const fx = (landscapeMode==='geom')? (c+0.5)*TS : c;   // 几何: 格子中心; 自由: 像素c
+    const fy = (landscapeMode==='geom')? (r+0.5)*TS : r;
+    if(landscapeBrush){ landscape.push({ l:curLayer, x:fx, y:fy, kind:landscapeBrush.kind, id:landscapeBrush.id, scale:landScale }); }
+    return;
+  }
+  if(brush==='erase'){
+    const v=layers[curLayer][r][c];
+    // 先擦楼梯(在 stairs 中): 移除该格或其下方格的楼梯
+    const si=stairs.findIndex(s=> s.l===curLayer && ((s.r===r&&s.c===c)||(s.r+1===r&&s.c===c)) );
+    if(si>=0){ stairs.splice(si,1); }
+    else layers[curLayer][r][c]=0;
+    return;
+  }
+  if(brush==='stairL'||brush==='stairR'){
+    // 楼梯作为额外贴图: 存进 stairs(锚点上格), 不改 layers 地形; 一次两格(上格+下格)
+    stairs.push({ l:curLayer, r:r, c:c, dir: brush==='stairL'?3:4 }); draw(); return;
+  }
+  if(curLayer===0){
+    layers[0][r][c] = brush==='water'?0 : 1;
+  } else {
+    const v = brush==='cliff' ? 2 : 1;
+    if(layers[curLayer][r][c]===0) layers[curLayer][r][c]=v;
+  }
+}
+function ptrXY(e){ const rc=cv.getBoundingClientRect(); return { x:e.clientX-rc.left, y:e.clientY-rc.top }; }
+function placeAt(px,py){
+  if(tab==='units'){
+    let x=px, y=py;
+    if(landscapeMode==='geom'){ x=Math.floor(px/TS)*TS+TS/2; y=Math.floor(py/TS)*TS+TS/2; }
+    let ui=-1, best=1e9;
+    for(let i=0;i<units.length;i++){ const u=units[i]; if(u.l!==curLayer) continue; const d=Math.hypot(u.x-x,u.y-y); if(d<best){best=d; ui=i;} }
+    if(unitBrushTool==='erase'){ if(ui>=0&&best<TS*0.8){ units.splice(ui,1); } return; }
+    if(unitBrushTool==='glove'){ selectedUnit = (best<TS*1.5)? units[ui] : null; if(selectedUnit) document.getElementById('unitScale').value=selectedUnit.scale||1; return; }
+    if(unitBrush){ units.push({ l:curLayer, x:x, y:y, role:unitBrush.role, scale:unitScaleVal }); }
+    return;
+  }
+  if(tab==='landscape'){
+    // 像素坐标: 几何吸附到格子中心, 自由用像素
+    let x=px, y=py;
+    if(landscapeMode==='geom'){ x=Math.floor(px/TS)*TS+TS/2; y=Math.floor(py/TS)*TS+TS/2; }
+    // 找光标最近的本层景观
+    let li=-1, best=1e9;
+    for(let i=0;i<landscape.length;i++){ const s=landscape[i]; if(s.l!==curLayer) continue;
+      const d=Math.hypot(s.x-x, s.y-y);
+      if(d<best){ best=d; li=i; }
+    }
+    if(landBrush==='erase'){ // 只删最近的一个(拖动时mousemove连续触发=>连续删), 不误删其它
+      if(li>=0 && best<TS*0.8){ landscape.splice(li,1); if(selectedLand===landscape) selectedLand=null; }
+      return;
+    }
+    if(landBrush==='glove'){
+      selectedLand = (best<TS*1.5)? landscape[li] : null;
+      if(selectedLand) document.getElementById('landScaleSel').value=selectedLand.scale||1;
+      return;
+    }
+    // 放置: 无碰撞判定, 点哪放哪
+    if(landscapeBrush){ landscape.push({ l:curLayer, x:x, y:y, kind:landscapeBrush.kind, id:landscapeBrush.id, scale:landScale }); }
+    return;
+  }
+  const c=Math.floor(px/TS), r=Math.floor(py/TS); if(c<0||c>=COLS||r<0||r>=ROWS) return; toggle(r,c);
+}
+cv.addEventListener('mousedown',e=>{ e.preventDefault(); const p=ptrXY(e); painting=true; lastXY=p; placeAt(p.x,p.y); draw(); });
+cv.addEventListener('mousemove',e=>{
+  const p=ptrXY(e);
+  document.getElementById('cursor').textContent=Math.floor(p.x/TS)+','+Math.floor(p.y/TS);
+  if(tab==='units'){
+    if(unitBrushTool==='glove' && selectedUnit){ selectedUnit.x=p.x; selectedUnit.y=p.y; draw(); return; }
+    if(unitBrushTool==='erase' && painting){ placeAt(p.x,p.y); draw(); return; }   // 角色擦除: 按住拖动连续删
+    if(unitBrushTool==='place' && landscapeMode==='free' && painting){
+      let ui=-1,b=1e9; for(let i=0;i<units.length;i++){ const u=units[i]; if(u.l!==curLayer)continue; const d=Math.hypot(u.x-p.x,u.y-p.y); if(d<b){b=d;ui=i;} }
+      if(ui>=0){ units[ui].x=p.x; units[ui].y=p.y; }   // 长按拖动=>移动最近角色
+      draw(); return;
+    }
+    return;
+  }
+  if(tab==='landscape'){
+    if(landBrush==='glove' && selectedLand){ selectedLand.x=p.x; selectedLand.y=p.y; draw(); return; }
+    if(landBrush==='erase' && painting){ placeAt(p.x,p.y); draw(); return; }
+    if(landBrush==='place' && landscapeMode==='free' && painting){
+      let li=-1,b=1e9; for(let i=0;i<landscape.length;i++){ const s=landscape[i]; if(s.l!==curLayer)continue; const d=Math.hypot(s.x-p.x,s.y-p.y); if(d<b){b=d;li=i;} }
+      if(li>=0){ landscape[li].x=p.x; landscape[li].y=p.y; }   // 长按拖动=>移动最近景观
+      draw(); return;
+    }
+    return;
+  }
+  if(painting){ const c=Math.floor(p.x/TS),r=Math.floor(p.y/TS); if(c!==lastXY.c||r!==lastXY.r){ toggle(r,c); lastXY={c,r}; draw(); } }
+});
+cv.addEventListener('mouseup',()=>{ // 松手即放下
+  if(tab==='landscape' && landBrush==='glove'){ selectedLand=null; }
+  if(tab==='units' && unitBrushTool==='glove'){ selectedUnit=null; }
+  painting=false; document.getElementById('landScaleSel').value=landScale; });
+cv.addEventListener('mouseleave',()=>painting=false);
+cv.addEventListener('wheel',e=>{ if(tab==='landscape' && landBrush==='glove'){ e.preventDefault(); const p=ptrXY(e);
+  let sl=selectedLand;
+  if(!sl){ const li=landscape.findIndex(s=> s.l===curLayer && Math.abs(s.x-p.x)<TS/2 && Math.abs(s.y-p.y)<TS/2); if(li>=0){ sl=landscape[li]; selectedLand=sl; } }
+  if(sl){ const d=e.deltaY>0?-0.1:0.1; sl.scale=Math.max(0.2,Math.min(4,(sl.scale||1)+d)); document.getElementById('landScaleSel').value=sl.scale; draw(); }
+} },{passive:false});
+// 工具切换
+function setLandTool(t){ landBrush=t; document.getElementById('ltPlace').classList.toggle('on',t==='place'); document.getElementById('ltErase').classList.toggle('on',t==='erase'); document.getElementById('ltGlove').classList.toggle('on',t==='glove'); }
+document.getElementById('ltPlace').onclick=()=>setLandTool('place');
+document.getElementById('ltErase').onclick=()=>setLandTool('erase');
+document.getElementById('ltGlove').onclick=()=>setLandTool('glove');
+document.getElementById('landScaleSel').oninput=e=>{ landScale=Math.max(0.2,Math.min(4,+e.target.value||1)); if(selectedLand) selectedLand.scale=landScale; };
+
+// 图层列表
+function renderLayerList(){
+  const list=document.getElementById('layerList'); list.innerHTML='';
+  for(let l=0;l<NLAYER;l++){
+    const row=document.createElement('div'); row.className='layer-row'+(l===curLayer?' on':'');
+    const sw=document.createElement('div'); sw.className='sw'; sw.style.background = LAYERDEF[l].color;
+    const nm=document.createElement('div'); nm.className='nm'; nm.textContent=LAYERDEF[l].name+(l===curLayer?' (当前)':'');
+    const vis=document.createElement('div'); vis.className='vis';
+    const cb=document.createElement('input'); cb.type='checkbox'; cb.checked=layerVis[l];
+    cb.addEventListener('click',e=>{ e.stopPropagation(); layerVis[l]=cb.checked; draw(); });
+    vis.appendChild(cb);
+    row.appendChild(sw); row.appendChild(nm); row.appendChild(vis);
+    row.onclick=()=>{ curLayer=l; brush='grass'; document.getElementById('curLayer').textContent=LAYERDEF[l].name; renderLayerList(); renderBrushPanel(); draw(); };
+    list.appendChild(row);
+  }
+}
+function renderBrushPanel(){
+  const title=document.getElementById('brushTitle'), box=document.getElementById('brushBtns');
+  title.textContent = '第'+curLayer+'层 画笔';
+  const opts = curLayer===0 ? [['water','水'],['grass','草地'],['erase','橡皮擦']]
+                            : [['grass','草地'],['cliff','悬崖'],['stairL','左楼梯'],['stairR','右楼梯'],['erase','橡皮擦']];
+  box.innerHTML='';
+  for(const [id,label] of opts){
+    const b=document.createElement('button'); b.className='btn'+(brush===id?' on':''); b.textContent=label;
+    if(id==='erase') b.classList.add('red');
+    b.onclick=()=>{ brush=id; renderBrushPanel(); };
+    box.appendChild(b);
+  }
+}
+renderBrushPanel();
+
+// ---------- 景观: tab 切换 + 面板 + 动画 ----------
+function switchTab(t){
+  tab=t;
+  document.getElementById('tabTerrain').classList.toggle('on', t==='terrain');
+  document.getElementById('tabLandscape').classList.toggle('on', t==='landscape');
+  document.getElementById('tabUnits').classList.toggle('on', t==='units');
+  document.getElementById('landPanel').style.display = t==='landscape' ? '' : 'none';
+  document.getElementById('unitPanel').style.display = t==='units' ? '' : 'none';
+  const brushGroup=document.getElementById('brushTitle').closest('.group');
+  if(brushGroup) brushGroup.style.display = t==='terrain' ? '' : 'none';
+  if(t==='landscape') renderLandList();
+  if(t==='units') renderUnitList();
+}
+document.getElementById('tabTerrain').onclick=()=>switchTab('terrain');
+document.getElementById('tabLandscape').onclick=()=>switchTab('landscape');
+document.getElementById('tabUnits').onclick=()=>switchTab('units');
+function setLandMode(m){ landscapeMode=m; document.getElementById('modeGeom').classList.toggle('on',m==='geom'); document.getElementById('modeFree').classList.toggle('on',m==='free'); }
+document.getElementById('modeGeom').onclick=()=>setLandMode('geom');
+document.getElementById('modeFree').onclick=()=>setLandMode('free');
+// ---------- 角色: 列表 + 工具 ----------
+let unitBrushTool='place'; // place|erase|glove
+let selectedUnit=null;
+function renderUnitList(){
+  const box=document.getElementById('unitList'); box.innerHTML='';
+  if(!A.units) return;
+  for(const role of Object.keys(A.units)){
+    const cfg=A.units[role];
+    const it=document.createElement('div'); it.className='land-item'+(unitBrush&&unitBrush.role===role?' on':'');
+    const c=document.createElement('canvas'); c.width=72;c.height=48; const cc=c.getContext('2d'); cc.imageSmoothingEnabled=false;
+    cc.drawImage(cfg.imgs[0], 0,0,cfg.fw,cfg.fh, 12,0,48,48);
+    it.appendChild(c);
+    const nm=document.createElement('div'); nm.className='nm'; nm.textContent=cfg.label;
+    it.appendChild(nm);
+    it.onclick=()=>{ unitBrush={role}; renderUnitList(); };
+    box.appendChild(it);
+  }
+}
+function setUnitTool(t){ unitBrushTool=t; document.getElementById('utPlace').classList.toggle('on',t==='place'); document.getElementById('utErase').classList.toggle('on',t==='erase'); document.getElementById('utGlove').classList.toggle('on',t==='glove'); }
+document.getElementById('utPlace').onclick=()=>setUnitTool('place');
+document.getElementById('utErase').onclick=()=>setUnitTool('erase');
+document.getElementById('utGlove').onclick=()=>setUnitTool('glove');
+document.getElementById('unitScale').oninput=e=>{ unitScaleVal=Math.max(0.3,Math.min(4,+e.target.value||1)); };
+
+document.getElementById('landScale').oninput=document.getElementById('landScale').oninput=e=>{ landScale=Math.max(0.2,Math.min(4,+e.target.value||1)); };
+
+function renderLandList(){
+  const box=document.getElementById('landList'); box.innerHTML='';
+  if(!A.landscape) return;
+  const cats=[['bush','灌木'],['tree','树'],['stump','树桩'],['rock','岩石'],['cloud','云'],['gold','金矿'],['resource','资源'],['duck','鸭子'],['wrock','水中岩石'],['sheep','绵羊'],['building','建筑']];
+  for(const [kind,label] of cats){
+    const cfg=A.landscape[kind]; if(!cfg) continue;
+    for(let i=0;i<cfg.imgs.length;i++){
+      const it=document.createElement('div'); it.className='land-item'+(landscapeBrush&&landscapeBrush.kind===kind&&landscapeBrush.id===i?' on':'');
+      const c=document.createElement('canvas'); c.width=72;c.height=48; const cc=c.getContext('2d'); cc.imageSmoothingEnabled=false;
+      const baseW = cfg.sizes? cfg.sizes[i][0] : cfg.fw, baseH = cfg.sizes? cfg.sizes[i][1] : cfg.fh;
+      const sd=Math.min(54/baseW, 42/baseH);
+      cc.drawImage(cfg.imgs[i], 0,0,baseW,baseH, (72-baseW*sd)/2,(48-baseH*sd)/2, baseW*sd, baseH*sd);
+      it.appendChild(c);
+      const nm=document.createElement('div'); nm.className='nm'; nm.textContent= cfg.names? cfg.names[i] : (label+(i+1));
+      it.appendChild(nm);
+      it.onclick=()=>{ landscapeBrush={kind,id:i}; renderLandList(); };
+      box.appendChild(it);
+    }
+  }
+}
+// 动画循环: 驱动景观帧
+let rafId=null, lastT=null;
+function startLoop(){ if(rafId) return; lastT=performance.now(); (function tick(now){ const dt=Math.min((now-lastT)/1000,0.05); lastT=now; animTime+=dt; draw(); rafId=requestAnimationFrame(tick); })(performance.now()); }
+
+// ---------- 导入/导出 (JSON) ----------
+function exportJson(){
+  const data={ version:1, cols:COLS, rows:ROWS, curLayer:curLayer, layerVis:layerVis,
+    layers:layers.map(g=>g.map(r=>r.slice())), stairs:stairs.map(s=>Object.assign({},s)), landscape:landscape.map(s=>Object.assign({},s)), units:units.map(s=>Object.assign({},s)) };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='terrain-map.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function applyData(d){
+  if(!d.layers) throw new Error('缺少 layers');
+  COLS=d.cols||COLS; ROWS=d.rows||ROWS; curLayer=d.curLayer||0; layerVis=d.layerVis||layerVis;
+  layers=[]; for(let l=0;l<NLAYER;l++){ const g=[]; for(let r=0;r<ROWS;r++){ g.push(new Array(COLS).fill(0)); } layers.push(g); }
+  for(let l=0;l<Math.min(NLAYER,d.layers.length);l++){ for(let r=0;r<Math.min(ROWS,d.layers[l].length);r++){ for(let c=0;c<Math.min(COLS,d.layers[l][r].length);c++) layers[l][r][c]=d.layers[l][r][c]; } }
+  stairs=(d.stairs||[]).map(s=>Object.assign({},s));
+  landscape=(d.landscape||[]).map(s=>Object.assign({},s));
+  units=(d.units||[]).map(s=>Object.assign({},s));
+  document.getElementById('rows').value=ROWS; document.getElementById('cols').value=COLS;
+  resizeCanvas(); renderLayerList(); renderBrushPanel(); renderLandList(); draw();
+}
+function importJson(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ try{ applyData(JSON.parse(reader.result)); }catch(e){ document.title='导入失败: '+e.message; } };
+  reader.readAsText(file);
+}
+document.getElementById('foamScale').oninput=e=>{ foamScale=Math.max(0.4,Math.min(4,+e.target.value||1)); draw(); };
+document.getElementById('shadowScale').oninput=e=>{ shadowScale=Math.max(0.4,Math.min(4,+e.target.value||1)); draw(); };
+document.getElementById('shadowBtn').onclick=()=>{ shadowOn=shadowOn?0:1; document.getElementById('shadowBtn').textContent='阴影:'+(shadowOn?'开':'关'); draw(); };
+document.getElementById('foamBtn').onclick=()=>{ waterFoamOn=waterFoamOn?0:1; document.getElementById('foamBtn').textContent='水泡:'+(waterFoamOn?'开':'关'); draw(); };
+document.getElementById('exportBtn').onclick=exportJson;
+document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();
+document.getElementById('importFile').addEventListener('change',e=>{ importJson(e.target.files[0]); e.target.value=''; });
+document.getElementById('initWater').onclick=()=>{ for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) layers[0][r][c]=0; draw(); };
+document.getElementById('initGrass').onclick=()=>{ for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) layers[0][r][c]=1; draw(); };
+document.getElementById('demoCliff').onclick=()=>{
+  // 示例1: 在当前目录导入指定文件 terrain-map.json(复用 applyData)
+  fetch('terrain-map.json', { cache:'no-store' })
+    .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(d=>{ try{ applyData(d); }catch(e){ alert('示例1 应用失败: '+e.message); } })
+    .catch(e=>{
+  if(location.protocol==='file:'){
+    alert('当前是 file:// 打开, 浏览器禁止 fetch 加载 json。\n请改用 http 访问: http://127.0.0.1:8131/ (服务器在运行)');
+  } else {
+    alert('示例1 加载失败: '+e.message+'\n页面: '+location.href+'\n目标: '+new URL('terrain-map.json', location.href).href);
+  }
+});
+};
+document.getElementById('applySize').onclick=()=>{
+  const nr=Math.max(4,Math.min(200,+document.getElementById('rows').value||ROWS));
+  const nc=Math.max(4,Math.min(200,+document.getElementById('cols').value||COLS));
+  for(let l=0;l<NLAYER;l++){
+    let g=layers[l]; g=g.slice(0,nr); while(g.length<nr) g.push(new Array(nc).fill(0));
+    for(let r=0;r<nr;r++){ g[r]=g[r].slice(0,nc); while(g[r].length<nc) g[r].push(0); }
+    layers[l]=g;
+  }
+  ROWS=nr; COLS=nc; resizeCanvas(); draw();
+};
+
+Promise.all([
+  img('assets/tiles/color1.png'),img('assets/tiles/color2.png'),img('assets/tiles/color3.png'),img('assets/tiles/color4.png'), img('assets/tiles/water_bg.png'),
+  img('assets/landscape/bush1.png'),img('assets/landscape/bush2.png'),img('assets/landscape/tree1.png'),img('assets/landscape/tree2.png'),
+  img('assets/landscape/rock1.png'),img('assets/landscape/rock2.png'),img('assets/landscape/cloud1.png'),img('assets/landscape/wrock1.png'),
+  img('assets/landscape/buildings/castle.png'),img('assets/landscape/buildings/house1.png'),img('assets/landscape/buildings/house2.png'),img('assets/landscape/buildings/house3.png'),
+  img('assets/landscape/buildings/monastery.png'),img('assets/landscape/buildings/barracks.png'),img('assets/landscape/buildings/archery.png'),img('assets/landscape/buildings/tower.png'),
+  img('assets/tiles/water_foam.png'),img('assets/tiles/shadow.png'),
+  // 补全场景素材
+  img('assets/landscape/tree3.png'),img('assets/landscape/tree4.png'),
+  img('assets/landscape/stump1.png'),img('assets/landscape/stump2.png'),img('assets/landscape/stump3.png'),img('assets/landscape/stump4.png'),
+  img('assets/landscape/gold_resource.png'),img('assets/landscape/gold_stone1.png'),img('assets/landscape/gold_stone2.png'),img('assets/landscape/gold_stone3.png'),
+  img('assets/landscape/gold_stone4.png'),img('assets/landscape/gold_stone5.png'),img('assets/landscape/gold_stone6.png'),
+  img('assets/landscape/wood_resource.png'),img('assets/landscape/meat_resource.png'),img('assets/landscape/tool1.png'),img('assets/landscape/tool2.png'),img('assets/landscape/tool3.png'),img('assets/landscape/tool4.png'),
+  img('assets/landscape/rubber_duck.png'),img('assets/landscape/wrock3.png'),img('assets/landscape/wrock4.png'),img('assets/landscape/sheep_idle.png'),
+  img('assets/units/archer.png'),img('assets/units/lancer.png'),img('assets/units/monk.png'),img('assets/units/pawn.png'),img('assets/units/warrior.png')
+]).then(([color1,color2,color3,color4,waterbg, lsBush1,lsBush2,lsTree1,lsTree2,lsRock1,lsRock2,lsCloud1,lsWrock1, bCastle,bHouse1,bHouse2,bHouse3,bMonastery,bBarracks,bArchery,bTower, waterFoam, shadowImg, lsTree3,lsTree4, sStump1,sStump2,sStump3,sStump4, gResource,gStone1,gStone2,gStone3,gStone4,gStone5,gStone6, wWood,wMeat,wTool1,wTool2,wTool3,wTool4, sDuck,sWrock3,sWrock4,sSheep, uArcher,uLancer,uMonk,uPawn,uWarrior])=>{
+  A={sheets:{color1,color2,color3,color4},waterbg,waterFoam,shadow:shadowImg};
+  A.landscape={
+    bush:{imgs:[lsBush1,lsBush2], fw:128, fh:128, frames:8, fps:8, kind:'bush', label:'灌木'},
+    tree:{imgs:[lsTree1,lsTree2,lsTree3,lsTree4], sizes:[[192,256],[192,256],[192,192],[192,192]], frames:8, fps:6, kind:'tree', label:'树'},
+    rock:{imgs:[lsRock1,lsRock2], fw:64, fh:64, frames:1, fps:0, kind:'rock', label:'岩石'},
+    cloud:{imgs:[lsCloud1], fw:576, fh:256, frames:1, fps:0, kind:'cloud', label:'云'},
+    building:{ imgs:[bCastle,bHouse1,bHouse2,bHouse3,bMonastery,bBarracks,bArchery,bTower],
+      sizes:[[320,256],[128,192],[128,192],[128,192],[192,320],[192,256],[192,256],[128,256]],
+      frames:1, fps:0, kind:'building', label:'建筑', names:['城堡','民房1','民房2','民房3','修道院','兵营','箭楼','塔'] },
+    stump:{imgs:[sStump1,sStump2,sStump3,sStump4], sizes:[[192,256],[192,256],[192,256],[192,256]], frames:1, fps:0, kind:'stump', label:'树桩'},
+    gold:{imgs:[gResource,gStone1,gStone2,gStone3,gStone4,gStone5,gStone6], sizes:[[128,128],[128,128],[128,128],[128,128],[128,128],[128,128],[128,128]], frames:1, fps:0, kind:'gold', label:'金矿', names:['金堆','金矿1','金矿2','金矿3','金矿4','金矿5','金矿6']},
+    resource:{imgs:[wWood,wMeat,wTool1,wTool2,wTool3,wTool4], fw:64, fh:64, frames:1, fps:0, kind:'resource', label:'资源', names:['木头','肉','工具1','工具2','工具3','工具4']},
+    duck:{imgs:[sDuck], fw:32, fh:32, frames:3, fps:6, kind:'duck', label:'鸭子'},
+    wrock:{imgs:[lsWrock1,sWrock3,sWrock4], fw:64, fh:64, frames:16, fps:8, kind:'wrock', label:'水中岩石'},
+    sheep:{imgs:[sSheep], fw:128, fh:128, frames:6, fps:6, kind:'sheep', label:'绵羊'},
+  };
+  // 角色(待机帧动画): imgs[role], 帧宽/帧数 per role; 底部锚定
+  A.units={
+    archer:{imgs:[uArcher], fw:192, fh:192, frames:6, fps:6, label:'弓箭手'},
+    lancer:{imgs:[uLancer], fw:320, fh:320, frames:12, fps:8, label:'枪兵'},
+    monk:{imgs:[uMonk], fw:192, fh:192, frames:6, fps:6, label:'僧侣'},
+    pawn:{imgs:[uPawn], fw:192, fh:192, frames:8, fps:6, label:'步兵'},
+    warrior:{imgs:[uWarrior], fw:192, fh:192, frames:8, fps:6, label:'武士'},
+  };
+  resizeCanvas(); renderLayerList(); renderBrushPanel(); draw(); startLoop(); window.__A_READY=1;
+})
+.catch(e=>{ document.title='ERR '+e.message; });
+/* ===== 录制 / 回放 ===== */
+(function(){
+  var IS_EDIT = /[?&]edit=1/.test(location.search);
+  window.__recOn=false; window.__rec=[]; window.__recT0=0; window.__snap=null;
+  var recLabel=null;
+  function snap(){
+    return { layers: layers.map(function(L){ return L.map(function(row){ return row.slice(); }); }),
+      stairs: JSON.parse(JSON.stringify(stairs)), landscape: JSON.parse(JSON.stringify(landscape)), units: JSON.parse(JSON.stringify(units)) };
+  }
+  window.__recDiff=function(){
+    if(!window.__recOn || !window.__snap) return;
+    var t=Math.round(performance.now()-window.__recT0), s=window.__snap, ev=window.__rec;
+    for(var l=0;l<NLAYER;l++){ for(var r=0;r<ROWS;r++){ for(var c=0;c<COLS;c++){
+      if(layers[l][r][c]!==s.layers[l][r][c]) ev.push({t:t,k:'cell',l:l,r:r,c:c,v:layers[l][r][c]});
+    } } }
+    var ns=JSON.stringify(stairs), nl=JSON.stringify(landscape), nu=JSON.stringify(units);
+    if(ns!==JSON.stringify(s.stairs) || nl!==JSON.stringify(s.landscape) || nu!==JSON.stringify(s.units)){
+      ev.push({t:t,k:'objs',stairs:JSON.parse(ns),landscape:JSON.parse(nl),units:JSON.parse(nu)});
+    }
+    window.__snap=snap();
+    if(recLabel) recLabel.textContent='● 录制中 · 已录 '+ev.length+' 步';
+  };
+  function startRec(){ window.__rec=[]; window.__snap=snap(); window.__recT0=performance.now(); window.__recOn=true; }
+  function resetAll(){
+    for(var l=0;l<NLAYER;l++){ for(var r=0;r<ROWS;r++){ for(var c=0;c<COLS;c++){ layers[l][r][c]=0; } } }
+    stairs.length=0; landscape.length=0; units.length=0; curLayer=0;
+  }
+  function applyEv(e){
+    if(e.k==='cell'){ layers[e.l][e.r][e.c]=e.v; return; }
+    if(e.k==='o+'||e.k==='o-'||e.k==='o~'){
+      var A = e.arr==='stair'?stairs : e.arr==='land'?landscape : e.arr==='unit'?units : null;
+      if(!A) return;
+      if(e.k==='o+'){ A.splice(e.idx,0,e.item); }
+      else if(e.k==='o-'){ A.splice(e.idx,1); }
+      else { A[e.idx]=e.item; }
+      return;
+    }
+    if(e.k==='objs'){ stairs.length=0; landscape.length=0; units.length=0;
+      (e.stairs||[]).forEach(function(x){ stairs.push(x); });
+      (e.landscape||[]).forEach(function(x){ landscape.push(x); });
+      (e.units||[]).forEach(function(x){ units.push(x); }); }
+  }
+  function play(rec){
+    resetAll(); draw();
+    var ev=rec.events||[], i=0, t0=performance.now();
+    var totalT = ev.length ? (ev[ev.length-1].t||0) : 0;
+    var targetMs = 25000;
+    var speed = totalT>targetMs ? (totalT/targetMs) : 1;
+    var timer=setInterval(function(){
+      var el=(performance.now()-t0)*speed;
+      while(i<ev.length && ev[i].t<=el){ applyEv(ev[i++]); }
+      draw();
+      if(i>=ev.length){ clearInterval(timer); setTimeout(function(){ play(rec); }, 3000); }
+    }, 40);
+  }
+  function defaultDemo(){
+    resetAll(); draw();
+    var cells=[];
+    function rect(l,r0,r1,c0,c1,v){ for(var r=r0;r<=r1;r++){ for(var c=c0;c<=c1;c++){ if(r>=0&&r<ROWS&&c>=0&&c<COLS) cells.push({l:l,r:r,c:c,v:v}); } } }
+    rect(0,3,10,4,19,1); rect(1,5,8,7,16,1);
+    var i=0;
+    var timer=setInterval(function(){
+      if(i<cells.length){ var s=cells[i++]; layers[s.l][s.r][s.c]=s.v; draw(); return; }
+      clearInterval(timer); setTimeout(defaultDemo, 3000);
+    }, 40);
+  }
+  function setupEditBar(){
+    startRec();
+    var bar=document.createElement('div');
+    bar.style.cssText='position:fixed;right:14px;bottom:14px;z-index:99;background:rgba(18,26,34,.94);border:1px solid #f5b942;border-radius:10px;padding:10px 12px;font:13px/1.6 system-ui;color:#e8eef4;display:flex;gap:10px;align-items:center';
+    recLabel=document.createElement('span'); recLabel.textContent='● 录制中 · 已录 0 步';
+    var btn=document.createElement('button'); btn.textContent='导出录制(recording.json)';
+    btn.style.cssText='background:#f5b942;color:#181a14;border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700';
+    btn.onclick=function(){ var rec={version:1, cols:COLS, rows:ROWS, events:window.__rec};
+      var blob=new Blob([JSON.stringify(rec)],{type:'application/json'});
+      var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='recording.json'; a.click(); };
+    bar.appendChild(recLabel); bar.appendChild(btn); document.body.appendChild(bar);
+  }
+  function stripUI(){
+    var s=document.createElement('style');
+    s.textContent='.app{grid-template-rows:1fr!important}.topbar,.statusbar,aside{display:none!important}.main{grid-template-columns:1fr!important}.canvaswrap{display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;background:#0c0f14!important}canvas{max-width:none!important;max-height:none!important}';
+    document.head.appendChild(s);
+    function fit(){
+      var w=document.querySelector('.canvaswrap'); if(!w) return;
+      var sc=Math.min(w.clientWidth/W(), w.clientHeight/H());
+      cv.style.width=Math.round(W()*sc)+'px'; cv.style.height=Math.round(H()*sc)+'px';
+    }
+    fit(); window.addEventListener('resize', fit);
+    setTimeout(fit,200); setTimeout(fit,800);
+  }
+  function boot(){
+    if(IS_EDIT){ setupEditBar(); return; }
+    stripUI();
+    fetch('recording.json',{cache:'no-store'})
+      .then(function(r){ return r.ok?r.json():null; })
+      .then(function(rec){ if(rec && rec.events && rec.events.length) play(rec); else defaultDemo(); })
+      .catch(function(){ defaultDemo(); });
+  }
+  var w=setInterval(function(){ if(window.__A_READY){ clearInterval(w); boot(); } }, 120);
+})();
+</script>
+</body>
+</html>
