@@ -277,6 +277,7 @@ window.WORKS = [
     prdUrl: "https://xiaolu-fzu.github.io/ProListing-PRD/",
     prdDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/JRwsw8Kaui2rUEkTaE1c0X5Pn9e?from=from_copylink",
     platform: "Web 原型 · 安卓 App · 下载页",
+    catLabel: "产品 · 产品原型 · C端",
     keywords: ["产品原型", "移动端", "离线记账"],
     featured: true
   },
@@ -303,14 +304,17 @@ window.WORKS = [
     featured: true
   },
   {
-    title: "瓦片地图编辑器B端",
+    title: "瓦片地图编辑器·2D卡通风格",
     desc: "面向游戏开发者的瓦片地图编辑器（B 端工具）：用「画地形意图 + 规则自动拼接」代替手摆瓦片，浏览器免安装，导出 JSON 可直接接入游戏引擎。",
+    thumb: "assets/img/地图编辑器.webp",
     value: "B 端工具 · 规则自动拼接 · JSON 接入引擎",
     category: "prototype",
+    catLabel: "产品 · 产品原型 · B端",
     year: 2026,
     hue: 210,
     prototypeUrl: "assets/demo/tilemap/index.html",
     protoWide: true,
+    protoLabel: "动画演示",
     idea: "面向游戏开发者（独立开发者 / 关卡设计师 / 美术 / 策划）的 B 端生产力工具：把「手摆瓦片」变成「画地形意图 → 规则自动拼接」——开发者只画草地/水/高地，岸边、悬崖、草唇、楼梯由编辑器按掩码规则自动生成；支持多层地形 + 景观 + 角色 + 特效一站式编辑，产出 JSON 直接接入游戏关卡。",
     mainline: [
       "第 1 步 · 需求分析（B 端 PRD）：面向游戏开发者，定位「免安装、规则自动拼接、JSON 可接入」；明确目标用户（独立开发者 / 关卡设计师 / 美术 / 策划）与 32 条功能需求（多层地形、画笔体系、自动拼接、景观/角色/特效、导入导出）+ 非功能需求（性能 / 易用 / 可移植 / 分享）。",
@@ -319,6 +323,10 @@ window.WORKS = [
       "第 4 步 · 数据接口：导出/导入 terrain-map.json（version / cols / rows / layers / stairs / landscape / units / scale），标准 JSON 便于游戏引擎消费；坐标系左上原点、1 格 = 64px。",
       "第 5 步 · 交付与分享：通过公网链接（GitHub Pages）直接访问使用，团队/客户免安装即用；内置示例地图一键加载复用。"
     ],
+    link: "https://xiaolu-fzu.github.io/medieval-terrain-editor/",
+    outLinkText: "产品链接 ↗",
+    devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/PUS8wIzO3iCikBkMAHOc3upXnDh?from=from_copylink",
+    reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/GyPQwTswGimDcJkmOg1cWt4nnHh?from=from_copylink",
     keywords: ["B端工具", "瓦片地图编辑器", "游戏开发", "JSON"],
     featured: true
   },
@@ -433,5 +441,5 @@ window.WORKS = [
   }
 ];
 
-window.WORK_CATEGORIES = ["全部", "数据分析", "行业研究", "原型和产品", "AIGC", "网页游戏", "工具/开发"];
+window.WORK_CATEGORIES = ["全部", "数据分析", "行业研究", "产品原型", "AIGC", "网页游戏", "工具/开发"];
 

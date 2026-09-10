@@ -93,11 +93,11 @@
     return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", industry: "行业研究", prototype: "原型和产品", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
   }
-  function catTagsHtml(category) {
+  function catTagsHtml(category, labelOverride) {
     var cls = catClass(category);
-    return tagLabel(category).split(" · ").map(function (part) {
+    return (labelOverride || tagLabel(category)).split(" · ").map(function (part) {
       return '<span class="tag ' + cls + '">' + escapeHtml(part) + "</span>";
     }).join("");
   }
@@ -117,7 +117,7 @@
   }
 
   function makeCard(work, index) {
-    var tags = catTagsHtml(work.category);
+    var tags = catTagsHtml(work.category, work.catLabel);
     var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
     var badge = work.featured ? '<span class="work-card__badge">精选</span>' : "";
     return (
@@ -237,7 +237,7 @@
     }
     if (w.prototypeUrl) {
       html += '<div class="proto-showcase">' +
-        '<p class="proto-showcase__label">产品原型展示（点击可交互）</p>' +
+        '<p class="proto-showcase__label">' + (w.protoLabel || "产品原型展示（点击可交互）") + '</p>' +
         '<div class="work-media proto-frame">' +
           '<iframe src="' + escapeHtml(w.prototypeUrl) + '" title="' + escapeHtml(w.title) + ' 在线原型" loading="lazy" class="proto-iframe' + (w.protoWide ? ' proto-wide' : '') + '"></iframe>' +
         '</div>' +
@@ -250,7 +250,7 @@
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
     // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
-    if (w.devDocUrl && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>';
+    if (w.devDocUrl && !w.gameUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>';
     if (w.reqDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.reqDocUrl) + '" target="_blank" rel="noopener">需求文档 ↗</a>';
     if (w.docUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.docUrl) + '" target="_blank" rel="noopener">需求/开发文档 ↗</a>';
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
@@ -283,7 +283,7 @@
     function openDetail(index) {
       var w = works[index];
       if (!w || !detail) return;
-      var catTags = catTagsHtml(w.category);
+      var catTags = catTagsHtml(w.category, w.catLabel);
       var kwTags = (w.keywords || []).map(function (k) {
         return '<span class="tag">' + escapeHtml(k) + "</span>";
       }).join("");

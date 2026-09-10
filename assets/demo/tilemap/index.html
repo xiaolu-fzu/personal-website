@@ -51,6 +51,7 @@
 </style>
 </head>
 <body>
+<script src="recording.js"></script>
 <div class="app">
   <div class="topbar">
     <h1>地形编辑器 <span class="dot">·</span> 图层</h1>
@@ -798,6 +799,7 @@ Promise.all([
   function boot(){
     if(IS_EDIT){ setupEditBar(); return; }
     stripUI();
+    if(window.__REC && window.__REC.events && window.__REC.events.length){ play(window.__REC); return; }
     fetch('recording.json',{cache:'no-store'})
       .then(function(r){ return r.ok?r.json():null; })
       .then(function(rec){ if(rec && rec.events && rec.events.length) play(rec); else defaultDemo(); })
