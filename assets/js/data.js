@@ -273,7 +273,8 @@ window.WORKS = [
     year: 2024,
     hue: 200,
     prototypeUrl: "prototype/prolist.html",
-    downloadUrl: "https://xiaolu-fzu.github.io/prolist-download/",
+    link: "https://xiaolu-fzu.github.io/prolist-download/",
+    outLinkText: "产品链接",
     prdUrl: "https://xiaolu-fzu.github.io/ProListing-PRD/",
     prdDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/JRwsw8Kaui2rUEkTaE1c0X5Pn9e?from=from_copylink",
     platform: "Web 原型 · 安卓 App · 下载页",
@@ -298,7 +299,7 @@ window.WORKS = [
     link: "https://xiaolu-fzu.github.io/fungal-stars/",
     devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/LEVJwpvEUiZQ9mkYlELc1STZneb",
     reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/PDIgwgQR8ifTjOknbQxcqo6Yn2b?from=from_copylink",
-    outLinkText: "原型demo ↗",
+    outLinkText: "原型demo",
     thumb: "assets/img/真菌星域.webp",
     keywords: ["游戏原型", "PRD", "需求与实现", "产品设计"],
     featured: true
@@ -324,7 +325,7 @@ window.WORKS = [
       "第 5 步 · 交付与分享：通过公网链接（GitHub Pages）直接访问使用，团队/客户免安装即用；内置示例地图一键加载复用。"
     ],
     link: "https://xiaolu-fzu.github.io/medieval-terrain-editor/",
-    outLinkText: "产品链接 ↗",
+    outLinkText: "产品链接",
     devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/PUS8wIzO3iCikBkMAHOc3upXnDh?from=from_copylink",
     reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/GyPQwTswGimDcJkmOg1cWt4nnHh?from=from_copylink",
     keywords: ["B端工具", "瓦片地图编辑器", "游戏开发", "JSON"],
@@ -435,7 +436,7 @@ window.WORKS = [
     ],
     docUrl: "https://fcn6t1589nyp.feishu.cn/wiki/XrLiw2icsiPwfJkkYoRcjbmsnjc?from=from_copylink",
     link: "https://github.com/xiaolu-fzu/EufloriaHD_ZH",
-    outLinkText: "汉化仓库 ↗",
+    outLinkText: "汉化仓库",
     keywords: ["本地化", "汉化", "工具链", "逆向"],
     featured: true
   }
