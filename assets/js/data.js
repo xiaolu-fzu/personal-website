@@ -313,7 +313,7 @@ window.WORKS = [
     catLabel: "产品 · 产品原型 · B端",
     year: 2026,
     hue: 210,
-    prototypeUrl: "assets/demo/tilemap/index.html",
+    prototypeUrl: "assets/demo/tilemap/index.html?v=2",
     protoWide: true,
     protoLabel: "动画演示",
     idea: "面向游戏开发者（独立开发者 / 关卡设计师 / 美术 / 策划）的 B 端生产力工具：把「手摆瓦片」变成「画地形意图 → 规则自动拼接」——开发者只画草地/水/高地，岸边、悬崖、草唇、楼梯由编辑器按掩码规则自动生成；支持多层地形 + 景观 + 角色 + 特效一站式编辑，产出 JSON 直接接入游戏关卡。",
