@@ -470,5 +470,5 @@ window.WORKS = [
 
 ];
 
-window.WORK_CATEGORIES = ["全部", "数据分析", "行业研究", "产品原型", "AIGC", "网页游戏", "工具/开发", "Agent开发"];
+window.WORK_CATEGORIES = ["全部", "Agent开发", "数据分析", "行业研究", "产品原型", "AIGC", "网页游戏", "工具/开发"];
 
