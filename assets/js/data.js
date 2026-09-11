@@ -459,6 +459,7 @@ window.WORKS = [
       "第 5 步 · 人设三态：手写人设直接可用；未写过的角色由大模型依据 14 条台词样本生成人设（性格经历、说话风格、时间线边界）并缓存复用；从未生成过的角色标记为「需解锁」，经确认后才调用模型。",
       "第 6 步 · 展示与交付：静态展示页固化「改写后的查询 + 检索到的范例」全过程，并做「同题异答」——同一问题问遍所有角色，证明答案差异全部来自角色本身；前端检索把向量与模型放到浏览器端，免后端即可运行。"
     ],
+    devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink",
     link: "https://santi-chat.pages.dev/chat.html",
     outLinkText: "产品链接",
     caseUrl: "https://santi-chat.pages.dev/",
