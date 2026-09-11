@@ -87,13 +87,13 @@
   }
 
   function catClass(tag) {
-    return { data: "tag--data", industry: "tag--industry", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool" }[tag] || "";
+    return { data: "tag--data", industry: "tag--industry", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool", agent: "tag--agent" }[tag] || "";
   }
   function catVar(tag) {
-    return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)" }[tag] || "var(--accent)";
+    return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)", agent: "var(--cat-agent)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发", agent: "Agent开发" }[tag] || tag;
   }
   function catTagsHtml(category, labelOverride) {
     var cls = catClass(category);
@@ -102,7 +102,7 @@
     }).join("");
   }
   function catPriority(tag) {
-    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5 }[tag] || 99;
+    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5, agent: 6 }[tag] || 99;
   }
 
   /* 排序：精选置顶 → 年限倒序 → 同年按类优先级 → 标题 */
@@ -254,6 +254,7 @@
     if (w.reqDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.reqDocUrl) + '" target="_blank" rel="noopener">需求文档 ↗</a>';
     if (w.docUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.docUrl) + '" target="_blank" rel="noopener">需求/开发文档 ↗</a>';
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
+    if (w.caseUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.caseUrl) + '" target="_blank" rel="noopener">' + escapeHtml(w.caseText || "案例展示") + ' ↗</a>';
     if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
     if (w.prdUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
     if (w.prdDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdDocUrl) + '" target="_blank" rel="noopener">PRD 飞书文档 ↗</a>';
