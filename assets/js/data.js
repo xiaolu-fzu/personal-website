@@ -445,7 +445,7 @@ window.WORKS = [
   {
     title: "《三体》·角色RAG · 短期记忆对话",
     desc: "把《三体》31 个角色做成人人能对话的 AI 角色。两个非典型做法：对话的短期记忆不靠保存历史，而靠「改写问题」；整套检索被搬进浏览器，后端只剩几十 KB 转发器。",
-    thumb: "assets/img/三体.webp",
+    thumb: "assets/img/三体.webp?v=2",
     value: "改写问题实现短期记忆 · 检索全搬进浏览器",
     category: "agent",
     catLabel: "RAG · 工作流",
