@@ -250,7 +250,8 @@
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
     // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
-    if (w.devDocUrl && !w.gameUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>';
+    var devDocHtml = (w.devDocUrl && !w.gameUrl) ? '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>' : "";
+    if (!w.docLast) html += devDocHtml;;
     if (w.reqDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.reqDocUrl) + '" target="_blank" rel="noopener">需求文档 ↗</a>';
     if (w.docUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.docUrl) + '" target="_blank" rel="noopener">需求/开发文档 ↗</a>';
     if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
@@ -260,6 +261,7 @@
     if (w.prdDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdDocUrl) + '" target="_blank" rel="noopener">PRD 飞书文档 ↗</a>';
 
     if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '">联系获取更多 ↗</a>';
+    if (w.docLast) html += devDocHtml;
     html += "</div>";
     return html;
   }
