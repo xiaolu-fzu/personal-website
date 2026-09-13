@@ -142,7 +142,7 @@ body.nav-locked { overflow: hidden; }
 
 /* ==================== 2.3 作品卡片 Work Card ==================== */
 .work-card {
-  display: block;
+  display: flex; flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
@@ -196,7 +196,7 @@ body.nav-locked { overflow: hidden; }
 }
 .work-card__value-row { margin-top: var(--space-2); }
 .work-card__value { color: var(--text-secondary); font-size: var(--fs-sm); line-height: 1.55; margin: 0; }
-.work-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.work-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: auto; padding-top: var(--space-3); }
 
 /* ==================== 2.4 标签 Tag ==================== */
 .tag {
