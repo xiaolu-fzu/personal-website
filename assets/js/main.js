@@ -285,7 +285,7 @@
 
     /* 文档库：文件图标网格，点击打开飞书文档 */
     function docIconSvg() {
-      return '<svg viewBox="0 0 48 60" width="46" height="58" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+      return '<svg viewBox="0 0 48 60" width="52" height="65" fill="none" xmlns="http://www.w3.org/2000/svg">' +
         '<path d="M6 5a5 5 0 0 1 5-5h19l12 12v43a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5V5z" fill="currentColor" opacity="0.13"/>' +
         '<path d="M6 5a5 5 0 0 1 5-5h19l12 12v43a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5V5z" stroke="currentColor" stroke-width="2.6"/>' +
         '<path d="M30 0v12h12" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>' +
