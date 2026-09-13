@@ -229,6 +229,9 @@ body.nav-locked { overflow: hidden; }
 .doc-item:hover { transform: translateY(-3px); border-color: var(--border-accent); box-shadow: 0 10px 28px rgba(0,0,0,.28); }
 .doc-item__icon { line-height: 0; color: var(--accent); }
 .doc-item__name { font-size: var(--fs-base); font-weight: 600; color: var(--text); line-height: 1.5; letter-spacing: 0.01em; }
+.doc-item__proj { color: var(--text); }
+.doc-item__sep { color: var(--text-muted); opacity: .65; font-weight: 400; }
+.doc-item__type { color: var(--accent); }
 .doc-item--req .doc-item__icon { color: #CC785C; }
 .doc-item--dev .doc-item__icon { color: #B9624A; }
 .doc-item--prd .doc-item__icon { color: #C0592F; }

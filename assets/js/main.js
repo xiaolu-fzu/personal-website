@@ -293,9 +293,14 @@
       "</svg>";
     }
     function makeDoc(d) {
+      var parts = String(d.name || "").split(" · ");
+      var proj = parts[0] || "";
+      var kindName = parts.slice(1).join(" · ");
+      var nameHtml = '<span class="doc-item__proj">' + escapeHtml(proj) + "</span>" +
+        (kindName ? '<span class="doc-item__sep"> · </span><span class="doc-item__type">' + escapeHtml(kindName) + "</span>" : "");
       return '<a class="doc-item doc-item--' + (d.type || "doc") + '" href="' + escapeHtml(d.url) + '" target="_blank" rel="noopener">' +
         '<span class="doc-item__icon" aria-hidden="true">' + docIconSvg() + "</span>" +
-        '<span class="doc-item__name">' + escapeHtml(d.name) + "</span>" +
+        '<span class="doc-item__name">' + nameHtml + "</span>" +
       "</a>";
     }
     function renderDocs() {
