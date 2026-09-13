@@ -464,6 +464,7 @@ window.WORKS = [
       "第 6 步 · 展示与交付：静态展示页固化「改写后的查询 + 检索到的范例」全过程，并做「同题异答」——同一问题问遍所有角色，证明答案差异全部来自角色本身；前端检索把向量与模型放到浏览器端，免后端即可运行。"
     ],
     devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink",
+    reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/C6nywgdcUiYq9TksmWBcrS5vnZJ?from=from_copylink",
     docLast: true,
     link: "https://santi-chat.pages.dev/chat.html",
     outLinkText: "产品链接",
@@ -515,6 +516,7 @@ window.DOCS = [
   { name: "瓦片地图编辑器 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/PUS8wIzO3iCikBkMAHOc3upXnDh?from=from_copylink", type: "dev" },
   { name: "果宝特攻 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/QvinwvJtRi9vFYk2AFqcBTR5nUg?from=from_copylink", type: "dev" },
   { name: "Eufloria HD · 需求与技术实现文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/XrLiw2icsiPwfJkkYoRcjbmsnjc?from=from_copylink", type: "doc" },
+  { name: "三体角色RAG · 需求文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/C6nywgdcUiYq9TksmWBcrS5vnZJ?from=from_copylink", type: "req" },
   { name: "三体角色RAG · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink", type: "dev" }
 ];
 
