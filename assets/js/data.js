@@ -485,6 +485,7 @@ window.WORKS = [
     prototypeUrl: "https://youju-doc.pages.dev/chat.html",
     protoWide: true,
     protoLabel: "产品演示（在线可交互）",
+    reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/YuLiwzAOJi3pyMkiCEhcLKoknfe?from=from_copylink",
     link: "https://youju-doc.pages.dev/chat.html",
     outLinkText: "产品链接",
     caseUrl: "https://youju-doc.pages.dev/",
@@ -516,6 +517,7 @@ window.DOCS = [
   { name: "瓦片地图编辑器 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/PUS8wIzO3iCikBkMAHOc3upXnDh?from=from_copylink", type: "dev" },
   { name: "果宝特攻 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/QvinwvJtRi9vFYk2AFqcBTR5nUg?from=from_copylink", type: "dev" },
   { name: "Eufloria HD · 需求与技术实现文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/XrLiw2icsiPwfJkkYoRcjbmsnjc?from=from_copylink", type: "doc" },
+  { name: "有据 · 需求文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/YuLiwzAOJi3pyMkiCEhcLKoknfe?from=from_copylink", type: "req" },
   { name: "三体角色RAG · 需求文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/C6nywgdcUiYq9TksmWBcrS5vnZJ?from=from_copylink", type: "req" },
   { name: "三体角色RAG · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink", type: "dev" }
 ];
