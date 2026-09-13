@@ -445,7 +445,7 @@ window.WORKS = [
   {
     title: "《三体》·角色扮演RAG · 短期记忆对话",
     desc: "把《三体》31 个角色做成人人能对话的 AI 角色。两个非典型做法：对话的短期记忆不靠保存历史，而靠「改写问题」；整套检索被搬进浏览器，后端只剩几十 KB 转发器。",
-    thumb: "assets/img/三体.webp?v=2",
+    thumb: "assets/img/三体.webp?v=3",
     value: "改写问题实现短期记忆 · 检索全搬进浏览器",
     category: "agent",
     catLabel: "RAG · 工作流 · C端",
@@ -475,6 +475,7 @@ window.WORKS = [
   {
     title: "有据 · 企业文档问答引擎",
     desc: "把一批年报与制度 PDF 变成能问、能溯源的知识库：三个菜单对应三套语料（单公司年报 / 行业五家公司 / 全套管理制度），回答永远带原文出处，答不出就明确说「找不到」。",
+    thumb: "assets/img/有据.webp",
     value: "答案永远可溯源 · 检索全在浏览器 · 分司分年分组检索",
     category: "agent",
     catLabel: "RAG · 工作流 · B端",
