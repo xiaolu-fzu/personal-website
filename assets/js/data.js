@@ -465,7 +465,6 @@ window.WORKS = [
     ],
     devDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink",
     reqDocUrl: "https://fcn6t1589nyp.feishu.cn/wiki/C6nywgdcUiYq9TksmWBcrS5vnZJ?from=from_copylink",
-    docLast: true,
     link: "https://santi-chat.pages.dev/chat.html",
     outLinkText: "产品链接",
     caseUrl: "https://santi-chat.pages.dev/",

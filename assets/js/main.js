@@ -246,22 +246,31 @@
     return html;
   }
 
-  /* 各类外链动作 */
+  /* 按钮小图标（内联 SVG） */
+  function svgIcon(kind) {
+    var s = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+    if (kind === "file") return s + '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg>';
+    if (kind === "down") return s + '<path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>';
+    return s + '<path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+  }
+  function repoIcon() {
+    return '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>';
+  }
+  function linkBtn(href, cls, label, icon) {
+    return '<a class="btn ' + cls + '" href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' + (icon === "repo" ? repoIcon() : svgIcon(icon)) + "<span>" + escapeHtml(label) + "</span></a>";
+  }
+  /* 按钮顺序统一：产品类在前（产品链接固定最左、主按钮）→ 文档类在后 */
   function renderLinks(w) {
     var html = '<div class="work-detail__links">';
-    // 数据作品(有报表)不显示外链"查看完整报告"，仅无报表的外链作品显示"查看项目"
-    var devDocHtml = (w.devDocUrl && !w.gameUrl) ? '<a class="btn btn-ghost" href="' + escapeHtml(w.devDocUrl) + '" target="_blank" rel="noopener">开发文档 ↗</a>' : "";
-    if (!w.docLast) html += devDocHtml;;
-    if (w.reqDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.reqDocUrl) + '" target="_blank" rel="noopener">需求文档 ↗</a>';
-    if (w.docUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.docUrl) + '" target="_blank" rel="noopener">需求/开发文档 ↗</a>';
-    if (w.link && !w.report) html += '<a class="btn btn-primary" href="' + escapeHtml(w.link) + '" target="_blank" rel="noopener">' + (w.outLinkText || "查看项目") + ' ↗</a>';
-    if (w.caseUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.caseUrl) + '" target="_blank" rel="noopener">' + escapeHtml(w.caseText || "案例展示") + ' ↗</a>';
-    if (w.downloadUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.downloadUrl) + '" target="_blank" rel="noopener">获取 App / 下载页 ↗</a>';
-    if (w.prdUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdUrl) + '" target="_blank" rel="noopener">PRD 展示页面 ↗</a>';
-    if (w.prdDocUrl) html += '<a class="btn btn-ghost" href="' + escapeHtml(w.prdDocUrl) + '" target="_blank" rel="noopener">PRD 飞书文档 ↗</a>';
-
-    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '">联系获取更多 ↗</a>';
-    if (w.docLast) html += devDocHtml;
+    if (w.link && !w.report) html += linkBtn(w.link, "btn-primary", w.outLinkText || "查看项目", /github\.com/i.test(w.link) ? "repo" : "open");
+    if (w.caseUrl) html += linkBtn(w.caseUrl, "btn-ghost", w.caseText || "案例展示", "open");
+    if (w.downloadUrl) html += linkBtn(w.downloadUrl, "btn-ghost", "下载页", "down");
+    if (w.reqDocUrl) html += linkBtn(w.reqDocUrl, "btn-ghost", "需求文档", "file");
+    if (w.devDocUrl && !w.gameUrl) html += linkBtn(w.devDocUrl, "btn-ghost", "开发文档", "file");
+    if (w.docUrl) html += linkBtn(w.docUrl, "btn-ghost", "需求/开发文档", "file");
+    if (w.prdUrl) html += linkBtn(w.prdUrl, "btn-ghost", "PRD 展示页", "open");
+    if (w.prdDocUrl) html += linkBtn(w.prdDocUrl, "btn-ghost", "PRD 文档", "file");
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '"><span>联系获取更多</span></a>';
     html += "</div>";
     return html;
   }
