@@ -274,11 +274,37 @@
     var works = window.WORKS || [];
 
     function render(filterValue) {
+      if (filterValue === "docs") { renderDocs(); return; }
+      grid.classList.remove("works-grid--docs");
       var list = sortWorks(works.filter(function (w) { return meetsFilter(w, filterValue); }));
       grid.innerHTML = "";
       if (!list.length) { if (empty) empty.style.display = "block"; return; }
       if (empty) empty.style.display = "none";
       list.forEach(function (w) { grid.insertAdjacentHTML("beforeend", makeCard(w, works.indexOf(w))); });
+    }
+
+    /* 文档库：文件图标网格，点击打开飞书文档 */
+    function docIconSvg() {
+      return '<svg viewBox="0 0 48 60" width="46" height="58" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M6 5a5 5 0 0 1 5-5h19l12 12v43a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5V5z" fill="currentColor" opacity="0.13"/>' +
+        '<path d="M6 5a5 5 0 0 1 5-5h19l12 12v43a5 5 0 0 1-5 5H11a5 5 0 0 1-5-5V5z" stroke="currentColor" stroke-width="2.6"/>' +
+        '<path d="M30 0v12h12" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/>' +
+        '<path d="M15 26h18M15 34h18M15 42h11" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/>' +
+      "</svg>";
+    }
+    function makeDoc(d) {
+      return '<a class="doc-item doc-item--' + (d.type || "doc") + '" href="' + escapeHtml(d.url) + '" target="_blank" rel="noopener">' +
+        '<span class="doc-item__icon" aria-hidden="true">' + docIconSvg() + "</span>" +
+        '<span class="doc-item__name">' + escapeHtml(d.name) + "</span>" +
+      "</a>";
+    }
+    function renderDocs() {
+      var docs = window.DOCS || [];
+      grid.innerHTML = "";
+      grid.classList.add("works-grid--docs");
+      if (!docs.length) { if (empty) empty.style.display = "block"; return; }
+      if (empty) empty.style.display = "none";
+      docs.forEach(function (d) { grid.insertAdjacentHTML("beforeend", makeDoc(d)); });
     }
 
     function hideDetail() { if (detail) detail.classList.remove("is-open"); }

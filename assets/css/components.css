@@ -223,6 +223,18 @@ body.nav-locked { overflow: hidden; }
 .tag--agent { color: var(--cat-agent); border-color: rgba(150,101,122,0.42); }
 .tag--agent:hover { background: rgba(150,101,122,0.08); box-shadow: var(--glow-sm); }
 
+/* 文档库：文件图标网格 */
+.works-grid--docs { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: var(--space-5); }
+.doc-item { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: var(--space-5) var(--space-4); text-align: center; text-decoration: none; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.doc-item:hover { transform: translateY(-3px); border-color: var(--border-accent); box-shadow: 0 10px 28px rgba(0,0,0,.28); }
+.doc-item__icon { line-height: 0; color: var(--accent); }
+.doc-item__name { font-size: var(--fs-sm); color: var(--text); line-height: 1.55; }
+.doc-item--req .doc-item__icon { color: #CC785C; }
+.doc-item--dev .doc-item__icon { color: #B9624A; }
+.doc-item--prd .doc-item__icon { color: #C0592F; }
+.doc-item--report .doc-item__icon { color: #A9714B; }
+.doc-item--doc .doc-item__icon { color: #9E4F3A; }
+
 /* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active） */
 .filter-btn {
   appearance: none; cursor: pointer;

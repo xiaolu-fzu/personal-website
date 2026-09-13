@@ -504,3 +504,16 @@ window.WORKS = [
 
 window.WORK_CATEGORIES = ["全部", "Agent开发", "数据分析", "行业研究", "产品原型", "AIGC", "网页游戏", "工具/开发"];
 
+/* ---------------- 文档库（飞书文档收录） ---------------- */
+window.DOCS = [
+  { name: "4agent 产品调研 · 行业研究报告", url: "https://fcn6t1589nyp.feishu.cn/docx/OwFIdLuPloK0x9xl786ciNLnnVc", type: "report" },
+  { name: "ProListing · 需求文档（PRD）", url: "https://fcn6t1589nyp.feishu.cn/wiki/JRwsw8Kaui2rUEkTaE1c0X5Pn9e?from=from_copylink", type: "prd" },
+  { name: "真菌星域 · 需求文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/PDIgwgQR8ifTjOknbQxcqo6Yn2b?from=from_copylink", type: "req" },
+  { name: "真菌星域 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/LEVJwpvEUiZQ9mkYlELc1STZneb?from=from_copylink", type: "dev" },
+  { name: "瓦片地图编辑器 · 需求文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/GyPQwTswGimDcJkmOg1cWt4nnHh?from=from_copylink", type: "req" },
+  { name: "瓦片地图编辑器 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/PUS8wIzO3iCikBkMAHOc3upXnDh?from=from_copylink", type: "dev" },
+  { name: "果宝特攻 · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/QvinwvJtRi9vFYk2AFqcBTR5nUg?from=from_copylink", type: "dev" },
+  { name: "Eufloria HD · 需求与技术实现文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/XrLiw2icsiPwfJkkYoRcjbmsnjc?from=from_copylink", type: "doc" },
+  { name: "三体角色RAG · 开发文档", url: "https://fcn6t1589nyp.feishu.cn/wiki/Uuuqw2aSpioyVxkZ8XxcMxsyntf?from=from_copylink", type: "dev" }
+];
+
