@@ -477,10 +477,10 @@ window.WORKS = [
     catLabel: "RAG · 工作流",
     year: 2026,
     hue: 285,
-    link: "https://youju.pages.dev/chat.html",
+    link: "https://youju-doc.pages.dev/chat.html",
     outLinkText: "产品链接",
-    caseUrl: "https://xiaolu-fzu.github.io/youju/",
-    caseText: "案例展示",
+    caseUrl: "https://youju-doc.pages.dev/",
+    caseText: "产品实例",
     idea: "两个刻意的选择。其一「有据可查」：在这个大模型随手编造的时代，每句话都能追到原文反而成了稀缺品——所以设计上保证答案永远带出处，答不出时明确说「找不到」，而不是编一个像样的答案。其二检索只用 BM25：在 60 道真实问题上实测，纯向量检索命中率 22%、BM25 92%、RRF 融合 47%——因为中文企业文档的提问自带精确术语（「所得税影响额」），关键词一击即中；向量会把整页内容平均成一个语义向量，把具体术语稀释掉。",
     mainline: [
       "第 1 步 · 语料构建：从巨潮资讯网（沪深交易所指定的法定披露渠道）取 29 份公开文件，经解析、清洗、结构感知切块、去重后导出为静态 JSON，约 40 秒处理一份。",
