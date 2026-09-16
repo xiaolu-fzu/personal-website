@@ -348,6 +348,14 @@
       docs.forEach(function (d) { grid.insertAdjacentHTML("beforeend", makeDoc(d)); });
     }
 
+    /* 首页「工作方式」区块的项目链接：按标题匹配作品卡，自动补上正确 hash（标题改了也不会失效） */
+    Array.prototype.forEach.call(document.querySelectorAll("[data-title]"), function (a) {
+      var t = a.getAttribute("data-title");
+      for (var i = 0; i < works.length; i++) {
+        if (works[i].title === t) { a.setAttribute("href", "#work-" + slugify(t)); break; }
+      }
+    });
+
     function hideDetail() { if (detail) detail.classList.remove("is-open"); }
 
     function openDetail(index) {

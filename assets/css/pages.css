@@ -287,3 +287,22 @@
   .work-media.proto-frame .proto-iframe { height: min(1400px, 88vh); max-height: min(1300px, 88vh); }
   .filter-btn { flex: 0 0 auto; padding: var(--space-2) var(--space-4); font-size: var(--fs-sm); }
 }
+
+/* ==================== 工作方式（四步链路） ==================== */
+.how-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+.how-step { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-5); transition: border-color var(--transition-base), transform var(--transition-base); }
+.how-step:hover { border-color: var(--border-accent); transform: translateY(-2px); }
+.how-step__num { font-family: var(--font-display); font-size: 13px; letter-spacing: .12em; color: var(--accent); }
+.how-step h3 { font-size: var(--fs-lg); margin: 8px 0; color: var(--text); }
+.how-step p { font-size: var(--fs-sm); line-height: 1.75; color: var(--text-secondary); }
+.how-step__links { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; margin-top: auto; padding-top: var(--space-4); }
+.how-step__links a { font-size: 13px; color: var(--accent); text-decoration: none; border-bottom: 1px dashed transparent; transition: border-color var(--transition-fast); }
+.how-step__links a:hover { border-bottom-color: var(--accent); }
+.how-step:not(:last-child)::after { content: "→"; position: absolute; right: -13px; top: 44%; color: var(--accent); opacity: .45; font-size: 15px; }
+@media (max-width: 1024px) {
+  .how-flow { grid-template-columns: repeat(2, 1fr); }
+  .how-step::after { display: none; }
+}
+@media (max-width: 640px) {
+  .how-flow { grid-template-columns: 1fr; }
+}
