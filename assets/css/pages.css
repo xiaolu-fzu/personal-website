@@ -81,6 +81,8 @@
 /* 作品集标题居中 */
 #portfolio .section__title { text-align: center; }
 #portfolio .section__lead { text-align: center; margin-inline: auto; }
+#how .section__title { text-align: center; }
+#how .section__lead { text-align: center; margin-inline: auto; }
 
 /* ==================== 作品网格 ==================== */
 .works-grid {
