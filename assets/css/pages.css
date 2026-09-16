@@ -333,3 +333,18 @@
 .work-detail__links--cards .link-card__icon { width: 40px; height: 40px; border-radius: 11px; }
 .work-detail__links--cards .link-card__icon svg { width: 19px; height: 19px; }
 .work-detail__links--cards .link-card__text b { font-size: 15px; }
+
+
+/* 资源卡（最终版）：文字在左、按钮在右；图标放进按钮里 */
+.work-detail__links--cards { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-top: var(--space-5); width: 100%; }
+.work-detail__links--cards .link-card { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 18px; transition: border-color var(--transition-base); }
+.work-detail__links--cards .link-card:hover { border-color: var(--border-accent); }
+.work-detail__links--cards .link-card__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.work-detail__links--cards .link-card__text b { font-size: 15px; font-weight: 700; color: var(--text); }
+.work-detail__links--cards .link-card__text i { font-size: 13px; font-style: normal; color: var(--text-muted); line-height: 1.55; }
+.work-detail__links--cards .link-card .btn { flex: none; min-height: 40px; padding: 9px 18px; font-size: 14px; gap: 7px; }
+.work-detail__links--cards .link-card__emoji { font-size: 15px; line-height: 1; }
+@media (max-width: 640px) {
+  .work-detail__links--cards .link-card { flex-direction: column; align-items: stretch; gap: 12px; }
+  .work-detail__links--cards .link-card .btn { width: 100%; justify-content: center; }
+}
