@@ -306,6 +306,10 @@
     if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "doc", "📄");
     if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "open", "📋");
     if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "doc", "📄");
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) {
+      push("contact", "mailto:" + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com"),
+        "联系获取更多", "这个项目还没有公开链接，欢迎直接找我聊", "写邮件", "open", "✉️");
+    }
     return rows;
   }
   function renderLinkCards(w) {
@@ -322,8 +326,16 @@
       '</div>';
     }).join("") + "</div>";
   }
+  /* 是否用「资源卡」样式：默认开启；代码仓库类卡片保持原来的按钮排（用户要求），
+     个别卡片可用 linksStyle: false 单独关掉 */
+  function useCardStyle(w) {
+    if (w.linksStyle === false) return false;
+    if (w.linksStyle === true || w.linksStyle === "card") return true;
+    if (w.link && w.link.indexOf("github.com") >= 0) return false;
+    return true;
+  }
   function renderLinks(w) {
-    if (w.linksStyle === "card") return renderLinkCards(w);
+    if (useCardStyle(w)) return renderLinkCards(w);
     var html = '<div class="work-detail__links">';
     if (w.link && !w.report) html += linkBtn(w.link, "btn-primary", w.outLinkText || "查看项目", /github\.com/i.test(w.link) ? "repo" : "open");
     if (w.caseUrl) html += linkBtn(w.caseUrl, "btn-ghost", w.caseText || "案例展示", "open");
