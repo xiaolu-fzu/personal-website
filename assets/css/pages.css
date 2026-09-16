@@ -308,3 +308,28 @@
 @media (max-width: 640px) {
   .how-flow { grid-template-columns: 1fr; }
 }
+
+
+/* ==================== 资源卡（详情页链接：一行一个资源） ==================== */
+.work-detail__links--cards { display: flex; flex-direction: column; gap: 10px; margin-top: var(--space-5); }
+.link-card { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 13px 16px; transition: border-color var(--transition-base); }
+.link-card:hover { border-color: var(--border-accent); }
+.link-card__icon { flex: none; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(204,120,92,0.10); color: var(--accent); }
+.link-card__icon svg { width: 17px; height: 17px; }
+.link-card__text { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.link-card__text b { font-size: 14.5px; font-weight: 700; color: var(--text); }
+.link-card__text i { font-size: 12.5px; font-style: normal; color: var(--text-muted); line-height: 1.5; }
+.link-card .btn { flex: none; min-height: 38px; padding: 8px 16px; font-size: 13.5px; }
+@media (max-width: 640px) {
+  .link-card { flex-wrap: wrap; gap: 10px; }
+  .link-card__text { flex-basis: calc(100% - 50px); }
+  .link-card .btn { width: 100%; }
+}
+
+
+/* 修正：资源卡铺满详情卡宽度 */
+.work-detail__links--cards { align-items: stretch; width: 100%; }
+.work-detail__links--cards .link-card { width: 100%; }
+.work-detail__links--cards .link-card__icon { width: 40px; height: 40px; border-radius: 11px; }
+.work-detail__links--cards .link-card__icon svg { width: 19px; height: 19px; }
+.work-detail__links--cards .link-card__text b { font-size: 15px; }

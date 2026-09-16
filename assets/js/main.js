@@ -117,15 +117,19 @@
   }
 
   /* 卡面徽标：依据卡片已有字段自动推导（+ 手写 verify） */
+  /* 图标：Lucide 官方 path（内联，零依赖） */
   function badgeIcon(kind) {
-    var s = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
-    if (kind === "report") return s + '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>';
-    if (kind === "doc") return s + '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
-    if (kind === "live") return s + '<path d="M7 4.5v15l13-7.5z"/></svg>';
-    if (kind === "video") return s + '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 11 5-3v8l-5-3z"/></svg>';
-    if (kind === "verify") return s + '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8.5a3 3 0 0 1 0 5.8"/></svg>';
-    return s + "</svg>";
+    var s = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+    if (kind === "report") return s + '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>';
+    if (kind === "doc") return s + '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>';
+    if (kind === "live") return s + '<polygon points="6 3 20 12 6 21 6 3"/></svg>';
+    if (kind === "video") return s + '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="m16 13 5-3-5-3v6Z"/><path d="M7 3v18"/></svg>';
+    if (kind === "verify") return s + '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+    if (kind === "down") return s + '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>';
+    if (kind === "repo") return s + '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>';
+    return s + '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
   }
+  function repoIcon() { return badgeIcon("repo"); }
   function badgesHtml(w) {
     var list = [];
     if (w.report) list.push(["report", "数据报告"]);
@@ -287,7 +291,39 @@
     return '<a class="btn ' + cls + '" data-link-type="' + escapeHtml(label) + '" href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' + (icon === "repo" ? repoIcon() : svgIcon(icon)) + "<span>" + escapeHtml(label) + "</span></a>";
   }
   /* 按钮顺序统一：产品类在前（产品链接固定最左、主按钮）→ 文档类在后 */
+  /* 资源卡样式：一行一个资源（图标 + 标题 + 说明 + 按钮），由卡片的 linksStyle: "card" 启用 */
+  function linkRows(w) {
+    var rows = [], notes = w.linkNotes || {};
+    function push(field, href, title, note, action, icon, primary) {
+      rows.push({ href: href, title: title, note: notes[field] || note, action: action, icon: icon, primary: !!primary });
+    }
+    var isRepo = w.link && /github\.com/i.test(w.link);
+    if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", true);
+    if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "open");
+    if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "down");
+    if (w.reqDocUrl) push("reqDocUrl", w.reqDocUrl, "需求文档", "背景、目标用户、功能需求与验收标准", "在线查看", "doc");
+    if (w.devDocUrl && !w.gameUrl) push("devDocUrl", w.devDocUrl, "开发文档", "实现思路、系统结构与当前状态", "在线查看", "doc");
+    if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "doc");
+    if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "open");
+    if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "doc");
+    return rows;
+  }
+
+  function renderLinkCards(w) {
+    var rows = linkRows(w);
+    if (!rows.length) return "";
+    return '<div class="work-detail__links work-detail__links--cards">' + rows.map(function (r) {
+      var icon = r.icon === "repo" ? repoIcon() : badgeIcon(r.icon);
+      return '<div class="link-card">' +
+        '<span class="link-card__icon">' + icon + "</span>" +
+        '<span class="link-card__text"><b>' + escapeHtml(r.title) + "</b><i>" + escapeHtml(r.note) + "</i></span>" +
+        '<a class="btn ' + (r.primary ? "btn-primary" : "btn-ghost") + '" data-link-type="' + escapeHtml(r.title) + '" href="' + escapeHtml(r.href) + '" target="_blank" rel="noopener"><span>' + escapeHtml(r.action) + "</span></a>" +
+      "</div>";
+    }).join("") + "</div>";
+  }
+
   function renderLinks(w) {
+    if (w.linksStyle === "card") return renderLinkCards(w);
     var html = '<div class="work-detail__links">';
     if (w.link && !w.report) html += linkBtn(w.link, "btn-primary", w.outLinkText || "查看项目", /github\.com/i.test(w.link) ? "repo" : "open");
     if (w.caseUrl) html += linkBtn(w.caseUrl, "btn-ghost", w.caseText || "案例展示", "open");
