@@ -299,6 +299,7 @@
     }
     var isRepo = w.link && w.link.indexOf("github.com") >= 0;
     if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", isRepo ? "🐙" : "🚀", true);
+    if (w.gameUrl) push("gameUrl", w.gameUrl, "在线游玩", "浏览器直接打开即可玩，支持键盘与触屏", "开始游戏", "live", "🎮", true);
     if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "open", "🖼️");
     if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "down", "⬇️");
     if (w.reqDocUrl) push("reqDocUrl", w.reqDocUrl, "需求文档", "背景、目标用户、功能需求与验收标准", "在线查看", "doc", "📄");
@@ -329,10 +330,7 @@
   /* 是否用「资源卡」样式：默认开启；代码仓库类卡片保持原来的按钮排（用户要求），
      个别卡片可用 linksStyle: false 单独关掉 */
   function useCardStyle(w) {
-    if (w.linksStyle === false) return false;
-    if (w.linksStyle === true || w.linksStyle === "card") return true;
-    if (w.link && w.link.indexOf("github.com") >= 0) return false;
-    return true;
+    return w.linksStyle !== false;
   }
   function renderLinks(w) {
     if (useCardStyle(w)) return renderLinkCards(w);
