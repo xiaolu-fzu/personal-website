@@ -198,6 +198,15 @@ body.nav-locked { overflow: hidden; }
 .work-card__value { color: var(--text-secondary); font-size: var(--fs-sm); line-height: 1.55; margin: 0; }
 .work-card__tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: auto; padding-top: var(--space-3); }
 
+/* 卡面徽标：完成度标记 */
+.work-card__badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-3); }
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; line-height: 1; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-muted); white-space: nowrap; }
+.badge--report { color: #A9714B; border-color: rgba(169,113,75,0.35); background: rgba(169,113,75,0.06); }
+.badge--doc { color: #8A8177; border-color: rgba(138,129,119,0.32); background: rgba(138,129,119,0.06); }
+.badge--live { color: var(--accent); border-color: rgba(204,120,92,0.42); background: rgba(204,120,92,0.07); }
+.badge--video { color: #B9624A; border-color: rgba(185,98,74,0.35); background: rgba(185,98,74,0.06); }
+.badge--verify { color: #5B8C6A; border-color: rgba(91,140,106,0.4); background: rgba(91,140,106,0.07); font-weight: 600; }
+
 /* ==================== 2.4 标签 Tag ==================== */
 .tag {
   display: inline-flex; align-items: center;

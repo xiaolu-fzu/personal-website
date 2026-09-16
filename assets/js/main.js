@@ -116,6 +116,32 @@
     });
   }
 
+  /* 卡面徽标：依据卡片已有字段自动推导（+ 手写 verify） */
+  function badgeIcon(kind) {
+    var s = '<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+    if (kind === "report") return s + '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>';
+    if (kind === "doc") return s + '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>';
+    if (kind === "live") return s + '<path d="M7 4.5v15l13-7.5z"/></svg>';
+    if (kind === "video") return s + '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 11 5-3v8l-5-3z"/></svg>';
+    if (kind === "verify") return s + '<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M17 8.5a3 3 0 0 1 0 5.8"/></svg>';
+    return s + "</svg>";
+  }
+  function badgesHtml(w) {
+    var list = [];
+    if (w.report) list.push(["report", "数据报告"]);
+    if (w.reqDocUrl || w.prdDocUrl || w.docUrl) list.push(["doc", "需求文档"]);
+    if (w.devDocUrl) list.push(["doc", "开发文档"]);
+    // 「上线可玩」只给真能上手体验的：游戏 / 在线原型 / 原型与 Agent 分类的可访问外链
+    var playableCat = (w.category === "prototype" || w.category === "agent" || w.category === "game");
+    if (w.gameUrl || w.prototypeUrl || (w.link && playableCat)) list.push(["live", "上线可玩"]);
+    if (w.videoSrc) list.push(["video", "成片"]);
+    if (w.verify) list.push(["verify", w.verify]);
+    if (!list.length) return "";
+    return '<div class="work-card__badges">' + list.map(function (b) {
+      return '<span class="badge badge--' + b[0] + '">' + badgeIcon(b[0]) + escapeHtml(b[1]) + "</span>";
+    }).join("") + "</div>";
+  }
+
   function makeCard(work, index) {
     var tags = catTagsHtml(work.category, work.catLabel);
     var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
@@ -130,6 +156,7 @@
           badge +
         "</div>" +
         '<div class="work-card__value-row">' + valueHtml + "</div>" +
+        badgesHtml(work) +
         '<div class="work-card__tags">' + tags + "</div>" +
       "</a>"
     );
