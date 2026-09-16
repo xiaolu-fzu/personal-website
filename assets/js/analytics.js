@@ -1,13 +1,31 @@
 /* 个人网站访问统计（匿名上报）
- * 事件类型：page_view（打开网站）/ project_open（点开项目卡）/ link_click（点项目卡上的按钮）
- * 匿名：只用一个本地随机 ID 去重，不写 cookie、不收集 IP。
- * 部署后端后，把下面的 ENDPOINT 换成你的后端域名即可（例如 https://xiaolu-stats.pages.dev）。
+ * 事件：page_view（打开网站）/ project_open（点开项目卡）/ link_click（点项目卡上的按钮）
+ * 匿名：只用一个本地随机 ID 去重，不写 cookie、不采集 IP。
+ *
+ * 不想让自己的访问被统计？在这台设备上打开一次：
+ *     https://xiaolu-fzu.github.io/personal-website/?self=1
+ * 之后这台设备就不再上报了（想恢复：把 1 改成 0）。
  */
 (function () {
-  var ENDPOINT = "";                       // ← 部署后填写后端域名，留空则不上报
+  var ENDPOINT = "https://xiaolu-stats.pages.dev";   // 统计后端（Cloudflare Pages）
   var VKEY = "lxh_visitor";
-  var vid;
+  var NKEY = "lxh_nostats";
 
+  try {
+    var qs = new URLSearchParams(location.search);
+    if (qs.get("self") === "1") localStorage.setItem(NKEY, "1");
+    if (qs.get("self") === "0") localStorage.removeItem(NKEY);
+  } catch (e) {}
+
+  var muted = false;
+  try { muted = localStorage.getItem(NKEY) === "1"; } catch (e) {}
+
+  if (muted) {                                  // 本机（或主动关闭）不上报
+    window.DSH_TRACK = { pageView: function () {}, projectOpen: function () {}, linkClick: function () {} };
+    return;
+  }
+
+  var vid;
   try {
     vid = localStorage.getItem(VKEY);
     if (!vid) {
@@ -17,7 +35,7 @@
   } catch (e) { vid = "anon"; }
 
   function send(payload) {
-    if (!ENDPOINT) return;                 // 未配置后端：静默跳过
+    if (!ENDPOINT) return;
     payload.visitor = vid;
     payload.path = location.pathname;
     try { payload.ref = document.referrer ? document.referrer.slice(0, 120) : ""; } catch (e) {}
