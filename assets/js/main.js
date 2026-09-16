@@ -294,28 +294,30 @@
   /* 资源卡样式：一行一个资源（图标 + 标题 + 说明 + 按钮），由卡片的 linksStyle: "card" 启用 */
   function linkRows(w) {
     var rows = [], notes = w.linkNotes || {};
-    function push(field, href, title, note, action, icon, primary) {
-      rows.push({ href: href, title: title, note: notes[field] || note, action: action, icon: icon, primary: !!primary });
+    function push(field, href, title, note, action, icon, emoji, primary) {
+      rows.push({ href: href, title: title, note: notes[field] || note, action: action, icon: icon, emoji: emoji, primary: !!primary });
     }
     var isRepo = w.link && w.link.indexOf("github.com") >= 0;
-    if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "🐙" : "🚀", true);
-    if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "🖼️");
-    if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "⬇️");
-    if (w.reqDocUrl) push("reqDocUrl", w.reqDocUrl, "需求文档", "背景、目标用户、功能需求与验收标准", "在线查看", "📄");
-    if (w.devDocUrl && !w.gameUrl) push("devDocUrl", w.devDocUrl, "开发文档", "实现思路、系统结构与当前状态", "在线查看", "🛠️");
-    if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "📄");
-    if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "📋");
-    if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "📄");
+    if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", isRepo ? "🐙" : "🚀", true);
+    if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "open", "🖼️");
+    if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "down", "⬇️");
+    if (w.reqDocUrl) push("reqDocUrl", w.reqDocUrl, "需求文档", "背景、目标用户、功能需求与验收标准", "在线查看", "doc", "📄");
+    if (w.devDocUrl && !w.gameUrl) push("devDocUrl", w.devDocUrl, "开发文档", "实现思路、系统结构与当前状态", "在线查看", "doc", "🛠️");
+    if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "doc", "📄");
+    if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "open", "📋");
+    if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "doc", "📄");
     return rows;
   }
   function renderLinkCards(w) {
     var rows = linkRows(w);
     if (!rows.length) return "";
     return '<div class="work-detail__links work-detail__links--cards">' + rows.map(function (r) {
+      var btnIcon = r.icon === "repo" ? repoIcon() : badgeIcon(r.icon);
       return '<div class="link-card">' +
+        '<span class="link-card__icon" aria-hidden="true">' + r.emoji + '</span>' +
         '<span class="link-card__text"><b>' + escapeHtml(r.title) + '</b><i>' + escapeHtml(r.note) + '</i></span>' +
         '<a class="btn ' + (r.primary ? "btn-primary" : "btn-ghost") + '" data-link-type="' + escapeHtml(r.title) + '" href="' + escapeHtml(r.href) + '" target="_blank" rel="noopener">' +
-          '<span class="link-card__emoji" aria-hidden="true">' + r.icon + '</span><span>' + escapeHtml(r.action) + '</span>' +
+          btnIcon + '<span>' + escapeHtml(r.action) + '</span>' +
         '</a>' +
       '</div>';
     }).join("") + "</div>";
