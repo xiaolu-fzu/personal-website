@@ -36,9 +36,22 @@
     if (w.prdDocUrl) o.push({ label: "PRD 文档", href: w.prdDocUrl });
     return o;
   }
+  var CAT_NAME = { prototype: "原型和产品", agent: "AI项目", data: "数据分析", industry: "行业研究", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" };
   var CORPUS = works.map(function (w, i) {
     return { index: i, title: w.title, category: w.category, text: cardText(w), links: cardLinks(w), value: w.value || "" };
   });
+
+  /* 全量项目总览：任何问题都随请求带上，避免「一共多少项目」这类统计问题被检索子集带偏 */
+  function overviewText() {
+    var byCat = {};
+    CORPUS.forEach(function (c) { byCat[c.category] = (byCat[c.category] || 0) + 1; });
+    var dist = Object.keys(byCat).map(function (k) { return (CAT_NAME[k] || k) + " " + byCat[k] + " 个"; }).join("、");
+    var list = CORPUS.map(function (c, i) { return (i + 1) + "." + c.title + "（" + (CAT_NAME[c.category] || c.category) + "）"; }).join("；");
+    var docs = (window.DOCS || []).length;
+    return "【项目总览】本站作品集共 " + CORPUS.length + " 个项目；分类分布：" + dist + "。" +
+      (docs ? "文档库另收录 " + docs + " 份需求/开发文档。" : "") +
+      "\n完整清单：" + list;
+  }
 
   /* ---------- 检索 ---------- */
   function tokens(q) {
@@ -287,7 +300,7 @@
     var ANAPHORA = /(这两个|那两个|这两|那两|它们|他们|这几个|这几个项目|上面|刚才|前面|这个项目|那个项目|还有呢|继续)/;
     var hits = (ANAPHORA.test(q) && state.lastHits && state.lastHits.length) ? state.lastHits : search(q, 5);
     state.lastHits = hits;
-    var ctx = hits.map(function (c) {
+    var ctx = overviewText() + "\n\n【与本次问题最相关的项目详情】\n" + hits.map(function (c) {
       return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
         "｜可用链接:" + c.links.map(function (l) { return l.label + " " + l.href; }).join(" ; ");
     }).join("\n");
