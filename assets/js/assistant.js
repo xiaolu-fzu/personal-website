@@ -27,6 +27,7 @@
     var o = [];
     if (w.link) o.push({ label: w.outLinkText || "产品链接", href: w.link });
     if (w.caseUrl) o.push({ label: w.caseText || "案例展示", href: w.caseUrl });
+    if (w.protoUrl) o.push({ label: "在线原型", href: w.protoUrl });
     if (w.gameUrl) o.push({ label: "在线游玩", href: w.gameUrl });
     if (w.reqDocUrl) o.push({ label: "需求文档", href: w.reqDocUrl });
     if (w.devDocUrl) o.push({ label: "开发文档", href: w.devDocUrl });

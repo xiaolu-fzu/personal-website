@@ -273,6 +273,7 @@ window.WORKS = [
     year: 2024,
     hue: 200,
     prototypeUrl: "prototype/prolist.html",
+    protoUrl: "https://xiaolu-fzu.github.io/prolist-prototype/",
     link: "https://xiaolu-fzu.github.io/prolist-download/",
     outLinkText: "产品链接",
     prdUrl: "https://xiaolu-fzu.github.io/ProListing-PRD/",

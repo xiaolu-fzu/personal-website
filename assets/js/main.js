@@ -299,6 +299,7 @@
     }
     var isRepo = w.link && w.link.indexOf("github.com") >= 0;
     if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", isRepo ? "🐙" : "🚀", true);
+    if (w.protoUrl) push("protoUrl", w.protoUrl, "在线原型", "可点击的交互原型，直接打开体验完整流程", "打开原型", "open", "🎨", true);
     if (w.gameUrl) push("gameUrl", w.gameUrl, "在线游玩", "浏览器直接打开即可玩，支持键盘与触屏", "开始游戏", "live", "🎮", true);
     if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "open", "🖼️");
     if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "down", "⬇️");
