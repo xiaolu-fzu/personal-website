@@ -466,18 +466,37 @@
           projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; })
         })
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
+        .catch(function () {
+          // 失败重试一次（追问接口偶尔会超时/空返回）
+          return fetch(SUGGEST_API, {
+            method: "POST", headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify({
+              question: q, reply: (lastReply || "").slice(0, 1200),
+              projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; })
+            })
+          }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); });
+        })
         .then(function (j) {
           if (mySeq !== state.seq) return;      // 已经进入下一轮，丢弃过期结果
           var list = (j.followups || []).filter(function (x) {
             // 过滤掉已经执行过的项目相关的追问
             return !doneTitles.some(function (n) { return n && x.indexOf(n.slice(0, 6)) >= 0 && /打开|看看|查看/.test(x); });
           }).slice(0, 3);
+          // 模型没给 / 全被去重掉 → 用一组通用兜底，保证「下一轮」永远点得动
+          if (!list.length) {
+            list = ["你还有别的项目吗？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"].filter(function (x) {
+              return !doneTitles.some(function (n) { return n && x.indexOf(n.slice(0, 6)) >= 0; });
+            }).slice(0, 3);
+          }
           if (!list.length) return;
           showFollowups(list);
           var last = state.hist[state.hist.length - 1];
           if (last && last.who === "bot") { last.followups = list; save(); }
         })
-        .catch(function () { /* 追问失败就算了，不影响主回答 */ });
+        .catch(function () {
+          if (mySeq !== state.seq) return;
+          showFollowups(["你还有别的项目吗？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"]);   // 连重试都失败 → 兜底，不留空白
+        });
     }
 
     function step(n) {
