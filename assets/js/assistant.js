@@ -179,7 +179,7 @@
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
-  var state = { busy: false, hist: [] };
+  var state = { busy: false, hist: [], lastHits: [] };
   try { state.hist = JSON.parse(localStorage.getItem(HKEY) || "[]").slice(-20); } catch (e) {}
 
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
@@ -276,7 +276,10 @@
     log.appendChild(thinking);
     log.scrollTop = log.scrollHeight;
 
-    var hits = search(q, 5);
+    // 指代词（这两个/它们/刚才说的）→ 沿用上一轮命中的项目，否则重新检索
+    var ANAPHORA = /(这两个|那两个|这两|那两|它们|他们|这几个|这几个项目|上面|刚才|前面|这个项目|那个项目|还有呢|继续)/;
+    var hits = (ANAPHORA.test(q) && state.lastHits && state.lastHits.length) ? state.lastHits : search(q, 5);
+    state.lastHits = hits;
     var ctx = hits.map(function (c) {
       return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
         "｜可用链接:" + c.links.map(function (l) { return l.label + " " + l.href; }).join(" ; ");
@@ -295,7 +298,14 @@
     var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 22000);
     fetch(API, {
       method: "POST", headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ question: q, context: ctx, projects: hits.map(function (c) { return c.title; }) }),
+      body: JSON.stringify({
+        question: q,
+        context: ctx,
+        projects: hits.map(function (c) { return c.title; }),
+        history: state.hist.slice(-8).map(function (m) {
+          return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 600) };
+        })
+      }),
       signal: ctrl ? ctrl.signal : undefined
     }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
       .then(function (j) {
