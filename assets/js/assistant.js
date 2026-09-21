@@ -351,11 +351,26 @@
           return '<span class="asst__step' + (st.ok ? "" : " is-fail") + '">' + (i + 1) + ". " + esc(st.label) + " —— " + esc(st.msg) + "</span>";
         }).join("") + "</div>";
       }
+      // 动作按钮：不再自动罗列「相关项目」（会和下方追问重复）；
+      // 只保留模型自己给出的那个动作，并且只在没有追问时才展示，避免两排胶囊撞车。
       var actions = [];
-      lastHits.slice(0, 3).forEach(function (c) {
-        actions.push({ label: "打开「" + c.title.slice(0, 10) + "…」", action: { type: "open_project", target: c.title } });
-      });
-      bubble("bot", html, actions.slice(0, 3), lastFollowups);
+      var pending = state.pendingAction;
+      state.pendingAction = null;
+      if (pending && pending.type && !lastFollowups.length) {
+        actions.push({
+          label: pending.type === "open_link" ? "打开这个链接"
+            : pending.type === "open_project" ? "打开「" + String(pending.target || "").slice(0, 12) + "」"
+            : pending.type === "filter" ? "切换到「" + (pending.target || "") + "」"
+            : "执行",
+          action: pending
+        });
+      }
+      // 追问去重：已经执行过的项目不要再出现在「你可能还想问」里
+      var doneNames = steps.map(function (s) { return s.target || ""; }).filter(Boolean);
+      lastFollowups = lastFollowups.filter(function (q) {
+        return !doneNames.some(function (n) { return n && q.indexOf(n.slice(0, 6)) >= 0 && /打开|看看|查看/.test(q); });
+      }).slice(0, 3);
+      bubble("bot", html, actions, lastFollowups);
       state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: lastFollowups });
       save(); updateChips();
     }
@@ -390,11 +405,11 @@
 
           // 没有动作 → 任务结束
           if (!j.action || !j.action.type) { finish(); return; }
-          // 用户没明确下指令 → 只回答，不执行（保持行为边界）
-          if (!EXPLICIT.test(q)) { finish(); return; }
+          // 用户没明确下指令 → 只回答不执行；但把动作挂起，作为可点按钮（保持行为边界，又给用户选择）
+          if (!EXPLICIT.test(q)) { state.pendingAction = j.action; finish(); return; }
 
           var res = runAction(j.action);
-          steps.push({ label: actionLabel(j.action), msg: res.msg, ok: res.ok });
+          steps.push({ label: actionLabel(j.action), msg: res.msg, ok: res.ok, target: j.action.target || "" });
           loopHist.push({ role: "assistant", content: "（我调用了工具 " + j.action.type + "，目标：" + (j.action.target || "-") + "）" + (j.reply || "") });
           loopHist.push({ role: "user", content: "【系统反馈】" + res.msg + "。如果任务已完成，请把 action 设为 null 并简短总结；否则给出下一个动作。" });
 
