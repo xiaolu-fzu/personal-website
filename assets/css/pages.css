@@ -443,3 +443,32 @@
 /* 修复：hidden 属性必须真的隐藏（否则 display:flex 会覆盖它） */
 .asst__panel[hidden] { display: none !important; }
 .asst__tip.is-hidden { display: none !important; }
+
+
+/* ===== 小洄（最终）：点击不出现任何底色/边框，弹窗在其上方不遮挡 ===== */
+.asst__fab,
+.asst__fab:hover,
+.asst__fab:focus,
+.asst__fab:active,
+.asst__fab.is-open {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.asst__fab:focus-visible { outline: 2px dashed rgba(204,120,92,0.55) !important; outline-offset: 6px; }
+.asst__fab img { filter: drop-shadow(0 10px 16px rgba(0,0,0,0.18)); transition: filter 0.22s ease; }
+.asst__fab.is-open img { filter: drop-shadow(0 0 16px rgba(204,120,92,0.5)); }
+.asst__panel { bottom: 158px; }          /* 放到小洄上方，不再挡住他 */
+.asst--wide .asst__panel { bottom: 158px; }
+.asst--tall .asst__panel { bottom: 158px; }
+.asst__tip { right: 148px; bottom: 66px; }
+@media (max-width: 640px) {
+  .asst__panel, .asst--wide .asst__panel, .asst--tall .asst__panel { bottom: 122px; }
+  .asst__tip { display: none; }
+}

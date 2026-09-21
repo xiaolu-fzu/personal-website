@@ -326,7 +326,7 @@
     });
     document.addEventListener("mousemove", function (e) {
       if (!down) return;
-      if (Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy) > 5) moved = true;
+      if (Math.abs(e.clientX - sx) + Math.abs(e.clientY - sy) > 9) moved = true;
       if (!moved) return;
       var left = Math.max(8, Math.min(window.innerWidth - root.offsetWidth - 8, ox + e.clientX - sx));
       var top = Math.max(8, Math.min(window.innerHeight - 60, oy + e.clientY - sy));
