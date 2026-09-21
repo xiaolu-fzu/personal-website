@@ -114,7 +114,7 @@
     return true;
   }
   function filterCategory(cat) {
-    var map = { data: "数据分析", industry: "行业研究", prototype: "原型和产品", agent: "Agent开发", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" };
+    var map = { data: "数据分析", industry: "行业研究", prototype: "原型和产品", agent: "AI项目", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" };
     var id = null;
     Object.keys(map).forEach(function (k) { if (cat === k || cat === map[k]) id = k; });
     var btn = id && document.querySelector('[data-filter="' + id + '"]');

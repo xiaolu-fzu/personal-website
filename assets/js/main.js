@@ -93,7 +93,7 @@
     return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)", agent: "var(--cat-agent)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发", agent: "Agent开发" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发", agent: "AI项目" }[tag] || tag;
   }
   function catTagsHtml(category, labelOverride) {
     var cls = catClass(category);
