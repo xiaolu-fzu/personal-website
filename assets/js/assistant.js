@@ -225,6 +225,10 @@
         '</span>' +
       '</div>' +
       '<div class="asst__log" id="asstLog"></div>' +
+      /* 预测追问：放在输入框上方（不再塞进回答气泡里），且只显示最新一组 */
+      '<div class="asst__askbar" id="asstAskbar" hidden>' +
+        '<div class="asst__followups" id="asstFollowups"></div>' +
+      '</div>' +
       '<div class="asst__chips" id="asstChips">' +
         '<button type="button">我想玩一下真菌荒域，帮我打开。</button>' +
         '<button type="button">你有没有APP相关的项目？</button>' +
@@ -242,7 +246,7 @@
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
-  var state = { busy: false, hist: [], lastHits: [], currentProject: "" };
+  var state = { busy: false, hist: [], lastHits: [], currentProject: "", opened: [], seq: 0 };
   try { state.hist = JSON.parse(localStorage.getItem(HKEY) || "[]").slice(-20); } catch (e) {}
 
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
@@ -289,7 +293,22 @@
     log.scrollTop = log.scrollHeight;
     return el;                                  // 返回元素，便于稍后异步追加追问
   }
-  /* 追问是单独一次调用生成的（质量更高），拿到后追加到对应气泡下方 */
+  /* 预测追问区（输入框上方）：只保留最新一组；点击后立刻清空，避免旧问题残留 */
+  var fuBar = root.querySelector("#asstAskbar"), fuBox = root.querySelector("#asstFollowups");
+  function clearFollowups() { try { fuBox.innerHTML = ""; fuBar.hidden = true; } catch (e) {} }
+  function showFollowups(list) {
+    clearFollowups();
+    if (!list || !list.length) return;
+    list.forEach(function (q) {
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = q;
+      b.addEventListener("click", function () { ask(q); });     // 点击 → 提问（ask 开头会清空本区）
+      fuBox.appendChild(b);
+    });
+    fuBar.hidden = false;
+  }
+
+  /* 旧版：把追问追加到气泡下方（保留函数但不再使用） */
   function attachFollowups(el, list) {
     if (!el || !list || !list.length) return;
     var body = el.querySelector(".asst__msgbody");
@@ -349,6 +368,8 @@
 
   function ask(q) {
     if (state.busy) return;
+    clearFollowups();          // 提问即清掉上一轮的预测问题
+    state.seq++;               // 轮次号：避免上一轮的异步追问结果回来后又渲染一次
 
     // 纯前端能直接执行的命令（离线也灵）
     var quick = quickCommand(q);
@@ -381,9 +402,12 @@
     var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|看看|看一下|能看|可以看|我想看|我要看|给我看|展示|访问|点开|进入|切到|切换到|关掉|关闭|收起)/;
     var steps = [];                 // 执行过的动作与结果（给用户看，也回灌给模型）
     // 显式携带「当前讨论的项目」，指代词（它/这个/上面说的）才有确定所指
-    var loopHist = (state.currentProject
-      ? [{ role: "user", content: "【系统】本次对话当前讨论的项目是：" + state.currentProject + "。用户说「它 / 这个 / 上面说的」时都指这个项目。" }]
-      : []).concat(state.hist.slice(-8).map(function (m) {
+    var sysMemo = [];
+    if (state.currentProject) sysMemo.push("【系统】本次对话当前讨论的项目是：「" + state.currentProject + "」。用户说「它 / 这个 / 上面说的」都指这个项目，不要反问用户指哪个。");
+    if (state.opened && state.opened.length) sysMemo.push("【系统】本次会话已经打开过：" + state.opened.slice(-4).join("；") + "。若用户再要同一份，可直接说明已打开过。");
+    var loopHist = (sysMemo.length
+      ? [{ role: "user", content: sysMemo.join("\n") }]
+      : []).concat(state.hist.slice(-12).map(function (m) {
       return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br[^>]*>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 500) };
     }));
     var lastReply = "", lastFollowups = [], lastHits = [];
@@ -430,7 +454,8 @@
       state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: [] });
       save(); updateChips();
 
-      // 追问：单独一次调用专门生成（贴住本次回答的具体内容），拿到后再追加
+      // 追问：单独一次调用专门生成（贴住本次回答的具体内容），拿到后渲染到输入框上方
+      var mySeq = state.seq;
       var doneTitles = steps.map(function (s) { return s.target || ""; }).filter(Boolean);
       fetch(SUGGEST_API, {
         method: "POST", headers: { "Content-Type": "text/plain" },
@@ -441,12 +466,13 @@
         })
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
         .then(function (j) {
+          if (mySeq !== state.seq) return;      // 已经进入下一轮，丢弃过期结果
           var list = (j.followups || []).filter(function (x) {
             // 过滤掉已经执行过的项目相关的追问
             return !doneTitles.some(function (n) { return n && x.indexOf(n.slice(0, 6)) >= 0 && /打开|看看|查看/.test(x); });
           }).slice(0, 3);
           if (!list.length) return;
-          attachFollowups(el, list);
+          showFollowups(list);
           var last = state.hist[state.hist.length - 1];
           if (last && last.who === "bot") { last.followups = list; save(); }
         })
@@ -492,6 +518,7 @@
 
           var res = runAction(j.action);
           steps.push({ label: actionLabel(j.action), msg: res.msg, ok: res.ok, target: j.action.target || "" });
+          if (res.ok) { try { state.opened.push(actionLabel(j.action)); } catch (e) {} }
           loopHist.push({ role: "assistant", content: "（我调用了工具 " + j.action.type + "，目标：" + (j.action.target || "-") + "）" + (j.reply || "") });
           loopHist.push({ role: "user", content: "【系统反馈】" + res.msg + "。如果任务已完成，请把 action 设为 null 并简短总结；否则给出下一个动作。" });
 
@@ -581,7 +608,7 @@
     isOpen() ? close() : open();
   });
   root.querySelector("#asstClose").addEventListener("click", close);
-  root.querySelector("#asstClear").addEventListener("click", function () { state.hist = []; save(); showHist(); updateChips(); });
+  root.querySelector("#asstClear").addEventListener("click", function () { state.hist = []; state.currentProject = ""; save(); showHist(); updateChips(); clearFollowups(); });
   root.querySelector("#asstSize").addEventListener("click", function () {
     var order = ["", "asst--wide", "asst--tall"], cur = root.className.replace("asst", "").replace("asst--dragging", "").trim();
     var next = order[(order.indexOf(cur) + 1) % order.length];
