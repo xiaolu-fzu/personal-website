@@ -562,3 +562,10 @@
 }
 .asst__followups button:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
 .asst__askbar { padding: 10px 14px 2px; border-top: 1px dashed var(--border); }
+
+
+/* 图层修正：小洄必须浮在页眉（--z-nav:100）与遮罩（--z-overlay:200）之上 */
+.asst { z-index: 300 !important; }
+.asst__panel { z-index: 301; }
+.asst__fab { z-index: 302; }
+.asst__tip { z-index: 302; }
