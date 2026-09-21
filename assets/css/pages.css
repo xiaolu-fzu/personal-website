@@ -401,3 +401,29 @@
   .asst--wide .asst__panel, .asst--tall .asst__panel { width: calc(100vw - 28px); height: 68vh; }
   .asst__tip { display: none; }
 }
+
+
+/* ==================== 小洄形象（助手最终版） ==================== */
+.asst__fab { width: 78px; height: 78px; padding: 0; border-radius: 50%; border: 2px solid rgba(204,120,92,0.35); background: #fff; overflow: hidden; cursor: grab; box-shadow: 0 10px 26px rgba(0,0,0,0.16); animation: asstBob 3.6s ease-in-out infinite; }
+.asst__fab img { width: 100%; height: 100%; object-fit: cover; object-position: center 12%; display: block; pointer-events: none; }
+.asst__fab.is-open { border-color: var(--accent); }
+.asst--dragging .asst__fab { cursor: grabbing; animation-play-state: paused; }
+@keyframes asstBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.asst__tip { right: 92px; bottom: 26px; }
+
+.asst__headpic { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; object-position: center 12%; margin-right: 8px; flex: none; }
+.asst__msg { flex-direction: row; align-items: flex-start; gap: 8px; max-width: 92%; }
+.asst__msg--me { flex-direction: row-reverse; }
+.asst__msgpic { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; object-position: center 12%; flex: none; background: #fff; }
+.asst__msgbody { display: flex; flex-direction: column; gap: 6px; min-width: 0; align-items: flex-start; }
+.asst__msg--me .asst__msgbody { align-items: flex-end; }
+.asst__hint { display: inline-block; margin-top: 6px; font-size: 12.5px; color: var(--text-muted); }
+
+.asst__panel { animation: asstIn 0.22s ease-out; }
+@keyframes asstIn { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+.asst__msg { animation: asstMsgIn 0.22s ease-out; }
+@keyframes asstMsgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* 被助手定位到的项目卡：高亮闪一下 */
+.work-card.is-flash { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(204,120,92,0.22), 0 14px 32px rgba(204,120,92,0.18) !important; animation: cardFlash 1.1s ease-in-out 2; }
+@keyframes cardFlash { 0%, 100% { transform: none; } 50% { transform: translateY(-5px); } }
