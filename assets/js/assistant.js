@@ -174,9 +174,23 @@
         if (owner) {
           // ① 先"走到"这张项目卡：切分类 → 滚动 → 高亮 → 展开详情（弹窗先不关，让用户看得见过程）
           openProject(owner.title, true);
-          // ② 稍等片刻再打开链接，用户就能看到"跳到项目 → 打开链接"的完整动作
-          setTimeout(function () { openUrl(href); }, 1000);
-          return { ok: true, msg: "已定位到项目卡「" + owner.title + "」，随后打开该链接" };
+          // ② 再滑到详情区里**那一行资源卡**（也就是即将点开的按钮那一行），让用户先看到按钮
+          setTimeout(function () {
+            var row = null;
+            var rows = document.querySelectorAll(".work-detail__links--cards .link-card");
+            Array.prototype.forEach.call(rows, function (el) {
+              var a = el.querySelector("a.btn");
+              if (a && a.getAttribute("href") === href) row = el;
+            });
+            if (row) {
+              row.scrollIntoView({ behavior: "smooth", block: "center" });
+              row.classList.add("is-flash");
+              setTimeout(function () { row.classList.remove("is-flash"); }, 2400);
+            }
+          }, 1000);
+          // ③ 看清楚按钮之后再打开链接
+          setTimeout(function () { openUrl(href); }, 1900);
+          return { ok: true, msg: "已定位到项目卡「" + owner.title + "」并滑到对应按钮，随后打开该链接" };
         }
         var ok2 = openUrl(href);
         return { ok: !!ok2, msg: ok2 ? "已在浏览器新标签页打开该链接" : "该链接不在项目资料里，出于安全已拒绝打开" };
