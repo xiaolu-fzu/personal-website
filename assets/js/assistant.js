@@ -230,10 +230,10 @@
         '<div class="asst__followups" id="asstFollowups"></div>' +
       '</div>' +
       '<div class="asst__chips" id="asstChips">' +
+        '<button type="button">「有据」解决了什么问题？</button>' +
         '<button type="button">我想玩一下真菌荒域，帮我打开。</button>' +
-        '<button type="button">你有没有APP相关的项目？</button>' +
-        '<button type="button">我想了解你做过的ai项目。</button>' +
-        '<button type="button">打开ProListing的原型。</button>' +
+        '<button type="button">打开 ProListing 项目卡。</button>' +
+        '<button type="button">你一共有多少项目可以展示？</button>' +
       '</div>' +
       '<form class="asst__form" id="asstForm">' +
         '<input id="asstInput" type="text" placeholder="和小洄说点什么…" autocomplete="off">' +
