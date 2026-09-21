@@ -12,6 +12,7 @@
  */
 (function () {
   var API = "https://xiaolu-stats.pages.dev/api/chat";
+  var SUGGEST_API = "https://xiaolu-stats.pages.dev/api/suggest";
   var PKEY = "lxh_asst_pos", SKEY = "lxh_asst_size", HKEY = "lxh_asst_hist", AVATAR = "assets/img/小洄头像.webp", PET = "assets/img/小洄.webp";
   var works = window.WORKS || [];
   if (!works.length) return;
@@ -254,6 +255,23 @@
     el.appendChild(wrap);
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
+    return el;                                  // 返回元素，便于稍后异步追加追问
+  }
+  /* 追问是单独一次调用生成的（质量更高），拿到后追加到对应气泡下方 */
+  function attachFollowups(el, list) {
+    if (!el || !list || !list.length) return;
+    var body = el.querySelector(".asst__msgbody");
+    if (!body || body.querySelector(".asst__followups")) return;
+    var fu = document.createElement("div");
+    fu.className = "asst__followups";
+    list.forEach(function (q) {
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = q;
+      b.addEventListener("click", function () { ask(q); });
+      fu.appendChild(b);
+    });
+    body.appendChild(fu);
+    log.scrollTop = log.scrollHeight;
   }
 
   /* 新手推荐问题只在「还没聊过」时出现；一旦开始对话，就让位给回答下方的「你可能还想问」 */
@@ -370,9 +388,31 @@
       lastFollowups = lastFollowups.filter(function (q) {
         return !doneNames.some(function (n) { return n && q.indexOf(n.slice(0, 6)) >= 0 && /打开|看看|查看/.test(q); });
       }).slice(0, 3);
-      bubble("bot", html, actions, lastFollowups);
-      state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: lastFollowups });
+      var el = bubble("bot", html, actions, []);        // 先渲染回答（不等待追问）
+      state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: [] });
       save(); updateChips();
+
+      // 追问：单独一次调用专门生成（贴住本次回答的具体内容），拿到后再追加
+      var doneTitles = steps.map(function (s) { return s.target || ""; }).filter(Boolean);
+      fetch(SUGGEST_API, {
+        method: "POST", headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          question: q,
+          reply: (lastReply || "").slice(0, 1200),
+          projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; })
+        })
+      }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
+        .then(function (j) {
+          var list = (j.followups || []).filter(function (x) {
+            // 过滤掉已经执行过的项目相关的追问
+            return !doneTitles.some(function (n) { return n && x.indexOf(n.slice(0, 6)) >= 0 && /打开|看看|查看/.test(x); });
+          }).slice(0, 3);
+          if (!list.length) return;
+          attachFollowups(el, list);
+          var last = state.hist[state.hist.length - 1];
+          if (last && last.who === "bot") { last.followups = list; save(); }
+        })
+        .catch(function () { /* 追问失败就算了，不影响主回答 */ });
     }
 
     function step(n) {
