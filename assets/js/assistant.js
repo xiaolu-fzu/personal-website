@@ -508,7 +508,21 @@
       var hits = (ANAPHORA.test(question) && state.lastHits && state.lastHits.length) ? state.lastHits : search(question, 5);
       if (isFirst) {
         state.lastHits = hits; lastHits = hits;
-        if (hits.length) { try { state.currentProject = hits[0].title; } catch (e) {} }   // 记住当前讨论的项目
+        // ★ 项目锁定的更新规则（此前每轮无条件覆盖，导致聊几轮后项目就跑了）：
+        //   · 含指代词（它/这个项目/那…）→ **沿用**当前项目，绝不因检索结果而改变；
+        //   · 问题里**明确提到某个项目名** → 切换到那个项目；
+        //   · 其余（新话题）→ 才按检索结果更新。
+        try {
+          var titles = (window.WORKS || []).map(function (w) { return w.title; });
+          var named = null;
+          titles.forEach(function (t) {
+            if (!named && t && q.indexOf(String(t).split("·")[0].trim().slice(0, 6)) >= 0) named = t;
+          });
+          if (named) state.currentProject = named;                        // 明确点名 → 切过去
+          else if (!state.currentProject && hits.length) state.currentProject = hits[0].title;  // 首次才按检索设定
+          // 其余情况一律**保持不变**：宁可沿用当前项目，也不要被检索结果带跑
+          // （用户要换项目时会说项目名，那时上面的 named 分支会接住）
+        } catch (e) {}
       }
       var ctx = overviewText() + "\n\n【与本次问题最相关的项目详情】\n" + hits.map(function (c) {
         return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
@@ -522,7 +536,16 @@
         body: JSON.stringify({
           question: question, context: ctx, projects: hits.map(function (c) { return c.title; }),
           history: loopHist.slice(-8), step: n, maxSteps: MAX_STEPS,
-          lastReply: state.lastBotReply           // 交给后端做查询改写（还原「它/这个」）
+          currentProject: state.currentProject || "",   // ★ 当前讨论的项目（后端最高优先级采用）
+          // 交给后端做查询改写（还原「它/这个」）；若还没记录到，就从对话历史里取最后一条助手消息兜底
+          lastReply: state.lastBotReply || (function () {
+            for (var i = state.hist.length - 1; i >= 0; i--) {
+              if (state.hist[i] && state.hist[i].who === "bot" && state.hist[i].html) {
+                return String(state.hist[i].html).replace(/<br[^>]*>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 1200);
+              }
+            }
+            return "";
+          })()
         }),
         signal: ctrl ? ctrl.signal : undefined
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
