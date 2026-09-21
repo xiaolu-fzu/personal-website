@@ -246,7 +246,7 @@
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
-  var state = { busy: false, hist: [], lastHits: [], currentProject: "", opened: [], seq: 0, lastBotReply: "" };
+  var state = { busy: false, hist: [], lastHits: [], currentProject: "", opened: [], seq: 0, lastBotReply: "", substReply: "" };
   try { state.hist = JSON.parse(localStorage.getItem(HKEY) || "[]").slice(-20); } catch (e) {}
 
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
@@ -293,6 +293,25 @@
     log.scrollTop = log.scrollHeight;
     return el;                                  // 返回元素，便于稍后异步追加追问
   }
+  /* 兜底模板：仍严格保持三条职能（命令请求 / 点名另一个真实项目 / 当前项目细节） */
+  function templateFollowups() {
+    var cur = (state.currentProject || "").split("·")[0].split("（")[0].trim();
+    var curCard = null;
+    (window.WORKS || []).forEach(function (w) { if (!curCard && cur && w.title.indexOf(cur) >= 0) curCard = w; });
+    var curName = curCard ? String(curCard.title).split("·")[0].trim() : "这个项目";
+    // 挑一个与本项目分类不同的项目来点名
+    var other = null;
+    (window.WORKS || []).forEach(function (w) {
+      if (other || !w || !w.title) return;
+      if (curCard && w.category === curCard.category) return;
+      other = String(w.title).split("·")[0].trim();
+    });
+    var out = ["打开 " + curName + " 的需求文档"];
+    if (other) out.push("那 " + other + " 呢？");
+    out.push(curName + " 最难的地方是什么");
+    return out.slice(0, 3);
+  }
+
   /* 预测追问区（输入框上方）：只保留最新一组；点击后立刻清空，避免旧问题残留 */
   var fuBar = root.querySelector("#asstAskbar"), fuBox = root.querySelector("#asstFollowups");
   function clearFollowups() { try { fuBox.innerHTML = ""; fuBar.hidden = true; } catch (e) {} }
@@ -453,6 +472,9 @@
       var el = bubble("bot", html, actions, []);        // 先渲染回答（不等待追问）
       state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: [] });
       state.lastBotReply = String(html || "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 1200);
+      // ★ 追问生成要基于「有实质内容的回答」：像「好的，我先把卡片打开」这类动作确认语没有素材，
+      //   拿它去生成追问必然是空的。所以只记录长度 > 80 字的回答供追问使用。
+      if (state.lastBotReply.replace(/\s/g, "").length > 80) state.substReply = state.lastBotReply;
       save(); updateChips();
 
       // 追问：单独一次调用专门生成（贴住本次回答的具体内容），拿到后渲染到输入框上方
@@ -462,7 +484,7 @@
         method: "POST", headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
           question: q,
-          reply: (lastReply || "").slice(0, 1200),
+          reply: ((lastReply && lastReply.replace(/\s/g, "").length > 80) ? lastReply : (state.substReply || lastReply || "")).slice(0, 1200),
           projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
           allProjects: (window.WORKS || []).map(function (w) { return w.title; })
         })
@@ -472,7 +494,8 @@
           return fetch(SUGGEST_API, {
             method: "POST", headers: { "Content-Type": "text/plain" },
             body: JSON.stringify({
-              question: q, reply: (lastReply || "").slice(0, 1200),
+              question: q,
+              reply: ((lastReply && lastReply.replace(/\s/g, "").length > 80) ? lastReply : (state.substReply || lastReply || "")).slice(0, 1200),
               projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
               // 全部项目名：让第 2 条追问能"点名另一个真实的项目"
               allProjects: (window.WORKS || []).map(function (w) { return w.title; })
@@ -487,9 +510,7 @@
           }).slice(0, 3);
           // 模型没给 / 全被去重掉 → 用一组通用兜底，保证「下一轮」永远点得动
           if (!list.length) {
-            list = ["你还有别的项目吗？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"].filter(function (x) {
-              return !doneTitles.some(function (n) { return n && x.indexOf(n.slice(0, 6)) >= 0; });
-            }).slice(0, 3);
+            list = templateFollowups();
           }
           if (!list.length) return;
           showFollowups(list);
@@ -498,7 +519,7 @@
         })
         .catch(function () {
           if (mySeq !== state.seq) return;
-          showFollowups(["你还有别的项目吗？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"]);   // 连重试都失败 → 兜底，不留空白
+          showFollowups(templateFollowups());   // 连重试都失败 → 用三方向模板兜底，不留空白
         });
     }
 
