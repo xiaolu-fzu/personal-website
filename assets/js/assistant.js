@@ -242,7 +242,7 @@
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
-  var state = { busy: false, hist: [], lastHits: [] };
+  var state = { busy: false, hist: [], lastHits: [], currentProject: "" };
   try { state.hist = JSON.parse(localStorage.getItem(HKEY) || "[]").slice(-20); } catch (e) {}
 
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
@@ -380,9 +380,12 @@
     // 用户用「能看看吗」也是明确想要，不能因为措辞客气就不执行。
     var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|看看|看一下|能看|可以看|我想看|我要看|给我看|展示|访问|点开|进入|切到|切换到|关掉|关闭|收起)/;
     var steps = [];                 // 执行过的动作与结果（给用户看，也回灌给模型）
-    var loopHist = state.hist.slice(-8).map(function (m) {
+    // 显式携带「当前讨论的项目」，指代词（它/这个/上面说的）才有确定所指
+    var loopHist = (state.currentProject
+      ? [{ role: "user", content: "【系统】本次对话当前讨论的项目是：" + state.currentProject + "。用户说「它 / 这个 / 上面说的」时都指这个项目。" }]
+      : []).concat(state.hist.slice(-8).map(function (m) {
       return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br[^>]*>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 500) };
-    });
+    }));
     var lastReply = "", lastFollowups = [], lastHits = [];
 
     function actionLabel(a) {
@@ -398,8 +401,9 @@
       state.busy = false;
       thinking.remove();
       var html = esc(lastReply || "（小洄没有说出内容）").replace(/\n/g, "<br>");
+      // 步骤只包含真正执行过的动作（label 来自 actionLabel），不含追问与回答
       if (steps.length) {
-        html += '<div class="asst__steps"><b>我做了这些：</b>' + steps.map(function (st, i) {
+        html += '</div><div class="asst__steps"><b>我做了这些：</b>' + steps.map(function (st, i) {
           return '<span class="asst__step' + (st.ok ? "" : " is-fail") + '">' + (i + 1) + ". " + esc(st.label) + " —— " + esc(st.msg) + "</span>";
         }).join("") + "</div>";
       }
@@ -453,9 +457,13 @@
       var isFirst = n === 0;
       var question = isFirst ? q
         : "（系统消息）你上一轮要求执行的动作已经执行完毕，结果见上一条对话。若任务已全部完成，请把 action 设为 null 并简短总结你做了哪几步；若还需继续，请给出下一个动作。";
-      var ANAPHORA = /(这两个|那两个|这两|那两|它们|他们|这几个|上面|刚才|前面|这个项目|那个项目|还有呢|继续)/;
+      // 指代识别：把单个「它/他/她」也算进来（之前只认「它们」，导致「它是给谁用的」接不住）
+      var ANAPHORA = /(它|他|她|这两个|那两个|这两|那两|它们|他们|这几个|这些|那些|上面|刚才|前面|之前|这个项目|那个项目|还有呢|继续)/;
       var hits = (ANAPHORA.test(question) && state.lastHits && state.lastHits.length) ? state.lastHits : search(question, 5);
-      if (isFirst) { state.lastHits = hits; lastHits = hits; }
+      if (isFirst) {
+        state.lastHits = hits; lastHits = hits;
+        if (hits.length) { try { state.currentProject = hits[0].title; } catch (e) {} }   // 记住当前讨论的项目
+      }
       var ctx = overviewText() + "\n\n【与本次问题最相关的项目详情】\n" + hits.map(function (c) {
         return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
           "｜可用链接:" + c.links.map(function (l) { return l.label + " " + l.href; }).join(" ; ");
