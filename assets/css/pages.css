@@ -502,7 +502,7 @@
 
 /* 预测追问（回答下方可点的问题胶囊） */
 .asst__followups { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--border); }
-.asst__followups::before { content: "你可能还想问"; width: 100%; font-size: 11.5px; color: var(--text-muted); }
+/* （标题文字已按要求移除，不再显示「你可能还想问」） */
 .asst__followups button { font-size: 12px; padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(204,120,92,0.38); background: rgba(204,120,92,0.05); color: var(--accent); cursor: pointer; transition: 0.16s; text-align: left; }
 .asst__followups button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
@@ -544,8 +544,21 @@
 .asst__askbar { padding: 10px 14px 0; border-top: 1px dashed var(--border); }
 .asst__askbar[hidden] { display: none !important; }
 .asst__followups { display: flex; flex-wrap: wrap; gap: 6px; }
-.asst__followups::before { content: "你可能还想问"; width: 100%; font-size: 11.5px; color: var(--text-muted); margin-bottom: 1px; }
+/* （标题文字已按要求移除） */
 .asst__followups button { font-size: 12.5px; padding: 6px 11px; border-radius: 999px; border: 1px solid rgba(204,120,92,0.38); background: rgba(204,120,92,0.05); color: var(--accent); cursor: pointer; transition: 0.16s; text-align: left; }
 .asst__followups button:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 /* 气泡内的旧追问样式（兼容保留，不再使用） */
 .asst__msgbody .asst__followups { display: none; }
+
+
+/* 预测追问（最终版）：与新手推荐问题【同款胶囊格式】，且不显示任何标题文字 */
+.asst__followups::before { content: none !important; display: none !important; }
+.asst__followups { display: flex; flex-wrap: wrap; gap: 6px; }
+.asst__followups button {
+  font-size: 12px; padding: 6px 11px; border-radius: 999px;
+  border: 1px dashed var(--border);        /* 与推荐问题同款虚线 */
+  background: transparent; color: var(--text-muted);
+  cursor: pointer; transition: 0.16s; text-align: left;
+}
+.asst__followups button:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+.asst__askbar { padding: 10px 14px 2px; border-top: 1px dashed var(--border); }
