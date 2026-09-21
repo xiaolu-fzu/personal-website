@@ -119,6 +119,15 @@
     }, 260);
     return true;
   }
+  /* 按链接反查它属于哪张项目卡（用于「先跳到项目、再打开链接」） */
+  function locateProjectByHref(href) {
+    var hit = null;
+    CORPUS.forEach(function (c) {
+      if (hit) return;
+      c.links.forEach(function (l) { if (l.href === href) hit = c; });
+    });
+    return hit;
+  }
   function openUrl(href) {
     if (!href || !/^https?:/i.test(href)) return false;
     // 安全边界：只允许打开资料里出现过的链接
@@ -160,7 +169,16 @@
         return { ok: !!ok, msg: ok ? "已打开项目卡「" + a.target + "」（分类已切换、卡片已高亮并展开详情）" : "没有找到项目「" + a.target + "」" };
       }
       if (a.type === "open_link") {
-        var ok2 = openUrl(a.target || "");
+        var href = a.target || "";
+        var owner = locateProjectByHref(href);
+        if (owner) {
+          // ① 先"走到"这张项目卡：切分类 → 滚动 → 高亮 → 展开详情（弹窗先不关，让用户看得见过程）
+          openProject(owner.title, true);
+          // ② 稍等片刻再打开链接，用户就能看到"跳到项目 → 打开链接"的完整动作
+          setTimeout(function () { openUrl(href); }, 1000);
+          return { ok: true, msg: "已定位到项目卡「" + owner.title + "」，随后打开该链接" };
+        }
+        var ok2 = openUrl(href);
         return { ok: !!ok2, msg: ok2 ? "已在浏览器新标签页打开该链接" : "该链接不在项目资料里，出于安全已拒绝打开" };
       }
       if (a.type === "filter") {
