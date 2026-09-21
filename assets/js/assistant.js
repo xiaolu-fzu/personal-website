@@ -301,10 +301,17 @@
       .then(function (j) {
         clearTimeout(timer);
         var actions = [], auto = null;
-        // 模型给的动作：直接执行（用户说「直接帮忙执行即可」）
+        // 动作执行条件收紧：只有用户「明确要求打开/跳转/关闭」时才自动执行；
+        // 否则（例如回答里只是提到某个链接）只给按钮，绝不自动跳转。
+        var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|访问|点开|进入|关掉|关闭|收起)/;
         if (j.action && j.action.type) {
-          auto = j.action;
-          if (j.action.type === "open_link") actions.push({ label: "打开链接", action: j.action });
+          var actLabel = j.action.type === "open_link" ? "打开链接"
+            : j.action.type === "open_project" ? "打开「" + String(j.action.target || "").slice(0, 10) + "…」"
+            : j.action.type === "filter" ? "切换到「" + (j.action.target || "") + "」"
+            : j.action.type === "locate" ? "带我去看看"
+            : "执行";
+          if (EXPLICIT.test(q)) auto = j.action;                       // 用户明确要求 → 直接执行
+          actions.unshift({ label: actLabel, action: j.action });      // 无论哪种，都留一个可点的按钮
         }
         (j.projects || []).slice(0, 3).forEach(function (t) {
           if (j.action && j.action.type === "open_project" && j.action.target === t) return;
