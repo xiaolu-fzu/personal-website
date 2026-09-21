@@ -246,7 +246,7 @@
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
-  var state = { busy: false, hist: [], lastHits: [], currentProject: "", opened: [], seq: 0 };
+  var state = { busy: false, hist: [], lastHits: [], currentProject: "", opened: [], seq: 0, lastBotReply: "" };
   try { state.hist = JSON.parse(localStorage.getItem(HKEY) || "[]").slice(-20); } catch (e) {}
 
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
@@ -452,6 +452,7 @@
       }).slice(0, 3);
       var el = bubble("bot", html, actions, []);        // 先渲染回答（不等待追问）
       state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: [] });
+      state.lastBotReply = String(html || "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 1200);
       save(); updateChips();
 
       // 追问：单独一次调用专门生成（贴住本次回答的具体内容），拿到后渲染到输入框上方
@@ -501,7 +502,8 @@
         method: "POST", headers: { "Content-Type": "text/plain" },
         body: JSON.stringify({
           question: question, context: ctx, projects: hits.map(function (c) { return c.title; }),
-          history: loopHist.slice(-8), step: n, maxSteps: MAX_STEPS
+          history: loopHist.slice(-8), step: n, maxSteps: MAX_STEPS,
+          lastReply: state.lastBotReply           // 交给后端做查询改写（还原「它/这个」）
         }),
         signal: ctrl ? ctrl.signal : undefined
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
