@@ -307,7 +307,7 @@
     var t = String(q).trim();
     if (/^(关掉|关闭|收起|不用了|退下)$/.test(t)) return { reply: "好，那我先退到右下角，随时叫我。", actions: [], run: { type: "close" } };
     var m = t.match(/(?:打开|帮我打开|看看|访问)\s*(https?:\/\/[^\s]+)/i);
-    if (/文档库/.test(t)) return { reply: '好，带你去文档库。', actions: [], run: { type: 'locate', target: 'docs' } };
+    if (/(文档库)/.test(t)) return { reply: '好，带你去文档库。', actions: [], run: { type: 'locate', target: 'docs' } };
     if (/(关于我|你是谁|介绍下自己)/.test(t)) return { reply: '好，带你去「关于我」看看。', actions: [], run: { type: 'locate', target: 'about' } };
     if (/(回到顶部|去顶部|回首页)/.test(t)) return { reply: '好，回到顶部。', actions: [], run: { type: 'locate', target: 'top' } };
     if (/(作品集|所有项目|全部项目)/.test(t)) return { reply: '好，带你去作品集。', actions: [], run: { type: 'locate', target: 'portfolio' } };
@@ -344,7 +344,9 @@
     /* ═══════ Agent 循环：反复调用 LLM，每次把「上一步执行结果」回灌，直到模型说完成 ═══════
        最多 MAX_STEPS 轮；只有用户明确下指令时才允许执行动作；不明确则只回一次话。 */
     var MAX_STEPS = 3;
-    var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|访问|点开|进入|切到|切换到|关掉|关闭|收起)/;
+    // 执行意图：既包含强命令（打开/跳转/带我去），也包含委婉请求（能看看吗/给我看/我想看）——
+    // 用户用「能看看吗」也是明确想要，不能因为措辞客气就不执行。
+    var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|看看|看一下|能看|可以看|我想看|我要看|给我看|展示|访问|点开|进入|切到|切换到|关掉|关闭|收起)/;
     var steps = [];                 // 执行过的动作与结果（给用户看，也回灌给模型）
     var loopHist = state.hist.slice(-8).map(function (m) {
       return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br[^>]*>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 500) };
