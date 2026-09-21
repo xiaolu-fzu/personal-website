@@ -163,10 +163,10 @@
       '</div>' +
       '<div class="asst__log" id="asstLog"></div>' +
       '<div class="asst__chips" id="asstChips">' +
-        '<button type="button">帮我找有据这个项目</button>' +
-        '<button type="button">哪个项目最能体现数据分析？</button>' +
-        '<button type="button">有哪些能直接玩的？</button>' +
-        '<button type="button">打开三体的产品链接</button>' +
+        '<button type="button">我想玩一下真菌荒域，帮我打开。</button>' +
+        '<button type="button">你有没有APP相关的项目？</button>' +
+        '<button type="button">我想了解你做过的ai项目。</button>' +
+        '<button type="button">打开ProListing的原型。</button>' +
       '</div>' +
       '<form class="asst__form" id="asstForm">' +
         '<input id="asstInput" type="text" placeholder="和小洄说点什么…" autocomplete="off">' +
@@ -226,11 +226,16 @@
     log.scrollTop = log.scrollHeight;
   }
 
+  /* 新手推荐问题只在「还没聊过」时出现；一旦开始对话，就让位给回答下方的「你可能还想问」 */
+  function updateChips() {
+    try { chips.hidden = state.hist.length > 0; } catch (e) {}
+  }
   function greet() {
     bubble("bot", "你好。我是您的人工助手小洄，请问您有什么想了解的吗？<br><span class=\"asst__hint\">可以问我某个项目是怎么做的，也可以直接说「帮我找有据」「打开三体的产品链接」「看看数据分析的项目」「带我去文档库」「关掉」。</span>");
   }
   function showHist() {
     log.innerHTML = "";
+    updateChips();
     if (!state.hist.length) { greet(); return; }
     state.hist.forEach(function (m) { bubble(m.who, m.html, m.actions, m.followups); });
   }
@@ -270,6 +275,7 @@
     state.busy = true;
     bubble("me", esc(q));
     state.hist.push({ who: "me", html: esc(q) });
+    updateChips();
     var thinking = document.createElement("div");
     thinking.className = "asst__msg asst__msg--bot";
     thinking.innerHTML = '<img class="asst__msgpic" src="' + AVATAR + '" alt=""><div class="asst__msgbody"><div class="asst__bubble asst__typing">小洄正在翻项目库…</div></div>';
@@ -291,6 +297,7 @@
       bubble("bot", res.html, res.actions, res.followups);
       state.hist.push({ who: "bot", html: res.html, actions: res.actions, followups: res.followups });
       save();
+      updateChips();
       if (res.auto) runAction(res.auto);
     }
 
@@ -400,7 +407,7 @@
     isOpen() ? close() : open();
   });
   root.querySelector("#asstClose").addEventListener("click", close);
-  root.querySelector("#asstClear").addEventListener("click", function () { state.hist = []; save(); showHist(); });
+  root.querySelector("#asstClear").addEventListener("click", function () { state.hist = []; save(); showHist(); updateChips(); });
   root.querySelector("#asstSize").addEventListener("click", function () {
     var order = ["", "asst--wide", "asst--tall"], cur = root.className.replace("asst", "").replace("asst--dragging", "").trim();
     var next = order[(order.indexOf(cur) + 1) % order.length];
