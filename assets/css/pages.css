@@ -438,3 +438,8 @@
 @media (max-width: 640px) {
   .asst__fab { width: 96px; }
 }
+
+
+/* 修复：hidden 属性必须真的隐藏（否则 display:flex 会覆盖它） */
+.asst__panel[hidden] { display: none !important; }
+.asst__tip.is-hidden { display: none !important; }
