@@ -463,7 +463,8 @@
         body: JSON.stringify({
           question: q,
           reply: (lastReply || "").slice(0, 1200),
-          projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; })
+          projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
+          allProjects: (window.WORKS || []).map(function (w) { return w.title; })
         })
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
         .catch(function () {
@@ -472,7 +473,9 @@
             method: "POST", headers: { "Content-Type": "text/plain" },
             body: JSON.stringify({
               question: q, reply: (lastReply || "").slice(0, 1200),
-              projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; })
+              projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
+              // 全部项目名：让第 2 条追问能"点名另一个真实的项目"
+              allProjects: (window.WORKS || []).map(function (w) { return w.title; })
             })
           }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); });
         })
