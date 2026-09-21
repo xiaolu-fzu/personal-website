@@ -185,7 +185,7 @@
   function save() { try { localStorage.setItem(HKEY, JSON.stringify(state.hist.slice(-20))); } catch (e) {} }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]; }); }
 
-  function bubble(who, html, actions) {
+  function bubble(who, html, actions, followups) {
     var el = document.createElement("div");
     el.className = "asst__msg asst__msg--" + who;
     if (who === "bot") {
@@ -210,6 +210,17 @@
       });
       wrap.appendChild(bar);
     }
+    if (followups && followups.length) {
+      var fu = document.createElement("div");
+      fu.className = "asst__followups";
+      followups.forEach(function (q) {
+        var b = document.createElement("button");
+        b.type = "button"; b.textContent = q;
+        b.addEventListener("click", function () { ask(q); });
+        fu.appendChild(b);
+      });
+      wrap.appendChild(fu);
+    }
     el.appendChild(wrap);
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
@@ -221,7 +232,7 @@
   function showHist() {
     log.innerHTML = "";
     if (!state.hist.length) { greet(); return; }
-    state.hist.forEach(function (m) { bubble(m.who, m.html, m.actions); });
+    state.hist.forEach(function (m) { bubble(m.who, m.html, m.actions, m.followups); });
   }
 
   /* ---------- 无后端也能答 ---------- */
@@ -236,7 +247,7 @@
       html += "· <b>" + esc(c.title) + "</b>" + (c.value ? " —— " + esc(c.value) : "") + "<br>";
       actions.push({ label: "打开「" + c.title.slice(0, 10) + "…」", action: { type: "open_project", target: c.title } });
     });
-    return { html: html, actions: actions.slice(0, 3) };
+    return { html: html, actions: actions.slice(0, 3), followups: ["还有哪些 Agent 项目？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"] };
   }
   // 纯前端能直接执行的命令（离线也灵）
   function quickCommand(q) {
@@ -274,8 +285,8 @@
     function done(res) {
       state.busy = false;
       thinking.remove();
-      bubble("bot", res.html, res.actions);
-      state.hist.push({ who: "bot", html: res.html, actions: res.actions });
+      bubble("bot", res.html, res.actions, res.followups);
+      state.hist.push({ who: "bot", html: res.html, actions: res.actions, followups: res.followups });
       save();
       if (res.auto) runAction(res.auto);
     }
@@ -299,7 +310,7 @@
           if (j.action && j.action.type === "open_project" && j.action.target === t) return;
           actions.push({ label: "打开「" + t.slice(0, 10) + "…」", action: { type: "open_project", target: t } });
         });
-        done({ html: esc(j.reply || "（小洄没说话）").replace(/\n/g, "<br>"), actions: actions.slice(0, 4), auto: auto });
+        done({ html: esc(j.reply || "（小洄没说话）").replace(/\n/g, "<br>"), actions: actions.slice(0, 4), auto: auto, followups: (j.followups || []).slice(0, 3) });
       })
       .catch(function () { clearTimeout(timer); done(fallbackAnswer(q)); });
   }
