@@ -150,7 +150,7 @@
   root.className = "asst";
   root.innerHTML =
     '<button class="asst__fab" id="asstFab" type="button" title="拖动我换位置，点我聊天"><img src="' + PET + '" alt="小洄"></button>' +
-    '<div class="asst__tip" id="asstTip">想了解我的项目？问小洄 →</div>' +
+    '<div class="asst__tip" id="asstTip">点点我。</div>' +
     '<div class="asst__panel" id="asstPanel" hidden>' +
       '<div class="asst__head" id="asstHead">' +
         '<img class="asst__headpic" src="' + AVATAR + '" alt="">' +
@@ -307,11 +307,10 @@
   /* ---------- 开关与拖拽（拖小洄 = 移动弹窗） ---------- */
   function open() {
     panel.hidden = false; fab.classList.add("is-open"); tip.classList.add("is-hidden");
-    try { localStorage.setItem("lxh_asst_seen", "1"); } catch (e) {}
     if (!log.childElementCount) showHist();
     setTimeout(function () { input.focus(); }, 60);
   }
-  function close() { panel.hidden = true; fab.classList.remove("is-open"); }
+  function close() { panel.hidden = true; fab.classList.remove("is-open"); tip.classList.remove("is-hidden"); }
   var isOpen = function () { return !panel.hidden; };
 
   var lastToggle = 0;
@@ -383,7 +382,6 @@
   try {
     var s = localStorage.getItem(SKEY);
     if (s) root.className = "asst " + s;
-    if (localStorage.getItem("lxh_asst_seen")) tip.classList.add("is-hidden");
   } catch (e) {}
 
   form.addEventListener("submit", function (e) {
