@@ -94,11 +94,11 @@
     var hits = search(name || "", 1);
     return hits.length ? hits[0] : null;
   }
-  function openProject(name) {
+  function openProject(name, deferClose) {
     var hit = findCard(name);
     if (!hit) return false;
     var w = works[hit.index];
-    close();
+    if (!deferClose) close();
     // ① 先切到该卡所属分类（关键：不切的话卡片根本不在网格里）
     var btn = document.querySelector('[data-filter="' + w.category + '"]');
     if (btn && !btn.classList.contains("is-active")) btn.click();
@@ -127,36 +127,52 @@
     window.open(href, "_blank", "noopener");
     return true;
   }
-  function filterCategory(cat) {
+  function filterCategory(cat, deferClose) {
     var map = { data: "数据分析", industry: "行业研究", prototype: "原型和产品", agent: "AI项目", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" };
     var id = null;
     Object.keys(map).forEach(function (k) { if (cat === k || cat === map[k]) id = k; });
     var btn = id && document.querySelector('[data-filter="' + id + '"]');
     if (!btn) return false;
-    close(); btn.click();
+    if (!deferClose) close(); btn.click();
     setTimeout(function () {
       var g = document.getElementById("worksGrid");
       if (g) g.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 120);
     return true;
   }
-  function locate(where) {
+  function locate(where, deferClose) {
     var t = String(where || "").toLowerCase(), el = null;
     if (/top|顶部|首页|开头/.test(t)) el = document.getElementById("home") || document.body;
     else if (/关于|about/.test(t)) el = document.getElementById("about");
     else if (/文档|docs/.test(t)) el = document.getElementById("portfolio");
     else el = document.getElementById("portfolio");
-    close();
+    if (!deferClose) close();
     if (el) { el.scrollIntoView({ behavior: "smooth", block: "start" }); if (/文档/.test(t)) { var b = document.querySelector('[data-filter="docs"]'); if (b) b.click(); } return true; }
     return false;
   }
+  /* 执行动作并返回「做了什么」——循环时要把这个结果回灌给模型 */
   function runAction(a) {
-    if (!a || !a.type) return;
-    if (a.type === "open_project") openProject(a.target || "");
-    else if (a.type === "open_link") openUrl(a.target || "");
-    else if (a.type === "filter") filterCategory(a.target || "");
-    else if (a.type === "locate") locate(a.target || "");
-    else if (a.type === "close") close();
+    if (!a || !a.type) return { ok: false, msg: "没有可执行的动作" };
+    try {
+      if (a.type === "open_project") {
+        var ok = openProject(a.target || "", true);
+        return { ok: !!ok, msg: ok ? "已打开项目卡「" + a.target + "」（分类已切换、卡片已高亮并展开详情）" : "没有找到项目「" + a.target + "」" };
+      }
+      if (a.type === "open_link") {
+        var ok2 = openUrl(a.target || "");
+        return { ok: !!ok2, msg: ok2 ? "已在浏览器新标签页打开该链接" : "该链接不在项目资料里，出于安全已拒绝打开" };
+      }
+      if (a.type === "filter") {
+        var ok3 = filterCategory(a.target || "", true);
+        return { ok: !!ok3, msg: ok3 ? "已把作品集切换到「" + a.target + "」分类" : "没有这个分类" };
+      }
+      if (a.type === "locate") {
+        var ok4 = locate(a.target || "", true);
+        return { ok: !!ok4, msg: ok4 ? "页面已定位到对应区块" : "没找到该区块" };
+      }
+      if (a.type === "close") { close(); return { ok: true, msg: "已关闭对话弹窗" }; }
+    } catch (e) { return { ok: false, msg: "执行出错：" + String(e).slice(0, 60) }; }
+    return { ok: false, msg: "未知动作类型" };
   }
 
   /* ---------- 界面 ---------- */
@@ -283,74 +299,121 @@
 
   function ask(q) {
     if (state.busy) return;
+
+    // 纯前端能直接执行的命令（离线也灵）
     var quick = quickCommand(q);
-    if (quick && quick.run) { state.busy = true; bubble("me", esc(q)); state.hist.push({ who: "me", html: esc(q) }); setTimeout(function () { state.busy = false; bubble("bot", quick.reply); state.hist.push({ who: "bot", html: quick.reply }); save(); runAction(quick.run); }, 260); return; }
+    if (quick && quick.run) {
+      state.busy = true;
+      bubble("me", esc(q)); state.hist.push({ who: "me", html: esc(q) }); updateChips();
+      setTimeout(function () {
+        state.busy = false;
+        bubble("bot", quick.reply); state.hist.push({ who: "bot", html: quick.reply }); save(); updateChips();
+        runAction(quick.run);
+      }, 240);
+      return;
+    }
 
     state.busy = true;
     bubble("me", esc(q));
     state.hist.push({ who: "me", html: esc(q) });
     updateChips();
+
     var thinking = document.createElement("div");
     thinking.className = "asst__msg asst__msg--bot";
     thinking.innerHTML = '<img class="asst__msgpic" src="' + AVATAR + '" alt=""><div class="asst__msgbody"><div class="asst__bubble asst__typing">小洄正在翻项目库…</div></div>';
-    log.appendChild(thinking);
-    log.scrollTop = log.scrollHeight;
+    log.appendChild(thinking); log.scrollTop = log.scrollHeight;
 
-    // 指代词（这两个/它们/刚才说的）→ 沿用上一轮命中的项目，否则重新检索
-    var ANAPHORA = /(这两个|那两个|这两|那两|它们|他们|这几个|这几个项目|上面|刚才|前面|这个项目|那个项目|还有呢|继续)/;
-    var hits = (ANAPHORA.test(q) && state.lastHits && state.lastHits.length) ? state.lastHits : search(q, 5);
-    state.lastHits = hits;
-    var ctx = overviewText() + "\n\n【与本次问题最相关的项目详情】\n" + hits.map(function (c) {
-      return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
-        "｜可用链接:" + c.links.map(function (l) { return l.label + " " + l.href; }).join(" ; ");
-    }).join("\n");
+    /* ═══════ Agent 循环：反复调用 LLM，每次把「上一步执行结果」回灌，直到模型说完成 ═══════
+       最多 MAX_STEPS 轮；只有用户明确下指令时才允许执行动作；不明确则只回一次话。 */
+    var MAX_STEPS = 3;
+    var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|访问|点开|进入|切到|切换到|关掉|关闭|收起)/;
+    var steps = [];                 // 执行过的动作与结果（给用户看，也回灌给模型）
+    var loopHist = state.hist.slice(-8).map(function (m) {
+      return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br[^>]*>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 500) };
+    });
+    var lastReply = "", lastFollowups = [], lastHits = [];
 
-    function done(res) {
-      state.busy = false;
-      thinking.remove();
-      bubble("bot", res.html, res.actions, res.followups);
-      state.hist.push({ who: "bot", html: res.html, actions: res.actions, followups: res.followups });
-      save();
-      updateChips();
-      if (res.auto) runAction(res.auto);
+    function actionLabel(a) {
+      if (a.type === "open_project") return "打开项目卡「" + (a.target || "") + "」";
+      if (a.type === "open_link") return "打开链接";
+      if (a.type === "filter") return "切换到分类「" + (a.target || "") + "」";
+      if (a.type === "locate") return "定位到「" + (a.target || "") + "」";
+      if (a.type === "close") return "关闭弹窗";
+      return a.type;
     }
 
-    var ctrl = ("AbortController" in window) ? new AbortController() : null;
-    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 22000);
-    fetch(API, {
-      method: "POST", headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        question: q,
-        context: ctx,
-        projects: hits.map(function (c) { return c.title; }),
-        history: state.hist.slice(-8).map(function (m) {
-          return { role: m.who === "me" ? "user" : "assistant", content: String(m.html || "").replace(/<br\s*\/?>/gi, " ").replace(/<[^>]+>/g, "").slice(0, 600) };
+    function finish() {
+      state.busy = false;
+      thinking.remove();
+      var html = esc(lastReply || "（小洄没有说出内容）").replace(/\n/g, "<br>");
+      if (steps.length) {
+        html += '<div class="asst__steps"><b>我做了这些：</b>' + steps.map(function (st, i) {
+          return '<span class="asst__step' + (st.ok ? "" : " is-fail") + '">' + (i + 1) + ". " + esc(st.label) + " —— " + esc(st.msg) + "</span>";
+        }).join("") + "</div>";
+      }
+      var actions = [];
+      lastHits.slice(0, 3).forEach(function (c) {
+        actions.push({ label: "打开「" + c.title.slice(0, 10) + "…」", action: { type: "open_project", target: c.title } });
+      });
+      bubble("bot", html, actions.slice(0, 3), lastFollowups);
+      state.hist.push({ who: "bot", html: html, actions: actions.slice(0, 3), followups: lastFollowups });
+      save(); updateChips();
+    }
+
+    function step(n) {
+      var isFirst = n === 0;
+      var question = isFirst ? q
+        : "（系统消息）你上一轮要求执行的动作已经执行完毕，结果见上一条对话。若任务已全部完成，请把 action 设为 null 并简短总结你做了哪几步；若还需继续，请给出下一个动作。";
+      var ANAPHORA = /(这两个|那两个|这两|那两|它们|他们|这几个|上面|刚才|前面|这个项目|那个项目|还有呢|继续)/;
+      var hits = (ANAPHORA.test(question) && state.lastHits && state.lastHits.length) ? state.lastHits : search(question, 5);
+      if (isFirst) { state.lastHits = hits; lastHits = hits; }
+      var ctx = overviewText() + "\n\n【与本次问题最相关的项目详情】\n" + hits.map(function (c) {
+        return "【" + c.title + "】分类:" + c.category + "｜卖点:" + c.value + "｜简介:" + c.text.slice(0, 420) +
+          "｜可用链接:" + c.links.map(function (l) { return l.label + " " + l.href; }).join(" ; ");
+      }).join("\n");
+
+      var ctrl = ("AbortController" in window) ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 25000);
+      fetch(API, {
+        method: "POST", headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          question: question, context: ctx, projects: hits.map(function (c) { return c.title; }),
+          history: loopHist.slice(-8), step: n, maxSteps: MAX_STEPS
+        }),
+        signal: ctrl ? ctrl.signal : undefined
+      }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
+        .then(function (j) {
+          clearTimeout(timer);
+          if (isFirst) { lastReply = j.reply || ""; lastFollowups = (j.followups || []).slice(0, 3); }
+          else if (j.reply && j.reply.trim() && steps.length) { lastReply = j.reply; }   // 后续轮有总结就更新
+          if (j.followups && j.followups.length) lastFollowups = j.followups.slice(0, 3);
+
+          // 没有动作 → 任务结束
+          if (!j.action || !j.action.type) { finish(); return; }
+          // 用户没明确下指令 → 只回答，不执行（保持行为边界）
+          if (!EXPLICIT.test(q)) { finish(); return; }
+
+          var res = runAction(j.action);
+          steps.push({ label: actionLabel(j.action), msg: res.msg, ok: res.ok });
+          loopHist.push({ role: "assistant", content: "（我调用了工具 " + j.action.type + "，目标：" + (j.action.target || "-") + "）" + (j.reply || "") });
+          loopHist.push({ role: "user", content: "【系统反馈】" + res.msg + "。如果任务已完成，请把 action 设为 null 并简短总结；否则给出下一个动作。" });
+
+          if (n + 1 >= MAX_STEPS) { finish(); return; }   // 达到步数上限
+          step(n + 1);                                     // ← 继续循环：带着结果再问一次模型
         })
-      }),
-      signal: ctrl ? ctrl.signal : undefined
-    }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
-      .then(function (j) {
-        clearTimeout(timer);
-        var actions = [], auto = null;
-        // 动作执行条件收紧：只有用户「明确要求打开/跳转/关闭」时才自动执行；
-        // 否则（例如回答里只是提到某个链接）只给按钮，绝不自动跳转。
-        var EXPLICIT = /(打开|帮我打开|跳转|带我去|带我去看|去看看|访问|点开|进入|关掉|关闭|收起)/;
-        if (j.action && j.action.type) {
-          var actLabel = j.action.type === "open_link" ? "打开链接"
-            : j.action.type === "open_project" ? "打开「" + String(j.action.target || "").slice(0, 10) + "…」"
-            : j.action.type === "filter" ? "切换到「" + (j.action.target || "") + "」"
-            : j.action.type === "locate" ? "带我去看看"
-            : "执行";
-          if (EXPLICIT.test(q)) auto = j.action;                       // 用户明确要求 → 直接执行
-          actions.unshift({ label: actLabel, action: j.action });      // 无论哪种，都留一个可点的按钮
-        }
-        (j.projects || []).slice(0, 3).forEach(function (t) {
-          if (j.action && j.action.type === "open_project" && j.action.target === t) return;
-          actions.push({ label: "打开「" + t.slice(0, 10) + "…」", action: { type: "open_project", target: t } });
+        .catch(function () {
+          clearTimeout(timer);
+          if (isFirst && !steps.length) {
+            var fb = fallbackAnswer(q);
+            state.busy = false; thinking.remove();
+            bubble("bot", fb.html, fb.actions, fb.followups);
+            state.hist.push({ who: "bot", html: fb.html, actions: fb.actions, followups: fb.followups });
+            save(); updateChips();
+          } else { finish(); }
         });
-        done({ html: esc(j.reply || "（小洄没说话）").replace(/\n/g, "<br>"), actions: actions.slice(0, 4), auto: auto, followups: (j.followups || []).slice(0, 3) });
-      })
-      .catch(function () { clearTimeout(timer); done(fallbackAnswer(q)); });
+    }
+
+    step(0);
   }
 
   /* ---------- 开关与拖拽（拖小洄 = 移动弹窗） ---------- */

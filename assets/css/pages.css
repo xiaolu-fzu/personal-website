@@ -526,3 +526,11 @@
 
 /* 新手推荐问题：对话开始后隐藏（hidden 生效） */
 .asst__chips[hidden] { display: none !important; }
+
+
+/* Agent 循环：执行步骤展示 */
+.asst__steps { display: flex; flex-direction: column; gap: 4px; margin-top: 9px; padding-top: 9px; border-top: 1px dashed var(--border); }
+.asst__steps b { font-size: 12px; color: var(--text); font-weight: 600; margin-bottom: 2px; }
+.asst__step { display: block; font-size: 12.5px; line-height: 1.65; color: var(--text-muted); }
+.asst__step::before { content: "✓ "; color: #5B8C6A; font-weight: 700; }
+.asst__step.is-fail::before { content: "✕ "; color: #B3402F; }
