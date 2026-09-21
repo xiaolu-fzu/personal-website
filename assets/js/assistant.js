@@ -299,13 +299,12 @@
     var curCard = null;
     (window.WORKS || []).forEach(function (w) { if (!curCard && cur && w.title.indexOf(cur) >= 0) curCard = w; });
     var curName = curCard ? String(curCard.title).split("·")[0].trim() : "这个项目";
-    // 挑一个与本项目分类不同的项目来点名
-    var other = null;
-    (window.WORKS || []).forEach(function (w) {
-      if (other || !w || !w.title) return;
-      if (curCard && w.category === curCard.category) return;
-      other = String(w.title).split("·")[0].trim();
+    // 挑一个与本项目不同的项目来点名 —— **随机挑**（原来固定取第一个，导致永远是「绝区零」）
+    var pool = (window.WORKS || []).filter(function (w) {
+      return w && w.title && (!curCard || w.category !== curCard.category) &&
+        (!cur || String(w.title).indexOf(cur) < 0);
     });
+    var other = pool.length ? String(pool[Math.floor(Math.random() * pool.length)].title).split("·")[0].trim() : null;
     var out = ["打开 " + curName + " 的需求文档"];
     if (other) out.push("那 " + other + " 呢？");
     out.push(curName + " 最难的地方是什么");
@@ -370,7 +369,8 @@
       html += "· <b>" + esc(c.title) + "</b>" + (c.value ? " —— " + esc(c.value) : "") + "<br>";
       actions.push({ label: "打开「" + c.title.slice(0, 10) + "…」", action: { type: "open_project", target: c.title } });
     });
-    return { html: html, actions: actions.slice(0, 3), followups: ["还有哪些 Agent 项目？", "哪个项目最能体现数据分析？", "有哪些能直接玩的？"] };
+    // 离线降级也用三方向模板（原来那三条"你还有别的项目吗"式老问题已废弃）
+    return { html: html, actions: actions.slice(0, 3), followups: templateFollowups() };
   }
   // 纯前端能直接执行的命令（离线也灵）
   function quickCommand(q) {
@@ -486,7 +486,8 @@
           question: q,
           reply: ((lastReply && lastReply.replace(/\s/g, "").length > 80) ? lastReply : (state.substReply || lastReply || "")).slice(0, 1200),
           projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
-          allProjects: (window.WORKS || []).map(function (w) { return w.title; })
+          allProjects: (window.WORKS || []).map(function (w) { return w.title; }),
+          currentProject: state.currentProject || ""
         })
       }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); })
         .catch(function () {
@@ -498,7 +499,8 @@
               reply: ((lastReply && lastReply.replace(/\s/g, "").length > 80) ? lastReply : (state.substReply || lastReply || "")).slice(0, 1200),
               projects: lastHits.slice(0, 4).map(function (c) { return { title: c.title, value: c.value, links: c.links }; }),
               // 全部项目名：让第 2 条追问能"点名另一个真实的项目"
-              allProjects: (window.WORKS || []).map(function (w) { return w.title; })
+              allProjects: (window.WORKS || []).map(function (w) { return w.title; }),
+              currentProject: state.currentProject || ""
             })
           }).then(function (r) { return r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)); });
         })
