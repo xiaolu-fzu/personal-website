@@ -301,14 +301,14 @@
     if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", isRepo ? "🐙" : "🚀", true);
     if (w.protoUrl) push("protoUrl", w.protoUrl, "在线原型", "可点击的交互原型，直接打开体验完整流程", "打开原型", "open", "🎨", true);
     if (w.gameUrl) push("gameUrl", w.gameUrl, "在线游玩", "浏览器直接打开即可玩，支持键盘与触屏", "开始游戏", "live", "🎮", true);
-    if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", "查看案例", "open", "🖼️");
+    if (w.caseUrl) push("caseUrl", w.caseUrl, w.caseText || "案例展示", "更多细节与过程记录", w.caseBtn || "查看案例", "open", w.caseEmoji || "🖼️");
     if (w.downloadUrl) push("downloadUrl", w.downloadUrl, "下载页", "安装包与下载说明", "去下载", "down", "⬇️");
     if (w.reqDocUrl) push("reqDocUrl", w.reqDocUrl, "需求文档", "背景、目标用户、功能需求与验收标准", "在线查看", "doc", "📄");
     if (w.devDocUrl) push("devDocUrl", w.devDocUrl, "开发文档", "实现思路、系统结构与当前状态", "在线查看", "doc", "🛠️");
     if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "doc", "📄");
     if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "open", "📋");
     if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "doc", "📄");
-    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) {
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl && !w.caseUrl) {
       push("contact", "mailto:" + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com"),
         "联系获取更多", "这个项目还没有公开链接，欢迎直接找我聊", "写邮件", "open", "✉️");
     }
@@ -337,14 +337,14 @@
     if (useCardStyle(w)) return renderLinkCards(w);
     var html = '<div class="work-detail__links">';
     if (w.link && !w.report) html += linkBtn(w.link, "btn-primary", w.outLinkText || "查看项目", /github\.com/i.test(w.link) ? "repo" : "open");
-    if (w.caseUrl) html += linkBtn(w.caseUrl, "btn-ghost", w.caseText || "案例展示", "open");
+    if (w.caseUrl) html += linkBtn(w.caseUrl, "btn-ghost", w.caseText || "案例展示", "open");   // 有 caseUrl 也不再加邮件兜底
     if (w.downloadUrl) html += linkBtn(w.downloadUrl, "btn-ghost", "下载页", "down");
     if (w.reqDocUrl) html += linkBtn(w.reqDocUrl, "btn-ghost", "需求文档", "file");
     if (w.devDocUrl) html += linkBtn(w.devDocUrl, "btn-ghost", "开发文档", "file");
     if (w.docUrl) html += linkBtn(w.docUrl, "btn-ghost", "需求/开发文档", "file");
     if (w.prdUrl) html += linkBtn(w.prdUrl, "btn-ghost", "PRD 展示页", "open");
     if (w.prdDocUrl) html += linkBtn(w.prdDocUrl, "btn-ghost", "PRD 文档", "file");
-    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '"><span>联系获取更多</span></a>';
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl && !w.caseUrl) html += '<a class="btn btn-ghost" href="mailto:' + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com") + '"><span>联系获取更多</span></a>';
     html += "</div>";
     return html;
   }

@@ -579,6 +579,12 @@ window.WORKS = [
       "第 6 步 · 诚实标注成熟度：母本本身成熟度不均匀（A–F1 完整、F2 之后为空），封装如实反映——已有话术逐字收录，缺失部分从备份区回收并自研跑数引擎，仍无历史实现可回收的模块直接标注「未编造话术」。"
     ],
     keywords: ["Agent", "工作流", "行研", "SOP 封装", "B端"],
+    // 静态展示页（不是产品链接）：用 caseUrl 承载，并自定义标题与说明
+    caseUrl: "https://hangyan-automation.pages.dev/",
+    caseText: "流程展示页",
+    caseBtn: "打开展示页",
+    caseEmoji: "🧭",
+    linkNotes: { caseUrl: "静态展示页：8 大模块的编排顺序、四类闸门与产物契约一览" },
     featured: true
   },
 
