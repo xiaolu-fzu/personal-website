@@ -154,6 +154,91 @@
 .report-block { margin-bottom: var(--space-5); }
 .report-block:last-child { margin-bottom: 0; }
 .report-block h4 { color: var(--text); font-size: var(--fs-base); font-weight: var(--weight-bold); margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border); }
+/* ---------- 拆解卡：核心循环（策划视角 · 时间轴式，数据卡没有这一层） ----------
+   桌面 = 横向时间轴；移动 = 纵向步骤条。
+   连接线用「逐节点」画法（每段从本圆心右侧连到下一圆心左侧），端点精确对齐，不依赖整条贯穿线。
+   选择器统一带 .work-report 作用域：既有规则 `.work-report ol { display:flex }` 权重为 (0,1,1)，
+   会盖掉裸 `.loop-chain` 的 (0,1,0) —— 那条是数据卡在用的共享规则，本板块不去改它。 */
+.work-report .loop-block { margin-bottom: var(--space-5); }
+.work-report .loop-block:last-of-type { margin-bottom: var(--space-3); }
+
+.work-report .loop-chain { list-style: none; margin: 0; padding: 0; display: grid; }
+.work-report .loop-node { position: relative; display: grid; }
+.work-report .loop-node::after { content: ""; position: absolute; z-index: 0; border-radius: 1px; }
+.work-report .loop-node:last-child::after { content: none; }
+
+.work-report .loop-node__step {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: var(--surface); border: 2px solid var(--cat-teardown);
+  box-shadow: 0 0 0 5px var(--surface);
+  color: var(--cat-teardown); font-family: var(--font-mono);
+  font-size: 12.5px; font-weight: var(--weight-bold); line-height: 1;
+  margin-bottom: var(--space-3);
+}
+.work-report .loop-node__name { display: block; font-size: var(--fs-sm); font-weight: var(--weight-bold); color: var(--text); }
+.work-report .loop-node__desc { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.6; color: var(--text-muted); }
+
+/* —— 桌面：横向时间轴（5 列，段线在圆点之间） —— */
+@media (min-width: 720px) {
+  .work-report .loop-chain { grid-template-columns: repeat(var(--loop-n, 5), minmax(0, 1fr)); gap: var(--space-3); }
+  .work-report .loop-node { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
+  .work-report .loop-node::after {
+    top: 13px; height: 2px; left: calc(50% + 18px);
+    width: calc(100% - 36px + var(--space-3));
+    background: linear-gradient(90deg, rgba(126,106,71,0.46), rgba(126,106,71,0.20));
+  }
+}
+
+/* —— 移动：纵向步骤条（左轨贯穿到下一个圆点） —— */
+@media (max-width: 719px) {
+  /* 外层单列：每个节点独占一行；两列格局只在节点内部（轨道 + 内容） */
+  .work-report .loop-chain { grid-template-columns: minmax(0, 1fr); row-gap: var(--space-4); }
+  .work-report .loop-node { grid-template-columns: 28px minmax(0, 1fr); grid-template-rows: auto auto; column-gap: var(--space-3); }
+  .work-report .loop-node__step { grid-column: 1; grid-row: 1 / span 2; margin-bottom: 0; }
+  .work-report .loop-node__name { grid-column: 2; grid-row: 1; }
+  .work-report .loop-node__desc { grid-column: 2; grid-row: 2; margin-top: 3px; }
+  .work-report .loop-node::after {
+    left: 13px; width: 2px; top: 32px; bottom: calc(-1 * var(--space-4));
+    background: linear-gradient(180deg, rgba(126,106,71,0.46), rgba(126,106,71,0.20));
+  }
+}
+
+/* —— 闭环提示 —— */
+.work-report .loop-back {
+  margin: var(--space-4) 0 0; padding: 10px var(--space-4);
+  background: rgba(126,106,71,0.06);
+  border: 1px dashed rgba(126,106,71,0.38);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm); font-weight: var(--weight-bold);
+  color: var(--cat-teardown); text-align: center;
+}
+
+/* —— 子循环卡片 —— */
+.work-report .loop-subs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: var(--space-3); }
+.work-report .loop-sub {
+  position: relative; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4) var(--space-3) calc(var(--space-4) + 15px);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.work-report .loop-sub::before {
+  content: ""; position: absolute; left: var(--space-4); top: 19px;
+  width: 7px; height: 7px; border-radius: var(--radius-full); background: var(--cat-teardown);
+}
+.work-report .loop-sub:hover { transform: translateY(-2px); box-shadow: var(--glow-sm); }
+.work-report .loop-sub b { display: block; font-size: var(--fs-sm); font-weight: var(--weight-bold); color: var(--text); }
+.work-report .loop-sub i { display: block; margin-top: 4px; font-style: normal; font-size: 12.5px; line-height: 1.65; color: var(--text-muted); }
+
+/* —— 循环分工说明（callout） —— */
+.work-report .loop-purpose {
+  margin: var(--space-3) 0 0; padding: var(--space-3) var(--space-4);
+  background: rgba(126,106,71,0.05);
+  border-left: 3px solid var(--cat-teardown);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-sm); line-height: 1.85; color: var(--text-secondary);
+}
+
 .report-table-wrap { overflow-x: auto; }
 .report-table-wrap table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
 .report-table-wrap th, .report-table-wrap td { padding: var(--space-2) var(--space-3); border: 1px solid var(--border); text-align: left; }
@@ -687,3 +772,27 @@
 }
 /* 弹层本身也做成"悬停不消失"的容器 */
 .mainline-pop { transition: opacity 0.14s ease, transform 0.14s ease; }
+
+
+/* 筛选条：更明显的引导（标题 + 更宽松的间距） */
+.filter-bar { gap: 10px; margin-top: var(--space-6); }
+.filter-bar__hint { font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: 10px; letter-spacing: 0.02em; }
+@media (max-width: 720px) {
+  .filter-btn { padding: 9px 16px; font-size: var(--fs-sm); }
+}
+
+
+/* ==================== 分类切换滑动过渡 ==================== */
+.works-grid { transition: opacity 0.17s ease, transform 0.17s ease; }
+.works-grid--out { opacity: 0; transform: translateX(calc(var(--slide-dir, -1) * 36px)); }
+.works-grid--in { animation: worksSlideIn 0.36s cubic-bezier(0.22, 0.8, 0.3, 1) both; }
+@keyframes worksSlideIn {
+  from { opacity: 0; transform: translateX(calc(var(--slide-dir, -1) * -36px)); }
+  to   { opacity: 1; transform: none; }
+}
+/* 尊重系统的「减少动效」偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .works-grid { transition: none; }
+  .works-grid--out { opacity: 1; transform: none; }
+  .works-grid--in { animation: none; }
+}

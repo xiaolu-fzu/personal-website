@@ -87,13 +87,13 @@
   }
 
   function catClass(tag) {
-    return { data: "tag--data", industry: "tag--industry", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool", agent: "tag--agent" }[tag] || "";
+    return { data: "tag--data", industry: "tag--industry", prototype: "tag--prototype", aigc: "tag--aigc", game: "tag--game", tool: "tag--tool", agent: "tag--agent", teardown: "tag--teardown" }[tag] || "";
   }
   function catVar(tag) {
-    return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)", agent: "var(--cat-agent)" }[tag] || "var(--accent)";
+    return { data: "var(--cat-data)", industry: "var(--cat-industry)", prototype: "var(--cat-prototype)", aigc: "var(--cat-aigc)", game: "var(--cat-game)", tool: "var(--cat-tool)", agent: "var(--cat-agent)", teardown: "var(--cat-teardown)" }[tag] || "var(--accent)";
   }
   function tagLabel(tag) {
-    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发", agent: "AI项目" }[tag] || tag;
+    return { data: "数据分析", industry: "行业研究", prototype: "产品原型 · C端", aigc: "AIGC", game: "网页游戏", tool: "工具/开发", agent: "AI项目", teardown: "产品拆解（游戏）" }[tag] || tag;
   }
   function catTagsHtml(category, labelOverride) {
     var cls = catClass(category);
@@ -102,7 +102,7 @@
     }).join("");
   }
   function catPriority(tag) {
-    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5, agent: 6 }[tag] || 99;
+    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5, agent: 6, teardown: 7 }[tag] || 99;
   }
 
   /* 排序：精选置顶 → 年限倒序 → 同年按类优先级 → 标题 */
@@ -132,7 +132,7 @@
   function repoIcon() { return badgeIcon("repo"); }
   function badgesHtml(w) {
     var list = [];
-    if (w.report) list.push(["report", "数据报告"]);
+    if (w.report && w.category !== "teardown") list.push(["report", "数据报告"]);   // 拆解卡走下面的「拆解报告」，避免两个徽标重复
     if (w.reqDocUrl || w.prdDocUrl || w.docUrl) list.push(["doc", "需求文档"]);
     if (w.devDocUrl) list.push(["doc", "开发文档"]);
     // 「上线可玩」只给真能上手体验的：游戏 / 在线原型 / 原型与 Agent 分类的可访问外链
@@ -140,6 +140,11 @@
     if (w.gameUrl || w.prototypeUrl || (w.link && playableCat)) list.push(["live", "上线可玩"]);
     if (w.videoSrc) list.push(["video", "成片"]);
     if (w.verify) list.push(["verify", w.verify]);
+    // 拆解卡：拆解报告 + 证据等级（evidence: "desktop" 桌面研究 / "field" 已体验验证）
+    // 与数据卡的 verify 同一套诚实机制——卡片自己说明"这篇还没实地玩过"
+    if (w.category === "teardown") list.push(["report", "拆解报告"]);
+    if (w.evidence === "field") list.push(["verify", "已体验验证"]);
+    else if (w.evidence === "desktop") list.push(["doc", "桌面研究"]);
     if (!list.length) return "";
     return '<div class="work-card__badges">' + list.map(function (b) {
       return '<span class="badge badge--' + b[0] + '">' + badgeIcon(b[0]) + escapeHtml(b[1]) + "</span>";
@@ -149,6 +154,13 @@
   function makeCard(work, index) {
     var tags = catTagsHtml(work.category, work.catLabel);
     var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
+    // 拆解卡独有：关键指标带（数据卡没有）——让访客扫一眼就知道拆的是什么量级的产品
+    var metricsHtml = "";
+    if (work.metrics && work.metrics.length) {
+      metricsHtml = '<div class="work-card__metrics">' + work.metrics.map(function (m) {
+        return '<span class="metric-pill"><span class="metric-pill__k">' + escapeHtml(m.k) + '</span><span class="metric-pill__v">' + escapeHtml(m.v) + "</span></span>";
+      }).join("") + "</div>";
+    }
     var badge = work.featured ? '<span class="work-card__badge">精选</span>' : "";
     return (
       '<a class="work-card" href="#work-detail" data-slug="' + escapeHtml(slugify(work.title)) + '" data-index="' + index + '">' +
@@ -160,6 +172,7 @@
           badge +
         "</div>" +
         '<div class="work-card__value-row">' + valueHtml + "</div>" +
+        metricsHtml +
         badgesHtml(work) +
         '<div class="work-card__tags">' + tags + "</div>" +
       "</a>"
@@ -179,7 +192,121 @@
     var note = t.note ? '<p class="table-note">' + escapeHtml(t.note) + "</p>" : "";
     return '<div class="report-table-wrap"><table><thead><tr>' + t.thead.map(function (h) { return "<th>" + escapeHtml(h) + "</th>"; }).join("") + '</tr></thead><tbody>' + rows + "</tbody></table></div>" + note;
   }
+  /* ============================================================
+     拆解卡专用渲染（category === "teardown"）
+     与数据卡的报表面板**共用同一套 class 与 tab 交互**（.work-report / .report-tab /
+     .report-pane / .report-conclusions / .report-caliber / .report-summary-list），
+     只把「报告骨架」换成「产品骨架」：6 tab → 8 tab。
+     表格按 t.pane 分组：structure / economy / monetize / market（缺省 market）。
+     数据卡走原路径不受影响——这里是一支独立函数，不改动原有 renderReport 逻辑。
+     ============================================================ */
+  var TEARDOWN_TABS = [
+    ["conclusions", "💡 核心结论"],
+    ["coreloop",    "🔄 核心循环"],
+    ["structure",   "🧩 玩法结构"],
+    ["economy",     "⏳ 数值与时间墙"],
+    ["monetize",    "💰 商业化设计"],
+    ["market",      "📊 市场表现"],
+    ["validate",    "🎯 可迁移洞察"],
+    ["caliber",     "🧭 证据强度与口径"],
+    ["background",  "📋 拆解背景"]
+  ];
+  function renderTeardownReport(w) {
+    var tables = (w.report && w.report.tables) || [];
+    var byPane = {};
+    tables.forEach(function (t) {
+      var k = t.pane || "market";
+      (byPane[k] = byPane[k] || []).push(t);
+    });
+    function blocks(list) {
+      return list.map(function (t) {
+        return '<div class="report-block"><h4>' + escapeHtml(t.title) + "</h4>" + renderTableHtml(t) + "</div>";
+      }).join("");
+    }
+    var panes = {};
+    /* 核心结论 */
+    if (w.results && w.results.length) {
+      panes.conclusions = '<div class="report-pane" data-pane="conclusions"><ol class="report-conclusions">' +
+        w.results.map(function (r) {
+          var t = String(r);
+          var m = t.match(/^([^：:]+)[：:]\s*(.+)$/);
+          if (m) return '<li class="concl-item"><span class="concl-label">' + escapeHtml(m[1]) + '</span><span class="concl-body">' + escapeHtml(m[2]) + "</span></li>";
+          return "<li>" + escapeHtml(t) + "</li>";
+        }).join("") + "</ol></div>";
+    }
+    /* 核心循环：主循环链 + 子循环卡（策划视角，数据卡没有这一层） */
+    if (w.coreLoop) {
+      var cl = w.coreLoop, loopHtml = "";
+      if (cl.loop && cl.loop.length) {
+        loopHtml += '<div class="report-block">' +
+          (cl.title ? "<h4>" + escapeHtml(cl.title) + "</h4>" : "") +
+          '<ol class="loop-chain" style="--loop-n:' + cl.loop.length + '">' + cl.loop.map(function (n) {
+            return '<li class="loop-node">' +
+              '<span class="loop-node__step">' + escapeHtml(n.step) + "</span>" +
+              '<span class="loop-node__name">' + escapeHtml(n.name) + "</span>" +
+              '<span class="loop-node__desc">' + escapeHtml(n.desc) + "</span>" +
+            "</li>";
+          }).join("") + "</ol>" +
+          (cl.back ? '<p class="loop-back">' + escapeHtml(cl.back) + "</p>" : "") +
+        "</div>";
+      }
+      if (cl.sub && cl.sub.length) {
+        loopHtml += '<div class="report-block">' +
+          "<h4>" + escapeHtml(cl.subTitle || "子循环") + "</h4>" +
+          '<div class="loop-subs">' + cl.sub.map(function (s) {
+            return '<div class="loop-sub"><b>' + escapeHtml(s.name) + "</b><i>" + escapeHtml(s.desc) + "</i></div>";
+          }).join("") + "</div>" +
+          (cl.purpose ? '<p class="loop-purpose">' + escapeHtml(cl.purpose) + "</p>" : "") +
+        "</div>";
+      }
+      if (loopHtml) panes.coreloop = '<div class="report-pane" data-pane="coreloop" hidden>' + loopHtml + "</div>";
+    }
+    /* 纯表格的三个面 */
+    ["structure", "economy", "market"].forEach(function (k) {
+      if (byPane[k] && byPane[k].length) {
+        panes[k] = '<div class="report-pane" data-pane="' + k + '" hidden>' + blocks(byPane[k]) + "</div>";
+      }
+    });
+    /* 商业化设计 = 文字小结（summary）+ 表格 */
+    var mon = [];
+    if (w.summary && w.summary.length) {
+      mon.push('<ul class="report-summary-list">' + w.summary.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ul>");
+    }
+    if (byPane.monetize && byPane.monetize.length) mon.push(blocks(byPane.monetize));
+    if (mon.length) panes.monetize = '<div class="report-pane" data-pane="monetize" hidden>' + mon.join("") + "</div>";
+    /* 可迁移洞察 */
+    if (w.report && w.report.validate && w.report.validate.length) {
+      panes.validate = '<div class="report-pane" data-pane="validate" hidden><ul class="report-summary-list">' +
+        w.report.validate.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ul></div>";
+    }
+    /* 证据强度与口径 */
+    if (w.report && w.report.caliber && w.report.caliber.length) {
+      panes.caliber = '<div class="report-pane" data-pane="caliber" hidden><ul class="report-caliber">' +
+        w.report.caliber.map(function (c) { return "<li>" + escapeHtml(c) + "</li>"; }).join("") + "</ul></div>";
+    }
+    /* 拆解背景 */
+    if (w.background) {
+      var bb = Array.isArray(w.background)
+        ? '<ul class="report-background-list">' + w.background.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ul>"
+        : '<p class="report-background">' + escapeHtml(w.background) + "</p>";
+      panes.background = '<div class="report-pane" data-pane="background" hidden>' + bb + "</div>";
+    }
+    /* 组装：第一个存在的 pane 去 hidden 并置 is-active */
+    var firstKey = "";
+    TEARDOWN_TABS.forEach(function (t) { if (!firstKey && panes[t[0]]) firstKey = t[0]; });
+    if (!firstKey) return "";
+    var tabsHtml = "", paneHtml = "";
+    TEARDOWN_TABS.forEach(function (t) {
+      var key = t[0];
+      if (!panes[key]) return;
+      tabsHtml += '<button type="button" class="report-tab' + (key === firstKey ? " is-active" : "") + '" data-tab="' + key + '">' + t[1] + "</button>";
+      paneHtml += (key === firstKey) ? panes[key].replace(" hidden>", ">") : panes[key];
+    });
+    return '<div class="work-report"><div class="report-tabs">' + tabsHtml + "</div>" + paneHtml + "</div>";
+  }
+
   function renderReport(w) {
+    if (w.category === "teardown") return renderTeardownReport(w);
     var resultsHtml = "";
     if (w.results && w.results.length) {
       var items = w.results.map(function (r) {
@@ -298,6 +425,8 @@
       rows.push({ href: href, title: title, note: notes[field] || note, action: action, icon: icon, emoji: emoji, primary: !!primary });
     }
     var isRepo = w.link && w.link.indexOf("github.com") >= 0;
+    // 拆解卡：正文在飞书，固定第一行且为主按钮（可被 linkNotes.teardownDocUrl 覆盖说明文案）
+    if (w.teardownDocUrl) push("teardownDocUrl", w.teardownDocUrl, "拆解全文（飞书）", "完整拆解：玩法结构、数值与时间墙、商业化四段模型、证据强度表", "在线查看", "doc", "📖", true);
     if (w.link && !w.report) push("link", w.link, w.outLinkText || "产品链接", isRepo ? "源码仓库，可直接查看实现" : "已部署上线，浏览器直接打开", isRepo ? "查看仓库" : "访问站点", isRepo ? "repo" : "open", isRepo ? "🐙" : "🚀", true);
     if (w.protoUrl) push("protoUrl", w.protoUrl, "在线原型", "可点击的交互原型，直接打开体验完整流程", "打开原型", "open", "🎨", true);
     if (w.gameUrl) push("gameUrl", w.gameUrl, "在线游玩", "浏览器直接打开即可玩，支持键盘与触屏", "开始游戏", "live", "🎮", true);
@@ -308,7 +437,7 @@
     if (w.docUrl) push("docUrl", w.docUrl, "需求 / 开发文档", "需求说明与技术实现", "在线查看", "doc", "📄");
     if (w.prdUrl) push("prdUrl", w.prdUrl, "PRD 展示页", "产品需求文档在线展示", "查看", "open", "📋");
     if (w.prdDocUrl) push("prdDocUrl", w.prdDocUrl, "PRD 文档（飞书）", "产品需求文档全文", "在线查看", "doc", "📄");
-    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl && !w.caseUrl) {
+    if (!w.link && !w.downloadUrl && !w.videoSrc && !w.gameUrl && !w.prototypeUrl && !w.caseUrl && !w.teardownDocUrl) {
       push("contact", "mailto:" + (window.OWNER && window.OWNER.email ? window.OWNER.email : "18672786151@163.com"),
         "联系获取更多", "这个项目还没有公开链接，欢迎直接找我聊", "写邮件", "open", "✉️");
     }
@@ -383,6 +512,33 @@
       if (!list.length) { if (empty) empty.style.display = "block"; return; }
       if (empty) empty.style.display = "none";
       list.forEach(function (w) { grid.insertAdjacentHTML("beforeend", makeCard(w, works.indexOf(w))); });
+    }
+
+    /* 切换分类：卡片先按方向滑出、渲染新内容后滑入（点右边的分类 → 内容向左滑） */
+    var curIdx = 0;
+    function btnIndex(btn) {
+      var all = filterBar ? filterBar.querySelectorAll(".filter-btn") : [];
+      for (var i = 0; i < all.length; i++) { if (all[i] === btn) return i; }
+      return 0;
+    }
+    function switchTo(btn) {
+      if (!btn) return;
+      var idx = btnIndex(btn);
+      var dir = idx >= curIdx ? -1 : 1;          // -1 向左滑出，1 向右滑出
+      curIdx = idx;
+      Array.prototype.forEach.call(filterBar.querySelectorAll(".filter-btn"), function (b) {
+        var active = b === btn;
+        b.setAttribute("aria-pressed", active ? "true" : "false");
+        b.classList.toggle("is-active", active);
+      });
+      grid.style.setProperty("--slide-dir", String(dir));
+      grid.classList.add("works-grid--out");
+      setTimeout(function () {
+        render(btn.getAttribute("data-filter") || "");
+        grid.classList.remove("works-grid--out");
+        grid.classList.add("works-grid--in");
+        setTimeout(function () { grid.classList.remove("works-grid--in"); }, 360);
+      }, 170);
     }
 
     /* 文档库：文件图标网格，点击打开飞书文档 */
@@ -527,17 +683,45 @@
         var on = btn === firstBtn;
         btn.setAttribute("aria-pressed", on ? "true" : "false");
         btn.classList.toggle("is-active", on);
-        btn.addEventListener("click", function () {
-          Array.prototype.forEach.call(filterBar.querySelectorAll(".filter-btn"), function (b) {
-            var active = b === btn;
-            b.setAttribute("aria-pressed", active ? "true" : "false");
-            b.classList.toggle("is-active", active);
-          });
-          render(btn.getAttribute("data-filter") || "");
-        });
+        btn.addEventListener("click", function () { switchTo(btn); });
       });
     }
     render(firstBtn ? (firstBtn.getAttribute("data-filter") || "") : "");
+
+    /* ── 静止 5 秒自动轮播：切到下一个分类，最后一个回到第一个 ──
+       · 任何交互（鼠标移动 / 点击 / 键盘 / 滚轮 / 触摸 / 滚动）都会重置计时；
+       · 只有作品集区域进入视口时才轮播，避免用户在看别处时页面自己乱动。 */
+    var autoTimer = null;
+    /* 自动轮播的前提（用户明确要求）：**没有任何项目卡被打开**，且页面在前台 */
+    function autoAllowed() {
+      if (!filterBar) return false;
+      if (document.hidden) return false;
+      if (detail && detail.classList.contains("is-open")) return false;   // 有人打开了详情 → 不许动
+      return true;
+    }
+    function scheduleAuto() {
+      clearTimeout(autoTimer);
+      if (!autoAllowed()) return;
+      autoTimer = setTimeout(function () {
+        if (!autoAllowed()) return;                  // 计时期间被打开详情 → 放弃这一轮
+        var all = filterBar.querySelectorAll(".filter-btn");
+        if (!all.length) return;
+        switchTo(all[(curIdx + 1) % all.length]);    // 最后一个 → 回到第一个
+        scheduleAuto();
+      }, 5000);
+    }
+    if (filterBar) {
+      scheduleAuto();
+      // 任何交互都重置「静止 5 秒」的计时
+      ["mousemove", "mousedown", "keydown", "wheel", "touchstart", "scroll"].forEach(function (ev) {
+        document.addEventListener(ev, scheduleAuto, { passive: true });
+      });
+      // 详情打开 / 关闭时立刻重新评估：打开就停，关闭后重新计时
+      if (detail && window.MutationObserver) {
+        new MutationObserver(scheduleAuto).observe(detail, { attributes: true, attributeFilter: ["class"] });
+      }
+      document.addEventListener("visibilitychange", scheduleAuto);
+    }
     function openFromHash() {
       var slug = (location.hash || "").replace("#work-", "");
       if (!slug) return;

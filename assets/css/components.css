@@ -232,6 +232,21 @@ body.nav-locked { overflow: hidden; }
 .tag--industry:hover { background: rgba(169,113,75,0.08); box-shadow: var(--glow-sm); }
 .tag--agent { color: var(--cat-agent); border-color: rgba(150,101,122,0.42); }
 .tag--agent:hover { background: rgba(150,101,122,0.08); box-shadow: var(--glow-sm); }
+.tag--teardown { color: var(--cat-teardown); border-color: rgba(126,106,71,0.45); }
+.tag--teardown:hover { background: rgba(126,106,71,0.08); box-shadow: var(--glow-sm); }
+
+/* ---------- 拆解卡：关键指标带（数据卡没有、拆解卡独有的一层） ---------- */
+.work-card__metrics { display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-2); }
+.metric-pill {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 3px 9px; border-radius: var(--radius-full);
+  background: rgba(126,106,71,0.07);
+  border: 1px solid rgba(126,106,71,0.22);
+  font-size: 11.5px; line-height: 1.5; white-space: nowrap;
+}
+.metric-pill__k { color: var(--text-muted); }
+.metric-pill__v { color: var(--cat-teardown); font-weight: var(--weight-bold); }
+@media (max-width: 480px) { .metric-pill { font-size: 11px; padding: 2px 8px; } }
 
 /* 文档库：文件图标网格 */
 .works-grid--docs { grid-template-columns: repeat(auto-fill, minmax(172px, 1fr)); gap: var(--space-5); }
@@ -248,25 +263,40 @@ body.nav-locked { overflow: hidden; }
 .doc-item--report .doc-item__icon { color: #A9714B; }
 .doc-item--doc .doc-item__icon { color: #9E4F3A; }
 
-/* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active） */
+/* 筛选按钮（可交互，JS 控制 aria-pressed 与 .is-active）
+   注意：原样式默认态是 rgba(255,255,255,0.05) —— 在浅色页面上几乎不可见，
+   访客根本注意不到分类入口。这里改为「白底 + 主题色描边 + 轻投影」，并强化 hover / 选中态。 */
 .filter-btn {
   appearance: none; cursor: pointer;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border-strong);
+  background: #fff;
+  border: 1.5px solid rgba(204, 120, 92, 0.30);
   color: var(--text);
   border-radius: var(--radius-full);
-  padding: var(--space-2) var(--space-5);
-  font-size: var(--fs-base); font-weight: var(--weight-medium);
+  padding: 10px 20px;
+  font-size: var(--fs-base); font-weight: 600;
   font-family: var(--font-body);
   white-space: nowrap; flex-shrink: 0;
   letter-spacing: 0.02em;
-  transition: all var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(90, 50, 32, 0.07);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
-.filter-btn:hover { color: var(--text); border-color: var(--border-strong); box-shadow: var(--glow-sm); }
+/* 悬停：上浮 + 变主题色 + 投影，明确"可以点" */
+.filter-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(204, 120, 92, 0.22);
+}
+.filter-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(204, 120, 92, 0.20); }
+/* 选中：主题色实心 + 白字 + 更强投影（一眼看出"当前在哪个分类"） */
 .filter-btn.is-active, .filter-btn[aria-pressed="true"] {
   background: var(--accent); border-color: var(--accent);
-  color: #17110b; box-shadow: var(--glow-md);
+  color: #fff; font-weight: 700;
+  box-shadow: 0 8px 22px rgba(204, 120, 92, 0.36);
+  transform: translateY(-1px);
 }
+.filter-btn.is-active:hover, .filter-btn[aria-pressed="true"]:hover { color: #fff; transform: translateY(-2px); }
 
 
 /* ==================== 2.6 Footer ==================== */
