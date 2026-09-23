@@ -244,6 +244,29 @@
   document.body.appendChild(root);
 
   var fab = root.querySelector("#asstFab"), tip = root.querySelector("#asstTip");
+
+  /* 气泡精确定位：小洄可拖动，所以用 fab 的实际位置来算，
+     保证气泡始终「与小洄同宽、水平居中、贴在头顶上方 12px」 */
+  function syncTip() {
+    if (!tip || !fab || !root) return;
+    var r = fab.getBoundingClientRect();
+    var rr = root.getBoundingClientRect();
+    if (!r.width || !rr.width) return;
+    tip.style.left = (r.left - rr.left) + "px";
+    tip.style.right = "auto";
+    tip.style.width = r.width + "px";
+    tip.style.bottom = (rr.bottom - r.top + 12) + "px";
+    tip.style.top = "auto";
+  }
+
+  /* 气泡文案 3 秒轮换一次；弹窗打开（气泡隐藏）时不轮换，关闭后继续 */
+  var TIPS = ["点点我。", "有想了解的吗。", "你好啊。"];
+  var tipIdx = 0;
+  setInterval(function () {
+    if (!tip || tip.classList.contains("is-hidden")) return;
+    tipIdx = (tipIdx + 1) % TIPS.length;
+    tip.textContent = TIPS[tipIdx];
+  }, 3000);
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
@@ -642,7 +665,7 @@
       if (!down) return;
       down = false;
       root.classList.remove("asst--dragging");
-      if (moved) { try { localStorage.setItem(PKEY, JSON.stringify({ l: root.style.left, t: root.style.top })); } catch (e) {} }
+      if (moved) { try { localStorage.setItem(PKEY, JSON.stringify({ l: root.style.left, t: root.style.top })); } catch (e) {} syncTip(); }
       else { lastToggle = Date.now(); isOpen() ? close() : open(); }     // 没拖动 = 点击 = 开关
     });
     try {
@@ -650,6 +673,13 @@
       if (p && p.l) { root.style.left = p.l; root.style.top = p.t; root.style.right = "auto"; root.style.bottom = "auto"; }
     } catch (e) {}
   })();
+
+  // 位置恢复后 + 窗口尺寸变化 / 图片加载完成时，重新对齐气泡
+  syncTip();
+  window.addEventListener("resize", syncTip);
+  window.addEventListener("load", syncTip);
+  setTimeout(syncTip, 120);
+  setTimeout(syncTip, 600);
 
   // 头部也可拖（方便从标题栏移动）
   (function dragHead() {
