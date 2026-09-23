@@ -586,3 +586,104 @@
 .video-lightbox video { width: min(1100px, 92vw); max-height: 82vh; border-radius: var(--radius-md); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); background: #000; }
 .video-lightbox__hint { margin-top: 14px; font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.6); }
 .work-media video { cursor: zoom-in; }
+
+
+/* ==================== 产品设计主线（按钮区里的一行：按钮不跳转，桌面悬浮/手机点击弹出）==================== */
+.link-card--mainline { position: relative; }
+.mainline-trigger { cursor: help; }
+.mainline-pop {
+  position: absolute; right: 0; bottom: calc(100% + 10px);
+  width: min(620px, 92vw); max-height: 56vh; overflow: auto;
+  padding: 16px 20px; border-radius: 12px;
+  background: var(--surface, #fff); border: 1px solid var(--border);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.16);
+  z-index: 80; text-align: left;
+}
+.mainline-pop[hidden] { display: none !important; }
+.mainline-pop h4 { margin: 0 0 10px; font-size: 14px; letter-spacing: 0.04em; color: var(--accent); }
+.mainline-pop .mainline-list { margin: 0; padding-left: 20px; }
+.mainline-pop .mainline-list li { font-size: 13.5px; line-height: 1.75; color: var(--text); margin-bottom: 8px; }
+.mainline-pop .mainline-list li:last-child { margin-bottom: 0; }
+
+/* 触屏或窄屏：弹层固定在屏幕下方，避免超出可视范围（手机必须点击才能看到） */
+@media (hover: none), (max-width: 720px) {
+  .mainline-pop {
+    position: fixed; left: 14px; right: 14px; bottom: 14px; top: auto;
+    width: auto; max-height: 66vh;
+  }
+}
+
+
+/* ==================== 产品设计主线弹层（精修版：字体 / 边框 / 离开即消失）==================== */
+.mainline-pop {
+  position: absolute; right: 0; bottom: calc(100% + 14px);
+  width: min(640px, 92vw); max-height: 58vh; overflow: auto;
+  padding: 20px 24px 18px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid rgba(204, 120, 92, 0.22);
+  box-shadow: 0 24px 64px rgba(60, 30, 20, 0.16), 0 2px 10px rgba(60, 30, 20, 0.06);
+  z-index: 90; text-align: left;
+  font-family: var(--font-body);
+  animation: mlPop 0.16s ease-out;
+}
+@keyframes mlPop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.mainline-pop[hidden] { display: none !important; }
+/* 指向按钮的小箭头（边框同色，视觉连成一体） */
+.mainline-pop::after {
+  content: ""; position: absolute; right: 36px; bottom: -7px;
+  width: 12px; height: 12px; background: #fff;
+  border-right: 1px solid rgba(204, 120, 92, 0.22);
+  border-bottom: 1px solid rgba(204, 120, 92, 0.22);
+  transform: rotate(45deg);
+}
+/* 标题：小号字 + 字间距 + 虚线分隔 */
+.mainline-pop h4 {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 14px; padding-bottom: 11px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--accent);
+  border-bottom: 1px dashed rgba(204, 120, 92, 0.28);
+}
+.mainline-pop h4::before {
+  content: ""; width: 4px; height: 15px; border-radius: 2px;
+  background: var(--accent); flex: none;
+}
+/* 正文：序号徽标 + 舒展行距 */
+.mainline-pop .mainline-list { margin: 0; padding: 0; list-style: none; counter-reset: ml; }
+.mainline-pop .mainline-list li {
+  position: relative; counter-increment: ml;
+  padding-left: 36px; margin-bottom: 13px;
+  font-size: 13.5px; line-height: 1.82; color: var(--text);
+  letter-spacing: 0.01em;
+}
+.mainline-pop .mainline-list li:last-child { margin-bottom: 0; }
+.mainline-pop .mainline-list li::before {
+  content: counter(ml, decimal-leading-zero);
+  position: absolute; left: 0; top: 3px;
+  width: 26px; height: 21px; line-height: 21px; text-align: center;
+  font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  color: var(--accent); background: rgba(204, 120, 92, 0.10);
+  border-radius: 7px;
+}
+.mainline-pop::-webkit-scrollbar { width: 6px; }
+.mainline-pop::-webkit-scrollbar-thumb { background: rgba(204, 120, 92, 0.28); border-radius: 3px; }
+
+/* 触屏 / 窄屏：固定在屏幕下方（手机必须点击），去掉箭头 */
+@media (hover: none), (max-width: 720px) {
+  .mainline-pop {
+    position: fixed; left: 14px; right: 14px; bottom: 14px; top: auto;
+    width: auto; max-height: 68vh; padding: 18px 18px 16px;
+  }
+  .mainline-pop::after { display: none; }
+}
+
+
+/* 按钮 → 弹窗之间的透明「桥接区」：鼠标从按钮移向弹窗时经过这里，不会触发关闭 */
+.link-card--mainline::after {
+  content: ""; position: absolute; right: 0; bottom: 100%;
+  width: 100%; height: 16px;            /* 与弹层 bottom 的间距一致 */
+  background: transparent;
+}
+/* 弹层本身也做成"悬停不消失"的容器 */
+.mainline-pop { transition: opacity 0.14s ease, transform 0.14s ease; }

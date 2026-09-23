@@ -326,7 +326,26 @@
           btnIcon + '<span>' + escapeHtml(r.action) + '</span>' +
         '</a>' +
       '</div>';
-    }).join("") + "</div>";
+    }).join("") + mainlineRow(w) + "</div>";
+  }
+
+  /* 产品设计主线：做成按钮区里的一行 —— 按钮本身**不跳转**，
+     桌面端鼠标悬浮弹出、移动端点击弹出（见 initMainlinePop） */
+  function mainlineRow(w) {
+    if (!w.mainline || !w.mainline.length) return "";
+    var title = w.mainlineTitle || "产品设计主线";
+    return '<div class="link-card link-card--mainline">' +
+      '<span class="link-card__icon" aria-hidden="true">📐</span>' +
+      '<span class="link-card__text"><b>' + escapeHtml(title) + '</b><i>' +
+        w.mainline.length + ' 步设计过程 · 桌面悬浮 / 手机点击查看</i></span>' +
+      '<button type="button" class="btn btn-ghost mainline-trigger" aria-expanded="false" aria-label="查看' + escapeHtml(title) + '">' +
+        badgeIcon("doc") + '<span>查看主线</span>' +
+      '</button>' +
+      '<div class="mainline-pop" hidden>' +
+        '<h4>' + escapeHtml(title) + '</h4>' +
+        '<ol class="mainline-list">' + w.mainline.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + '</ol>' +
+      '</div>' +
+    '</div>';
   }
   /* 是否用「资源卡」样式：默认开启；代码仓库类卡片保持原来的按钮排（用户要求），
      个别卡片可用 linksStyle: false 单独关掉 */
@@ -424,10 +443,9 @@
           (kwTags ? '<div class="work-detail__kws">' + kwTags + "</div>" : "") +
           '<p class="work-detail__desc">' + escapeHtml(w.desc) + "</p>" +
           (w.idea ? '<div class="work-detail__idea"><h4>设计理念</h4><p>' + escapeHtml(w.idea) + "</p></div>" : "") +
-          (w.mainline && w.mainline.length ? '<div class="work-detail__mainline"><h4>' + escapeHtml(w.mainlineTitle || "产品设计主线") + '</h4><ol class="mainline-list">' + w.mainline.map(function (s) { return "<li>" + escapeHtml(s) + "</li>"; }).join("") + "</ol></div>" : "") +
           renderReport(w) +
           renderMedia(w) +
-          renderLinks(w) +
+          renderLinks(w)
         "</div>";
       detail.classList.add("is-open");
       detail.setAttribute("role", "dialog");
@@ -625,6 +643,54 @@
     });
   }
 
+  /* 产品设计主线的弹层交互：桌面端悬浮即显，触屏端点击切换（按钮本身不跳转） */
+  function initMainlinePop() {
+    var wrap = null, timer = null;
+    function show(trigger) {
+      clearTimeout(timer);
+      wrap = trigger.closest(".link-card--mainline");
+      if (!wrap) return;
+      var pop = wrap.querySelector(".mainline-pop");
+      if (!pop) return;
+      pop.hidden = false;
+      trigger.setAttribute("aria-expanded", "true");
+    }
+    function hide() {
+      clearTimeout(timer);
+      if (!wrap) return;
+      var pop = wrap.querySelector(".mainline-pop");
+      if (pop) pop.hidden = true;
+      var t = wrap.querySelector(".mainline-trigger");
+      if (t) t.setAttribute("aria-expanded", "false");
+      wrap = null;
+    }
+    /* 鼠标是否仍在「按钮 / 桥接区 / 弹窗」范围内 */
+    function inside(el) { return !!(wrap && el && wrap.contains(el)); }
+
+    document.addEventListener("mouseover", function (e) {
+      var t = e.target.closest && e.target.closest(".mainline-trigger");
+      if (t) { show(t); return; }
+      // 进入弹窗（或桥接区）→ 取消待执行的隐藏
+      if (inside(e.target)) clearTimeout(timer);
+    });
+
+    document.addEventListener("mouseout", function (e) {
+      if (!wrap) return;
+      // 只有「离开按钮 / 桥接区 / 弹窗」才隐藏；移到它们内部一律保留
+      var to = e.relatedTarget;
+      if (inside(to)) { clearTimeout(timer); return; }
+      // 再留 150ms 缓冲：快速划过空隙时不会误关（配合 CSS 的桥接区双保险）
+      clearTimeout(timer);
+      timer = setTimeout(hide, 150);
+    });
+    document.addEventListener("click", function (e) {
+      var t = e.target.closest && e.target.closest(".mainline-trigger");
+      if (t) { e.preventDefault(); (wrap && wrap.contains(t)) ? hide() : show(t); return; }   // 触屏：点开关
+      if (wrap && !wrap.contains(e.target)) hide();                                          // 点别处收起
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") hide(); });
+  }
+
   function boot() {
     initNavHighlight();
     initNavDrawer();
@@ -633,6 +699,7 @@
 
     initStoryZoom();
     initVideoZoom();
+    initMainlinePop();
     initYear();
     landOnPortfolio();
   }
