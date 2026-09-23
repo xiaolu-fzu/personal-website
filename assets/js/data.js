@@ -343,6 +343,19 @@ window.WORKS = [
 
   /* ---------------- AIGC aigc ---------------- */
   {
+    title: "巅峰对决",
+    desc: "素材、场景、分镜、动作全部自己设计——不靠现成模板，从镜头怎么摆、动作怎么编排到每一帧画面的元素，都是自己定的，体现对 AIGC 工具的控制能力。",
+    thumb: "assets/img/巅峰对决.jpg",
+    value: "素材、场景、分镜、动作全自制",
+    category: "aigc",
+    year: 2025,
+    hue: 20,
+    videoSrc: "AIGC/巅峰对决.mp4",
+    videoTitle: "巅峰对决",
+    keywords: ["AIGC", "视频", "分镜设计"],
+    featured: true
+  },
+  {
     title: "硬币",
     desc: "把同学的一个初始脑洞，拆解、设计、编排成可执行落地的剧本；以此剧本，在同学期望的 50 秒内用 AI 创作出完整视频作品，体现想法拆解与 AI 生成编排的能力。",
     thumb: "assets/img/硬币.jpg",

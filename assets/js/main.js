@@ -578,6 +578,53 @@
     });
   }
 
+  /* 视频浮层播放：点视频 → 全屏浮层（z-index 最高，盖过页眉与小洄），ESC / 点击空白关闭 */
+  function initVideoZoom() {
+    var lb = null, vid = null, saveTime = 0;
+    function open(src, t) {
+      if (!lb) {
+        lb = document.createElement("div");
+        lb.className = "video-lightbox close";
+        lb.setAttribute("role", "dialog");
+        lb.setAttribute("aria-label", "视频播放");
+        lb.innerHTML = '<video controls playsinline preload="metadata"></video><span class="video-lightbox__hint">点击空白处或按 Esc 关闭</span>';
+        lb.addEventListener("click", function (e) { if (e.target === lb || e.target.className === "video-lightbox__hint") close(); });
+        document.body.appendChild(lb);
+      }
+      vid = lb.querySelector("video");
+      vid.src = src;
+      vid.currentTime = t || 0;
+      lb.classList.remove("close");
+      document.body.classList.add("nav-locked");
+      try { vid.play(); } catch (e) {}
+    }
+    function close() {
+      if (!lb) return;
+      var inline = document.querySelector('.work-media video');
+      if (inline && vid) { try { inline.currentTime = vid.currentTime; } catch (e) {} }
+      try { vid.pause(); } catch (e) {}
+      lb.classList.add("close");
+      document.body.classList.remove("nav-locked");
+    }
+    document.addEventListener("click", function (e) {
+      var v = e.target;
+      if (v && v.tagName === "VIDEO" && v.closest && v.closest(".work-media")) {
+        // 内嵌视频：点击画面（非控制条区域）→ 放大到浮层
+        var rect = v.getBoundingClientRect();
+        if (e.clientY - rect.top < rect.height - 44) {    // 避开底部控制条
+          e.preventDefault();
+          open(v.getAttribute("src"), v.currentTime);
+        }
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        var l = document.querySelector(".video-lightbox");
+        if (l && !l.classList.contains("close")) close();
+      }
+    });
+  }
+
   function boot() {
     initNavHighlight();
     initNavDrawer();
@@ -585,7 +632,23 @@
     initPortfolio();
 
     initStoryZoom();
+    initVideoZoom();
     initYear();
+    landOnPortfolio();
+  }
+
+  /* 首次打开直接停在作品集（URL 带锚点时尊重锚点；同一次会话只自动跳一次，避免用户返回时被再次拉走） */
+  function landOnPortfolio() {
+    try {
+      if (location.hash) return;
+      if (sessionStorage.getItem("lxh_landed") === "1") return;
+      var el = document.getElementById("portfolio");
+      if (!el) return;
+      sessionStorage.setItem("lxh_landed", "1");
+      requestAnimationFrame(function () {
+        window.scrollTo({ top: el.offsetTop - 72, behavior: "auto" });   // 减去固定页眉高度
+      });
+    } catch (e) { /* 忽略 */ }
   }
 
   if (document.readyState === "loading") {

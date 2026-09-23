@@ -569,3 +569,20 @@
 .asst__panel { z-index: 301; }
 .asst__fab { z-index: 302; }
 .asst__tip { z-index: 302; }
+
+
+/* 锚点定位时给固定页眉留出空间（否则跳转后标题被页眉遮住） */
+#portfolio, #about, #how, #docs, #contact { scroll-margin-top: 84px; }
+
+
+/* ==================== 视频浮层播放（最高图层：高于叶眉 100、小洄 300）==================== */
+.video-lightbox {
+  position: fixed; inset: 0; z-index: 1000 !important;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.92); padding: var(--space-6); cursor: zoom-out;
+  opacity: 1; transition: opacity 0.18s ease;
+}
+.video-lightbox.close { opacity: 0; pointer-events: none; }
+.video-lightbox video { width: min(1100px, 92vw); max-height: 82vh; border-radius: var(--radius-md); box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6); background: #000; }
+.video-lightbox__hint { margin-top: 14px; font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.6); }
+.work-media video { cursor: zoom-in; }
