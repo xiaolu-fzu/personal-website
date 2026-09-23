@@ -138,6 +138,8 @@
   }
   function repoIcon() { return badgeIcon("repo"); }
   function badgesHtml(w) {
+    // 拆解卡：卡面只保留「徽标(metrics) + 标签(tags)」两排，不额外渲染 badges
+    if (w.category === "teardown") return "";
     var list = [];
     if (w.report && w.category !== "teardown") list.push(["report", "数据报告"]);   // 拆解卡走下面的「拆解报告」，避免两个徽标重复
     if (w.reqDocUrl || w.prdDocUrl || w.docUrl) list.push(["doc", "需求文档"]);
@@ -147,17 +149,8 @@
     if (w.gameUrl || w.prototypeUrl || (w.link && playableCat)) list.push(["live", "上线可玩"]);
     if (w.videoSrc) list.push(["video", "成片"]);
     if (w.verify) list.push(["verify", w.verify]);
-    // 拆解卡：徽标展示「这份拆解分析过哪些维度」（卡片自带 badges 数组，来源就是拆解数据表的 tabs）
-    // 证据等级（桌面研究 / 已体验验证）不占徽标位，放在卡片正文与详情页说明
-    if (w.category === "teardown") {
-      if (Array.isArray(w.badges) && w.badges.length) {
-        w.badges.forEach(function (b) { list.push(["dim", b]); });
-      } else {
-        list.push(["report", "拆解报告"]);
-      }
-    } else if (w.evidence === "field") {
-      list.push(["verify", "已体验验证"]);
-    }
+    // 非拆解卡的证据类徽标（保持原有行为）
+    if (w.evidence === "field") list.push(["verify", "已体验验证"]);
     if (!list.length) return "";
     return '<div class="work-card__badges">' + list.map(function (b) {
       return '<span class="badge badge--' + b[0] + '">' + badgeIcon(b[0]) + escapeHtml(b[1]) + "</span>";
@@ -167,10 +160,12 @@
   function makeCard(work, index) {
     var tags = catTagsHtml(work.category, work.catLabel);
     var valueHtml = work.value ? '<p class="work-card__value">' + escapeHtml(work.value) + "</p>" : "";
-    // 拆解卡独有：关键指标带（数据卡没有）——让访客扫一眼就知道拆的是什么量级的产品
+    // 卡面「徽标」：拆解卡用它展示**这份拆解分析了哪些维度**（纯文字胶囊）；
+    // 其他卡仍可用于「关键指标带」（名称 + 数值）。当 v 为空时只渲染名称。
     var metricsHtml = "";
     if (work.metrics && work.metrics.length) {
       metricsHtml = '<div class="work-card__metrics">' + work.metrics.map(function (m) {
+        if (!m.v) return '<span class="metric-pill metric-pill--plain">' + escapeHtml(m.k) + "</span>";
         return '<span class="metric-pill"><span class="metric-pill__k">' + escapeHtml(m.k) + '</span><span class="metric-pill__v">' + escapeHtml(m.v) + "</span></span>";
       }).join("") + "</div>";
     }

@@ -640,9 +640,7 @@ window.WORKS = [
     desc: "点点互动 SLG 三步走 · 第 2 步（叠加重度）：在已验证的母题上加地图 SLG，用「建造爽感」获客、用「时间墙」变现。",
     value: "卖的不是 SLG，是建造爽感；变现的不是内容，是等待与并发。",
     metrics: [
-      { k: "累计收入", v: "$28亿" },
-      { k: "上线", v: "2023" },
-      { k: "品类", v: "SLG×模拟经营" }
+      { k: "玩法结构" }, { k: "时间墙" }, { k: "商业化" }, { k: "市场表现" }
     ],
     category: "teardown",
     year: 2026,
@@ -650,7 +648,6 @@ window.WORKS = [
     featured: true,
     order: 2,
     catLabel: "产品 · 产品拆解 · SLG",
-    badges: ["玩法结构", "时间墙", "商业化", "市场表现"],
     keywords: ["玩法结构", "商业化四段模型", "时间墙", "证据强度"],
     series: { name: "点点互动 SLG 三步走", step: "第 2 步", note: "母题验证 → 叠加重度 → 更换钩子。本篇是第 2 步：在《Frozen City》已验证的冰雪末日母题上，加大地图 SLG 与联盟生态。" },
     teardownDocUrl: window.TEARDOWN_DOC_URL,
@@ -770,9 +767,7 @@ window.WORKS = [
     value: "可复制的是骨架，不是钩子——创新被精确限制在漏斗最上层。",
     /* 卡面图待用户提供，暂时使用默认卡面（渐变 + 条纹） */
     metrics: [
-      { k: "117 天破", v: "$1亿" },
-      { k: "上线", v: "2025" },
-      { k: "品类", v: "SLG×塔防" }
+      { k: "三级漏斗" }, { k: "联盟系统" }, { k: "商业化" }, { k: "市场表现" }
     ],
     category: "teardown",
     year: 2026,
@@ -780,7 +775,6 @@ window.WORKS = [
     featured: true,
     order: 3,
     catLabel: "产品 · 产品拆解 · SLG",
-    badges: ["三级漏斗", "联盟系统", "商业化", "市场表现"],
     keywords: ["玩法融合", "三级漏斗", "消费心理学", "证据强度"],
     series: { name: "点点互动 SLG 三步走", step: "第 3 步", note: "母题验证 → 叠加重度 → 更换钩子。本篇是第 3 步：留存与付费骨架照搬《无尽冬日》，把获客钩子从模拟经营换成塔防。" },
     teardownDocUrl: window.TEARDOWN_DOC_URL,
@@ -916,9 +910,7 @@ window.WORKS = [
 
     value: "母题先验证、系统后叠加——Frozen City + 大地图 SLG ≈ Whiteout Survival。",
     metrics: [
-      { k: "模拟品类增长榜", v: "第 1" },
-      { k: "上线", v: "2022" },
-      { k: "品类", v: "冰雪末日模拟经营" }
+      { k: "三层结构" }, { k: "系统血缘" }, { k: "商业化" }, { k: "市场表现" }
     ],
     category: "teardown",
     year: 2026,
@@ -926,7 +918,6 @@ window.WORKS = [
     featured: true,
     order: 1,
     catLabel: "产品 · 产品拆解 · 模拟经营",
-    badges: ["三层结构", "系统血缘", "商业化", "市场表现"],
     keywords: ["母题验证", "系统血缘", "商业化与体验冲突", "证据强度"],
     series: { name: "点点互动 SLG 三步走", step: "第 1 步", note: "母题验证 → 叠加重度 → 更换钩子。本篇是第 1 步：先用纯轻度玩法验证「极寒末日 + 居民管理」的母题，跑通后才在《无尽冬日》上加大地图 SLG。" },
     teardownDocUrl: window.TEARDOWN_DOC_URL,
