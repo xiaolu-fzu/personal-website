@@ -245,28 +245,22 @@
 
   var fab = root.querySelector("#asstFab"), tip = root.querySelector("#asstTip");
 
-  /* 气泡精确定位：小洄可拖动，所以用 fab 的实际位置来算，
-     保证气泡始终「与小洄同宽、水平居中、贴在头顶上方 12px」 */
+  /* 气泡精确定位：小洄可拖动，所以用 fab 的实际位置来算。
+     ★ 气泡宽度改为「自适应内容」（不再是和小洄同宽），因此这里做的是
+     「按小洄中心线水平居中」——宽度交给文字撑开，只算 left。 */
   function syncTip() {
     if (!tip || !fab || !root) return;
     var r = fab.getBoundingClientRect();
     var rr = root.getBoundingClientRect();
     if (!r.width || !rr.width) return;
-    tip.style.left = (r.left - rr.left) + "px";
+    tip.style.width = "auto";
+    var tw = tip.offsetWidth;
+    if (!tw) return;
+    tip.style.left = Math.round((rr.width - tw) / 2) + "px";
     tip.style.right = "auto";
-    tip.style.width = r.width + "px";
-    tip.style.bottom = (rr.bottom - r.top + 12) + "px";
+    tip.style.bottom = Math.round(rr.bottom - r.top + 10) + "px";
     tip.style.top = "auto";
   }
-
-  /* 气泡文案 3 秒轮换一次；弹窗打开（气泡隐藏）时不轮换，关闭后继续 */
-  var TIPS = ["点点我。", "有想了解的吗。", "你好啊。"];
-  var tipIdx = 0;
-  setInterval(function () {
-    if (!tip || tip.classList.contains("is-hidden")) return;
-    tipIdx = (tipIdx + 1) % TIPS.length;
-    tip.textContent = TIPS[tipIdx];
-  }, 3000);
   var panel = root.querySelector("#asstPanel"), log = root.querySelector("#asstLog");
   var form = root.querySelector("#asstForm"), input = root.querySelector("#asstInput");
   var chips = root.querySelector("#asstChips"), head = root.querySelector("#asstHead");
