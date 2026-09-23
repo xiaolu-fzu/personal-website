@@ -231,10 +231,10 @@
         '<div class="asst__followups" id="asstFollowups"></div>' +
       '</div>' +
       '<div class="asst__chips" id="asstChips">' +
-        '<button type="button">「有据」解决了什么问题？</button>' +
-        '<button type="button">我想玩一下真菌荒域，帮我打开。</button>' +
-        '<button type="button">打开 ProListing 项目卡。</button>' +
-        '<button type="button">你一共有多少项目可以展示？</button>' +
+        '<button type="button">有据是什么</button>' +
+        '<button type="button">打开三体的产品链接</button>' +
+        '<button type="button">看看你的产品拆解</button>' +
+        '<button type="button">你有什么推荐的内容吗</button>' +
       '</div>' +
       '<form class="asst__form" id="asstForm">' +
         '<input id="asstInput" type="text" placeholder="和小洄说点什么…" autocomplete="off">' +
@@ -366,7 +366,7 @@
     try { chips.hidden = state.hist.length > 0; } catch (e) {}
   }
   function greet() {
-    bubble("bot", "你好。我是您的人工助手小洄，请问您有什么想了解的吗？<br><span class=\"asst__hint\">可以问我某个项目是怎么做的，也可以直接说「帮我找有据」「打开三体的产品链接」「看看数据分析的项目」「带我去文档库」「关掉」。</span>");
+    bubble("bot", "你好。我是您的人工助手小洄，请问您有什么想了解的吗？<br><span class=\"asst__hint\">可以问我某个项目是怎么做的，也可以直接说「有据是什么」「打开三体的产品链接」「看看你的产品拆解」「你有什么推荐的内容吗」。</span>");
   }
   function showHist() {
     log.innerHTML = "";
