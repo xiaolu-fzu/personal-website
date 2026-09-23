@@ -137,21 +137,32 @@
     return s + '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
   }
   function repoIcon() { return badgeIcon("repo"); }
+  /* 卡面「徽标」= **完成度 / 产出物标记**（与「标签」的分工：标签回答"这是什么"，徽标回答"做到了什么"）。
+     优先级从高到低，超过 5 个按这个顺序截断：
+       ① 文档类：需求文档 → 开发文档 → 飞书文档
+       ② 产出类：拆解报告 / 数据报告 → 上线可玩 → 成片
+       ③ 验证类（永远排最后）：手写 verify → 已体验验证 / 桌面研究 */
   function badgesHtml(w) {
-    // 拆解卡：卡面只保留「徽标(metrics) + 标签(tags)」两排，不额外渲染 badges
-    if (w.category === "teardown") return "";
     var list = [];
-    if (w.report && w.category !== "teardown") list.push(["report", "数据报告"]);   // 拆解卡走下面的「拆解报告」，避免两个徽标重复
-    if (w.reqDocUrl || w.prdDocUrl || w.docUrl) list.push(["doc", "需求文档"]);
+    // ① 文档类
+    if (w.reqDocUrl || w.prdUrl || w.docUrl) list.push(["doc", "需求文档"]);
     if (w.devDocUrl) list.push(["doc", "开发文档"]);
+    if (w.prdDocUrl || w.teardownDocUrl) list.push(["doc", "飞书文档"]);
+    // ② 产出类
+    if (w.category === "teardown") list.push(["report", "拆解报告"]);
+    else if (w.report) list.push(["report", "数据报告"]);
     // 「上线可玩」只给真能上手体验的：游戏 / 在线原型 / 原型与 Agent 分类的可访问外链
     var playableCat = (w.category === "prototype" || w.category === "agent" || w.category === "game");
     if (w.gameUrl || w.prototypeUrl || (w.link && playableCat)) list.push(["live", "上线可玩"]);
     if (w.videoSrc) list.push(["video", "成片"]);
+    // ③ 验证类（排最后）
     if (w.verify) list.push(["verify", w.verify]);
-    // 非拆解卡的证据类徽标（保持原有行为）
     if (w.evidence === "field") list.push(["verify", "已体验验证"]);
-    if (!list.length) return "";
+    else if (w.evidence === "desktop") list.push(["doc", "桌面研究"]);
+    return renderBadges(list.slice(0, 5));   // 徽标上限 5 个
+  }
+  function renderBadges(list) {
+    if (!list || !list.length) return "";
     return '<div class="work-card__badges">' + list.map(function (b) {
       return '<span class="badge badge--' + b[0] + '">' + badgeIcon(b[0]) + escapeHtml(b[1]) + "</span>";
     }).join("") + "</div>";

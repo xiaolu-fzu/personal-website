@@ -640,9 +640,6 @@ window.WORKS = [
     desc: "点点互动 SLG 三步走 · 第 2 步（叠加重度）：在已验证的母题上加地图 SLG，用「建造爽感」获客、用「时间墙」变现。",
     thumb: "assets/img/拆解-无尽冬日.jpg",
     value: "卖的不是 SLG，是建造爽感；变现的不是内容，是等待与并发。",
-    metrics: [
-      { k: "玩法结构" }, { k: "时间墙" }, { k: "商业化" }, { k: "市场表现" }
-    ],
     category: "teardown",
     year: 2026,
     hue: 190,
@@ -767,9 +764,6 @@ window.WORKS = [
 
     thumb: "assets/img/拆解-Kingshot.jpg",
     value: "可复制的是骨架，不是钩子——创新被精确限制在漏斗最上层。",
-    metrics: [
-      { k: "三级漏斗" }, { k: "联盟系统" }, { k: "商业化" }, { k: "市场表现" }
-    ],
     category: "teardown",
     year: 2026,
     hue: 30,
@@ -910,9 +904,6 @@ window.WORKS = [
     desc: "点点互动 SLG 三步走 · 第 1 步（母题验证）：《无尽冬日》的玩法试验田，拆它才看得懂 WoS 为什么「上线即成熟」。",
     thumb: "assets/img/拆解-FrozenCity.jpg",
     value: "母题先验证、系统后叠加——Frozen City + 大地图 SLG ≈ Whiteout Survival。",
-    metrics: [
-      { k: "三层结构" }, { k: "系统血缘" }, { k: "商业化" }, { k: "市场表现" }
-    ],
     category: "teardown",
     year: 2026,
     hue: 220,
