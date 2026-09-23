@@ -25,7 +25,7 @@ window.OWNER = {
    ⚠️ 三张拆解卡共用一个飞书文档：把下面这个值换成你的飞书链接即可（只改这一行）。
    建议飞书文档结构：3 个一级标题分别对应 3 款游戏，每篇内含「玩法结构 / 数值与时间墙 /
    商业化设计 / 市场表现 / 可迁移洞察 / 证据强度」六节 + 文末来源清单。 */
-window.TEARDOWN_DOC_URL = "https://fcn6t1589nyp.feishu.cn/REPLACE_WITH_YOUR_TEARDOWN_DOC";
+window.TEARDOWN_DOC_URL = "https://fcn6t1589nyp.feishu.cn/wiki/GF53weJ5Si8Jm1kaFvdce4aGngZ";
 
 window.WORKS = [
   /* ---------------- 数据分析 data ---------------- */

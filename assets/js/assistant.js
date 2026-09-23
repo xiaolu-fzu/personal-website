@@ -35,6 +35,7 @@
     if (w.docUrl) o.push({ label: "需求/开发文档", href: w.docUrl });
     if (w.prdUrl) o.push({ label: "PRD 展示页", href: w.prdUrl });
     if (w.prdDocUrl) o.push({ label: "PRD 文档", href: w.prdDocUrl });
+    if (w.teardownDocUrl) o.push({ label: "拆解全文", href: w.teardownDocUrl });   // 产品拆解：飞书全文
     return o;
   }
   var CAT_NAME = { prototype: "原型和产品", agent: "AI项目", data: "数据分析", industry: "行业研究", aigc: "AIGC", game: "网页游戏", tool: "工具/开发" };
