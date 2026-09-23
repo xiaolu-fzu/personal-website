@@ -132,6 +132,7 @@
     if (kind === "video") return s + '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="m16 13 5-3-5-3v6Z"/><path d="M7 3v18"/></svg>';
     if (kind === "verify") return s + '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
     if (kind === "down") return s + '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>';
+    if (kind === "dim") return s + '<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>';
     if (kind === "repo") return s + '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>';
     return s + '<path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
   }
@@ -146,11 +147,17 @@
     if (w.gameUrl || w.prototypeUrl || (w.link && playableCat)) list.push(["live", "上线可玩"]);
     if (w.videoSrc) list.push(["video", "成片"]);
     if (w.verify) list.push(["verify", w.verify]);
-    // 拆解卡：拆解报告 + 证据等级（evidence: "desktop" 桌面研究 / "field" 已体验验证）
-    // 与数据卡的 verify 同一套诚实机制——卡片自己说明"这篇还没实地玩过"
-    if (w.category === "teardown") list.push(["report", "拆解报告"]);
-    if (w.evidence === "field") list.push(["verify", "已体验验证"]);
-    else if (w.evidence === "desktop") list.push(["doc", "桌面研究"]);
+    // 拆解卡：徽标展示「这份拆解分析过哪些维度」（卡片自带 badges 数组，来源就是拆解数据表的 tabs）
+    // 证据等级（桌面研究 / 已体验验证）不占徽标位，放在卡片正文与详情页说明
+    if (w.category === "teardown") {
+      if (Array.isArray(w.badges) && w.badges.length) {
+        w.badges.forEach(function (b) { list.push(["dim", b]); });
+      } else {
+        list.push(["report", "拆解报告"]);
+      }
+    } else if (w.evidence === "field") {
+      list.push(["verify", "已体验验证"]);
+    }
     if (!list.length) return "";
     return '<div class="work-card__badges">' + list.map(function (b) {
       return '<span class="badge badge--' + b[0] + '">' + badgeIcon(b[0]) + escapeHtml(b[1]) + "</span>";
