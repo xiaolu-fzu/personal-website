@@ -155,7 +155,11 @@ body.nav-locked { overflow: hidden; }
   box-shadow: var(--glow-md);
 }
 .work-card__thumb {
-  height: 200px;
+  /* 高度改为随宽度自适应：原来固定 200px，平板单列时卡片变很宽（约 673px），
+     容器比例会变成 3.19:1 的极端宽扁形，object-fit:cover 会纵向裁掉 42% 的画面。
+     用 16/9 让容器比例恒定，图片几乎不被裁切。 */
+  aspect-ratio: 16 / 9;
+  height: auto;
   border-radius: var(--radius-sm);
   overflow: hidden;
   position: relative;
