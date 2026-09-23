@@ -102,7 +102,7 @@
     }).join("");
   }
   function catPriority(tag) {
-    return { data: 0, industry: 1, prototype: 2, game: 3, aigc: 4, tool: 5, agent: 6, teardown: 7 }[tag] || 99;
+    return { data: 0, teardown: 1, industry: 2, prototype: 3, game: 4, aigc: 5, tool: 6, agent: 7 }[tag] || 99;
   }
 
   /* 排序：精选置顶 → 年限倒序 → 同年按类优先级 → 标题 */
