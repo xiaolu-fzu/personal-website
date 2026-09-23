@@ -105,10 +105,16 @@
     return { data: 0, teardown: 1, industry: 2, prototype: 3, game: 4, aigc: 5, tool: 6, agent: 7 }[tag] || 99;
   }
 
-  /* 排序：精选置顶 → 年限倒序 → 同年按类优先级 → 标题 */
+  /* 排序：精选置顶 → **同分类内的显式 order** → 年限倒序 → 同年按类优先级 → 标题
+     order 只在同一分类内部比较，避免影响其它分类的卡片位置。 */
   function sortWorks(list) {
     return list.slice().sort(function (a, b) {
       if (a.featured !== b.featured) return a.featured ? -1 : 1;
+      if (a.category === b.category) {
+        var oa = (typeof a.order === "number") ? a.order : 999;
+        var ob = (typeof b.order === "number") ? b.order : 999;
+        if (oa !== ob) return oa - ob;
+      }
       if (a.year !== b.year) return b.year - a.year;
       var pa = catPriority(a.category), pb = catPriority(b.category);
       if (pa !== pb) return pa - pb;
