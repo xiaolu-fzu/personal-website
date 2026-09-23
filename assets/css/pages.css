@@ -86,7 +86,10 @@
 
 /* ==================== 作品网格 ==================== */
 .works-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, 1fr)：必须写 0，否则 1fr 的最小值是 auto —— 卡片里出现
+     「《无尽冬日》Whiteout Survival · 产品拆解」这种长英文串时会把该列撑宽，
+     导致同一行卡片宽度不一致。写 0 才是真正的等宽列。 */
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--gap-grid); margin-top: var(--space-6);
 }
 
@@ -353,7 +356,7 @@
 
 /* 平板 768–1024px */
 @media (max-width: 1024px) {
-  .works-grid { grid-template-columns: repeat(2, 1fr); }
+  .works-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .contact-grid { grid-template-columns: 1fr; }
   .work-media.proto-frame .proto-iframe { height: 760px; max-height: 760px; }
 }
@@ -364,7 +367,7 @@
   .nav__toggle { display: inline-flex !important; color: var(--accent); background-color: rgba(204,120,92,0.10); border: 1px solid var(--border-accent); }
   .nav__toggle:hover { background-color: rgba(204,120,92,0.18); }
   .filter-bar { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: var(--space-2); -webkit-overflow-scrolling: touch; }
-  .works-grid { grid-template-columns: 1fr; }
+  .works-grid { grid-template-columns: minmax(0, 1fr); }
   .hero { min-height: 72vh; }
   .cta-band { flex-direction: column; align-items: flex-start; }
   .timeline { padding-left: var(--space-5); }

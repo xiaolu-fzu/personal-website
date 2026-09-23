@@ -143,6 +143,7 @@ body.nav-locked { overflow: hidden; }
 /* ==================== 2.3 作品卡片 Work Card ==================== */
 .work-card {
   display: flex; flex-direction: column;
+  overflow-wrap: anywhere;   /* 长英文/长串允许断行，配合网格的 minmax(0,1fr) 保证各卡等宽 */
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
