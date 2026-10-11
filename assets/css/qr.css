@@ -1,0 +1,68 @@
+/* ============================================================
+   qr.css — 扫码中转页样式（三个方向版本共用）
+   页面：qr.html（产品经理）/ qr-game.html（系统策划）/ qr-ai.html（AI 应用开发·AI 产品经理）
+   依赖：variables.css（设计令牌）+ base.css（全局）
+   ============================================================ */
+
+.qr-page { min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+  padding: 24px 18px 40px; background: var(--bg-gradient); }
+
+.qr-card { width: 100%; max-width: 460px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 20px; padding: 32px 26px 26px;
+  box-shadow: 0 18px 50px -22px rgba(158,79,58,0.28); }
+
+.qr-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--accent-2); margin-bottom: 14px; }
+
+.qr-name { font-family: var(--font-display); font-size: 34px; line-height: 1.1;
+  margin: 0 0 10px; color: var(--text); letter-spacing: 0.02em; }
+
+.qr-sub { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin: 0 0 22px; }
+
+.qr-note { background: var(--surface-2); border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--accent); border-radius: 10px;
+  padding: 16px 18px; margin-bottom: 22px; }
+
+.qr-note__title { display: block; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.qr-note__title span { font-size: 18px; margin-right: 6px; }
+
+.qr-note p { font-size: 13px; line-height: 1.75; color: var(--text-secondary); margin: 0; }
+.qr-note strong { color: var(--accent-3); font-weight: 600; }
+
+.qr-url { margin-bottom: 14px; }
+
+.qr-url__label { display: block; font-family: var(--font-mono); font-size: 10.5px;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
+
+.qr-url__val { display: block; font-family: var(--font-mono); font-size: 13px; line-height: 1.5;
+  color: var(--accent-3); background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 11px 13px; word-break: break-all;
+  -webkit-user-select: all; user-select: all; }
+
+.qr-btn { display: block; width: 100%; border: 0; cursor: pointer; font-family: var(--font-body);
+  font-size: 15.5px; font-weight: 600; color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 11px; padding: 15px 18px; margin-bottom: 10px;
+  box-shadow: 0 8px 20px -10px rgba(185,98,74,0.75);
+  transition: transform .15s ease, box-shadow .15s ease; }
+
+.qr-btn:active { transform: translateY(1px); box-shadow: 0 4px 12px -8px rgba(185,98,74,0.8); }
+.qr-btn.is-done { background: linear-gradient(135deg, #7E6A47, #6b5a3c); }
+
+.qr-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin: 0 0 18px; }
+
+.qr-open { display: block; text-align: center; font-size: 14px; color: var(--accent-2);
+  text-decoration: none; padding: 12px; border: 1px solid var(--border-strong);
+  border-radius: 10px; margin-bottom: 22px; }
+
+.qr-open:active { background: var(--surface-2); }
+
+.qr-foot { font-size: 12px; color: var(--text-muted); text-align: center;
+  line-height: 1.7; padding-top: 18px; border-top: 1px solid var(--border); }
+
+.qr-toast { position: fixed; left: 50%; bottom: 34px; transform: translate(-50%, 14px);
+  background: #141413; color: #fff; font-size: 13.5px; padding: 12px 20px;
+  border-radius: 999px; opacity: 0; pointer-events: none;
+  transition: opacity .22s ease, transform .22s ease; white-space: nowrap; }
+
+.qr-toast.is-on { opacity: 1; transform: translate(-50%, 0); }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>李嘉豪 · 个人作品集｜AI 应用开发 / AI 产品经理方向</title>
+  <meta name="description" content="AI 方向作品集入口：别人讲 AI 能做什么，我算它值不值。可在线使用的 AI 助手、浏览器端 RAG 产品、Agent 工作流封装与评测体系，建议用电脑打开。" />
+  <link rel="stylesheet" href="assets/css/variables.css" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/qr.css" />
+</head>
+<body>
+  <main class="qr-page">
+    <div class="qr-card">
+      <div class="qr-kicker">Portfolio · AI</div>
+      <h1 class="qr-name">李嘉豪</h1>
+      <p class="qr-sub">别人讲 AI 能做什么，我算它值不值</p>
+
+      <div class="qr-note">
+        <strong class="qr-note__title"><span aria-hidden="true">💻</span>建议用电脑打开</strong>
+        <p>站内有 <strong>可在线使用的小洄 AI 助手</strong>（自建知识库 + 关键词与语义混合检索）、<strong>浏览器端 RAG 产品</strong>、<strong>Agent 工作流封装</strong>，以及 1,287 题评测体系与实测性能数据——在电脑上可以逐个试。</p>
+      </div>
+
+      <div class="qr-url">
+        <span class="qr-url__label">网址</span>
+        <span class="qr-url__val" id="siteUrl">xiaolu-fzu.github.io/personal-website</span>
+      </div>
+
+      <button class="qr-btn" id="saveBtn" type="button">点击保存网址</button>
+      <p class="qr-hint">保存后可在电脑浏览器里粘贴打开</p>
+
+      <a class="qr-open" href="./">仍然在手机上打开 →</a>
+
+      <div class="qr-foot">
+        福州大学（211）· 硕士在读 · 2027 届<br />
+        福建福州
+      </div>
+    </div>
+  </main>
+  <div class="qr-toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      var FULL = "https://xiaolu-fzu.github.io/personal-website/";
+      var btn = document.getElementById("saveBtn");
+      var toast = document.getElementById("toast");
+      var val = document.getElementById("siteUrl");
+      var timer = null;
+
+      function say(msg) {
+        toast.textContent = msg;
+        toast.classList.add("is-on");
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function () { toast.classList.remove("is-on"); }, 2600);
+      }
+
+      function legacyCopy() {
+        try {
+          var ta = document.createElement("textarea");
+          ta.value = FULL;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.top = "-1000px";
+          document.body.appendChild(ta);
+          ta.select();
+          ta.setSelectionRange(0, ta.value.length);
+          var ok = document.execCommand("copy");
+          document.body.removeChild(ta);
+          return ok;
+        } catch (e) { return false; }
+      }
+
+      function selectUrl() {
+        try {
+          var r = document.createRange();
+          r.selectNodeContents(val);
+          var s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(r);
+        } catch (e) {}
+      }
+
+      function done() {
+        btn.textContent = "已复制，去电脑上粘贴打开";
+        btn.classList.add("is-done");
+        say("已复制到剪贴板");
+      }
+
+      btn.addEventListener("click", function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(FULL).then(done, function () {
+            if (legacyCopy()) { done(); } else { selectUrl(); say("长按上方网址即可复制"); }
+          });
+        } else if (legacyCopy()) {
+          done();
+        } else {
+          selectUrl();
+          say("长按上方网址即可复制");
+        }
+      });
+
+      val.addEventListener("click", function () {
+        if (window.getSelection) {
+          var r = document.createRange();
+          r.selectNodeContents(val);
+          var s = window.getSelection();
+          s.removeAllRanges();
+          s.addRange(r);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

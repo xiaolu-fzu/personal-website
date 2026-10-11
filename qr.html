@@ -4,59 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex" />
-  <title>李嘉豪 · 个人作品集｜建议用电脑打开</title>
-  <meta name="description" content="作品集入口：建议在电脑上打开，站内有可玩的小游戏、AI 助手小洄与多篇长文拆解。" />
+  <title>李嘉豪 · 个人作品集｜产品经理方向</title>
+  <meta name="description" content="产品经理方向作品集入口：判断力交给我，执行力交给 AI。站内可交互的 APP 产品原型、可供阅读的需求文档与开发文档，建议用电脑打开。" />
   <link rel="stylesheet" href="assets/css/variables.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
-  <style>
-    .qr-page { min-height: 100dvh; display: flex; align-items: center; justify-content: center;
-      padding: 24px 18px 40px; background: var(--bg-gradient); }
-    .qr-card { width: 100%; max-width: 460px; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px 26px 26px; box-shadow: 0 18px 50px -22px rgba(158,79,58,0.28); }
-    .qr-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--accent-2); margin-bottom: 14px; }
-    .qr-name { font-family: var(--font-display); font-size: 34px; line-height: 1.1; margin: 0 0 8px;
-      color: var(--text); letter-spacing: 0.02em; }
-    .qr-sub { font-size: 13.5px; line-height: 1.65; color: var(--text-secondary); margin: 0 0 22px; }
-    .qr-note { background: var(--surface-2); border: 1px solid var(--border-strong); border-left: 3px solid var(--accent);
-      border-radius: 10px; padding: 16px 18px; margin-bottom: 22px; }
-    .qr-note__title { display: block; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-    .qr-note__title span { font-size: 18px; margin-right: 6px; }
-    .qr-note p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
-    .qr-url { margin-bottom: 14px; }
-    .qr-url__label { display: block; font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 7px; }
-    .qr-url__val { display: block; font-family: var(--font-mono); font-size: 13px; line-height: 1.5;
-      color: var(--accent-3); background: var(--surface-3); border: 1px solid var(--border);
-      border-radius: 8px; padding: 11px 13px; word-break: break-all; -webkit-user-select: all; user-select: all; }
-    .qr-btn { display: block; width: 100%; border: 0; cursor: pointer; font-family: var(--font-body);
-      font-size: 15.5px; font-weight: 600; color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border-radius: 11px; padding: 15px 18px; margin-bottom: 10px;
-      box-shadow: 0 8px 20px -10px rgba(185,98,74,0.75); transition: transform .15s ease, box-shadow .15s ease; }
-    .qr-btn:active { transform: translateY(1px); box-shadow: 0 4px 12px -8px rgba(185,98,74,0.8); }
-    .qr-btn.is-done { background: linear-gradient(135deg, #7E6A47, #6b5a3c); }
-    .qr-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin: 0 0 18px; }
-    .qr-open { display: block; text-align: center; font-size: 14px; color: var(--accent-2); text-decoration: none;
-      padding: 12px; border: 1px solid var(--border-strong); border-radius: 10px; margin-bottom: 22px; }
-    .qr-open:active { background: var(--surface-2); }
-    .qr-foot { font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.7;
-      padding-top: 18px; border-top: 1px solid var(--border); }
-    .qr-toast { position: fixed; left: 50%; bottom: 34px; transform: translate(-50%, 14px);
-      background: #141413; color: #fff; font-size: 13.5px; padding: 12px 20px; border-radius: 999px;
-      opacity: 0; pointer-events: none; transition: opacity .22s ease, transform .22s ease; white-space: nowrap; }
-    .qr-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
-  </style>
+  <link rel="stylesheet" href="assets/css/qr.css" />
 </head>
 <body>
   <main class="qr-page">
     <div class="qr-card">
-      <div class="qr-kicker">Portfolio</div>
+      <div class="qr-kicker">Portfolio · Product</div>
       <h1 class="qr-name">李嘉豪</h1>
-      <p class="qr-sub">做有数据思维的产品经理，和有产品视角的数据分析者</p>
+      <p class="qr-sub">判断力交给我，执行力交给 AI</p>
 
       <div class="qr-note">
         <strong class="qr-note__title"><span aria-hidden="true">💻</span>建议用电脑打开</strong>
-        <p>站内有可玩的小游戏、AI 助手「小洄」和多篇长文产品拆解——在电脑上体验更完整。</p>
+        <p>站内有 <strong>可以交互的 APP 产品原型</strong>、<strong>可供阅读的需求文档与开发文档</strong>，还有 8 个从需求一路做到验收的完整项目——在电脑上翻更顺、点得动。</p>
       </div>
 
       <div class="qr-url">
@@ -108,7 +71,6 @@
         } catch (e) { return false; }
       }
 
-      /* 复制失败时的兜底：把网址选中，提示长按复制 */
       function selectUrl() {
         try {
           var r = document.createRange();
@@ -149,5 +111,6 @@
       });
     })();
   </script>
+
 </body>
 </html>
