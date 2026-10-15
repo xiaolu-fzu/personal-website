@@ -1410,6 +1410,8 @@ window.DOCS = [
   { name: "产品拆解 · 点点互动 SLG 三篇合集（无尽冬日 / Kingshot / Frozen City）", url: window.TEARDOWN_DOC_URL, type: "report" },
   { name: "产品拆解 · 苏丹卡系统拆解", url: "https://fcn6t1589nyp.feishu.cn/wiki/FlLpwSQ83ikdFAkBqjgcd57cnpg", type: "report" },
   { name: "产品拆解 · 洛克王国商业化拆解", url: "https://fcn6t1589nyp.feishu.cn/wiki/WuuHwHPUKiHfYFkB2sncBBQAnSc", type: "report" },
-  { name: "产品拆解 · Vikingard体验报告", url: "https://fcn6t1589nyp.feishu.cn/wiki/O7huwQJntib2Ikk14Urcmhzxnmg", type: "report" }
+  { name: "产品拆解 · Vikingard体验报告", url: "https://fcn6t1589nyp.feishu.cn/wiki/O7huwQJntib2Ikk14Urcmhzxnmg", type: "report" },
+  /* 小洄自身的开发文档：架构 / 开发时间线 / 设计决策 / 接口 / 踩坑 / 现状 */
+  { name: "小洄 · 开发文档（作品集 AI 助手）", url: "https://fcn6t1589nyp.feishu.cn/wiki/EoEtwSxg3ip4gIk5Hm3c4lMUn2f?from=from_copylink", type: "dev" }
 ];
 
