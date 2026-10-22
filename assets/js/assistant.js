@@ -666,11 +666,28 @@
       var p = JSON.parse(localStorage.getItem(PKEY) || "null");
       if (p && p.l) { root.style.left = p.l; root.style.top = p.t; root.style.right = "auto"; root.style.bottom = "auto"; }
     } catch (e) {}
+    clampPos();
   })();
+
+  /* ★ 2026-10-22 修复「小洄不见了」：
+     拖动时本来就夹了视口（见上面的 mousemove），但**从 localStorage 恢复的位置没夹**——
+     那是上一次「窗口更大 / 缩放更小」时存下来的，换屏幕、改缩放或缩小窗口后，
+     left 可能超过 innerWidth，宠物就被摆到视口外：DOM 里在、但看不见也点不到。
+     这里用与拖动完全相同的公式再夹一次，并在 resize 时重新夹。 */
+  function clampPos() {
+    if (!root.style.left) return;                       // 从没拖过 → 用 CSS 默认的右下角
+    var w = root.offsetWidth || 220;
+    var maxL = Math.max(8, window.innerWidth - w - 8);
+    var maxT = Math.max(8, window.innerHeight - 60);
+    var l = Math.min(Math.max(8, parseInt(root.style.left, 10) || 8), maxL);
+    var t = Math.min(Math.max(8, parseInt(root.style.top, 10) || 8), maxT);
+    root.style.left = l + "px"; root.style.top = t + "px";
+    root.style.right = "auto"; root.style.bottom = "auto";
+  }
 
   // 位置恢复后 + 窗口尺寸变化 / 图片加载完成时，重新对齐气泡
   syncTip();
-  window.addEventListener("resize", syncTip);
+  window.addEventListener("resize", function () { clampPos(); syncTip(); });   // ← 顺带重新夹位置
   window.addEventListener("load", syncTip);
   setTimeout(syncTip, 120);
   setTimeout(syncTip, 600);
