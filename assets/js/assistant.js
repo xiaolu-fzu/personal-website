@@ -726,6 +726,30 @@
   setTimeout(syncTip, 120);
   setTimeout(syncTip, 600);
 
+  /* 召唤：把小洄移到窗口正中（之后仍可拖动、仍可继续对话）。
+     用途：位置随窗口/屏幕尺寸变化失效时，点导航里的「召唤」把它找回来。 */
+  function summon() {
+    var w = root.offsetWidth  || 220;
+    var h = root.offsetHeight || 220;
+    var availW = (window.screen && window.screen.availWidth)  || window.innerWidth;
+    var availH = (window.screen && window.screen.availHeight) || window.innerHeight;
+    var visW = Math.min(window.innerWidth,  availW);
+    var visH = Math.min(window.innerHeight, availH);
+    var l = Math.max(8, Math.round((visW - w) / 2));
+    var t = Math.max(8, Math.round((visH - h) / 2));
+    root.style.left = l + "px"; root.style.top = t + "px";
+    root.style.right = "auto"; root.style.bottom = "auto";
+    delete root.dataset.clampFallback;
+    try { localStorage.setItem(PKEY, JSON.stringify({ l: root.style.left, t: root.style.top })); } catch (e) {}
+    tip.classList.remove("is-hidden");
+    syncTip();
+  }
+  (function bindSummon() {
+    var btn = document.getElementById("lxhSummon");
+    if (!btn) return;
+    btn.addEventListener("click", function (e) { e.preventDefault(); summon(); });
+  })();
+
   // 头部也可拖（方便从标题栏移动）
   (function dragHead() {
     var sx = 0, sy = 0, ox = 0, oy = 0, down = false;
