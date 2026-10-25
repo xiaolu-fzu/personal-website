@@ -810,3 +810,18 @@
   .works-grid--out { opacity: 1; transform: none; }
   .works-grid--in { animation: none; }
 }
+
+/* ==================== 小洄：小屏 / 矮屏自适应（2026-10-26） ====================
+   目的：面试官屏幕大小不一，宠物在矮屏或窄屏上不该占掉太多高度。
+   位置本身不用管 —— .asst 是 position:fixed 的 right/bottom，天然相对视口；
+   只有「窗口比物理屏幕还宽」时才会跑出可见区，那种情况由 JS 的 clampPos() 兜。
+   气泡位置由 syncTip() 按 fab 实际矩形重算，所以改 fab 宽度不会错位。 */
+@media (max-height: 700px) {
+  .asst__fab { width: 156px; }
+}
+@media (max-height: 560px) {
+  .asst__fab { width: 120px; }
+}
+@media (max-width: 430px) {
+  .asst__fab { width: 108px; }
+}
