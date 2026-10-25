@@ -669,25 +669,59 @@
     clampPos();
   })();
 
-  /* ★ 2026-10-22 修复「小洄不见了」：
-     拖动时本来就夹了视口（见上面的 mousemove），但**从 localStorage 恢复的位置没夹**——
-     那是上一次「窗口更大 / 缩放更小」时存下来的，换屏幕、改缩放或缩小窗口后，
-     left 可能超过 innerWidth，宠物就被摆到视口外：DOM 里在、但看不见也点不到。
-     这里用与拖动完全相同的公式再夹一次，并在 resize 时重新夹。 */
+  /* ★ 2026-10-26 修复「小洄在小屏不见了」（第二版）：
+     ① 旧版只看 window.innerWidth —— 那是**窗口**宽度，不是**屏幕**宽度。
+        笔记本接外接屏时，1600 宽的窗口拖到 1366 宽的笔记本屏上，innerWidth 仍是 1600，
+        但右侧那一截物理上看不见，宠物钉在 right:22px 就落在看不见的区域。
+        改用 min(innerWidth, screen.availWidth) 作为可见边界。
+     ② 旧版 `if (!root.style.left) return;` —— 从没拖过就直接返回，
+        默认的 right/bottom 定位压根不检查；窗口比屏幕宽时同样会跑出去。
+        现在没存档也会检查，必要时改用 left/top 定位把宠物拉进可见区。
+     ③ 除 resize 外，focus / visibilitychange 也重新夹（切换到另一块屏时不一定触发 resize）。 */
   function clampPos() {
-    if (!root.style.left) return;                       // 从没拖过 → 用 CSS 默认的右下角
-    var w = root.offsetWidth || 220;
-    var maxL = Math.max(8, window.innerWidth - w - 8);
-    var maxT = Math.max(8, window.innerHeight - 60);
-    var l = Math.min(Math.max(8, parseInt(root.style.left, 10) || 8), maxL);
-    var t = Math.min(Math.max(8, parseInt(root.style.top, 10) || 8), maxT);
-    root.style.left = l + "px"; root.style.top = t + "px";
-    root.style.right = "auto"; root.style.bottom = "auto";
+    var w = root.offsetWidth  || 220;
+    var h = root.offsetHeight || 220;
+    var availW = (window.screen && window.screen.availWidth)  || window.innerWidth;
+    var availH = (window.screen && window.screen.availHeight) || window.innerHeight;
+    /* 物理上真正看得见的范围：窗口可能比屏幕还宽（笔记本接外接屏，窗口没缩小） */
+    var visW = Math.min(window.innerWidth,  availW);
+    var visH = Math.min(window.innerHeight, availH);
+    if (root.style.left) {
+      var maxL = Math.max(8, visW - w - 8);
+      var maxT = Math.max(8, visH - 60);
+      var l = Math.min(Math.max(8, parseInt(root.style.left, 10) || 8), maxL);
+      var t = Math.min(Math.max(8, parseInt(root.style.top, 10) || 8), maxT);
+      root.style.left = l + "px"; root.style.top = t + "px";
+      root.style.right = "auto"; root.style.bottom = "auto";
+    } else if (root.dataset.clampFallback) {
+      // 上次因超出可见区被拉进来的；窗口恢复后让位给 CSS 默认的右下角
+      var rc = root.getBoundingClientRect();
+      if (rc.right <= visW + 2 && rc.bottom <= visH + 2) {
+        root.style.left = ""; root.style.top = ""; root.style.right = ""; root.style.bottom = "";
+        delete root.dataset.clampFallback;
+      }
+    } else {
+      /* 没有存档位置 → 用 CSS 默认的 right/bottom 定位。
+         但如果窗口比物理屏幕宽，那它落点就在看不见的区域 → 改按实际矩形判断并拉回来。 */
+      var r2 = root.getBoundingClientRect();
+      if (r2.right > visW + 2 || r2.bottom > visH + 2) {
+        var nx = Math.max(8, visW - w - 22);
+        var ny = Math.max(8, visH - h - 22);
+        root.style.left = nx + "px"; root.style.top = ny + "px";
+        root.style.right = "auto"; root.style.bottom = "auto";
+        root.dataset.clampFallback = "1";
+      }
+    }
   }
 
   // 位置恢复后 + 窗口尺寸变化 / 图片加载完成时，重新对齐气泡
   syncTip();
-  window.addEventListener("resize", function () { clampPos(); syncTip(); });   // ← 顺带重新夹位置
+  function onViewportChange() { clampPos(); syncTip(); }
+  window.addEventListener("resize", onViewportChange);
+  window.addEventListener("focus", onViewportChange);           // 从另一块屏切回来
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) onViewportChange(); });
+  setTimeout(onViewportChange, 300);                            // 图片/字体加载后布局可能变，补两刀
+  setTimeout(onViewportChange, 1500);
   window.addEventListener("load", syncTip);
   setTimeout(syncTip, 120);
   setTimeout(syncTip, 600);
